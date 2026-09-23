@@ -25,6 +25,88 @@ function shuffleArray(arr) {
 }
 
 // ============================================================
+// KITS DE AFILIADO — FONTE ÚNICA (Mercado Livre)
+// ============================================================
+var kitsAfiliados = [
+  // ---------- COLORAÇÃO ----------
+  {
+    id: 'kit-keune',
+    nome: 'Kit Keune',
+    badge: 'Comercial',
+    categoria: 'coloracao',
+    link: 'https://meli.la/1GbiW7M',
+    produtos: 'Tinta Color + Semi Color + Oxidante 20 vol + Ativador de Cor',
+    imagem: 'https://i.pinimg.com/736x/f9/71/b6/f971b6679e2c7fda2f777c25d6e49b66.jpg'
+  },
+  {
+    id: 'kit-loreal-inoa',
+    nome: "Kit L'Oréal",
+    badge: 'Técnico',
+    categoria: 'coloracao',
+    link: 'https://meli.la/28LpPj2',
+    produtos: 'Tinta INOA + Tonalizante Dia Color + Oxidante 20 vol + Revelador 9 vol',
+    imagem: 'https://i.pinimg.com/1200x/8a/c7/0e/8ac70e6de8ca914b0a3e53ff6b93a0cc.jpg'
+  },
+
+  // ---------- CUIDADOS ----------
+  {
+    id: 'kit-kerastase',
+    nome: 'Kit Kerastase',
+    badge: 'Premium',
+    categoria: 'cuidados',
+    link: 'https://meli.la/1MwSY7v',
+    produtos: 'Shampoo Nutritive + Condicionador Resistance + Máscara Genesis + Leave-In Elixir Ultime',
+    imagem: 'https://i.pinimg.com/1200x/0c/dd/f1/0cddf1a088784488cc73ffbedfa53ebf.jpg'
+  },
+  {
+    id: 'kit-loreal-expert',
+    nome: "Kit L'Oréal Expert",
+    badge: 'Profissional',
+    categoria: 'cuidados',
+    link: 'https://meli.la/2nmeunk',
+    produtos: 'Shampoo Vitamino Color + Condicionador Absolut Repair + Máscara Nutrioil + Sérum Pro Longer',
+    imagem: 'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg'
+  },
+  {
+    id: 'kit-joico',
+    nome: 'Kit Joico',
+    badge: 'Hidratação',
+    categoria: 'cuidados',
+    link: 'https://meli.la/2x9xqBe',
+    produtos: 'Shampoo Moisture Recovery + Condicionador + Máscara Intensa + Leave-In K-PAK',
+    imagem: 'https://i.pinimg.com/1200x/55/d6/10/55d610f599b3c10b5fe4cafceb5104fc.jpg'
+  },
+
+  // ---------- FERRAMENTAS ----------
+  {
+    id: 'kit-ferramentas',
+    nome: 'Kit Ferramentas Profissionais',
+    badge: 'Ferramentas',
+    categoria: 'ferramentas',
+    link: 'https://meli.la/2H5F4mn',
+    produtos: 'Secador Iônico Pro + Prancha de Titânio + Escova Rotativa',
+    imagem: null
+  }
+];
+
+// Helpers para consumir os kits
+function getKitsByCategoria(cat) {
+  return kitsAfiliados.filter(function (k) { return k.categoria === cat; });
+}
+
+function getKitById(id) {
+  return kitsAfiliados.filter(function (k) { return k.id === id; })[0] || null;
+}
+
+// ============================================================
+// COMPATIBILIDADE — mantém coloracaoKits e cuidadosKits
+// apontando para a fonte única (nada quebra no createCard)
+// ============================================================
+var coloracaoKits = { kits: getKitsByCategoria('coloracao') };
+var cuidadosKits = { kits: getKitsByCategoria('cuidados') };
+var ferramentasKits = { kits: getKitsByCategoria('ferramentas') };
+
+// ============================================================
 // FUNÇÃO PARA BUSCAR PRODUTOS COMPLETOS
 // ============================================================
 function getOtherProductsData(currentId, categoria, count) {
@@ -73,7 +155,6 @@ function getOtherProductsData(currentId, categoria, count) {
 // ============================================================
 // HELPERS INTERNOS DO createCard
 // ============================================================
-
 function _getVariantUrl(variant) {
   if (typeof variant === 'object' && variant !== null) return variant.img;
   return variant;
@@ -181,51 +262,11 @@ function createCard(id, categoria, corte, title, desc, img, variants) {
     otherProductsData: otherProductsData,
     coloracao: coloracaoKits,
     cuidados: cuidadosKits,
+    ferramentas: ferramentasKits,
     altura: getAlturaHome(),
     isUserPhoto: id && id.startsWith('user_')
   };
 }
-
-// ============================================================
-// DADOS DOS KITS DE COLORAÇÃO E CUIDADOS
-// ============================================================
-var coloracaoKits = {
-  kits: [{
-    nome: 'Kit Keune',
-    badge: 'Comercial',
-    link: 'https://meli.la/1GbiW7M',
-    produtos: 'Tinta Color + Semi Color + Oxidante 20 vol + Ativador de Cor',
-    imagem: 'https://i.pinimg.com/736x/f9/71/b6/f971b6679e2c7fda2f777c25d6e49b66.jpg'
-  }, {
-    nome: 'Kit L\'Oréal',
-    badge: 'Técnico',
-    link: 'https://meli.la/28LpPj2',
-    produtos: 'Tinta INOA + Tonalizante Dia Color + Oxidante 20 vol + Revelador 9 vol',
-    imagem: 'https://i.pinimg.com/1200x/8a/c7/0e/8ac70e6de8ca914b0a3e53ff6b93a0cc.jpg'
-  }]
-};
-
-var cuidadosKits = {
-  kits: [{
-    nome: 'Kit Kerastase',
-    badge: 'Premium',
-    link: 'https://meli.la/1MwSY7v',
-    produtos: 'Shampoo Nutritive + Condicionador Resistance + Máscara Genesis + Leave-In Elixir Ultime',
-    imagem: 'https://i.pinimg.com/1200x/0c/dd/f1/0cddf1a088784488cc73ffbedfa53ebf.jpg'
-  }, {
-    nome: 'Kit L\'Oréal Expert',
-    badge: 'Profissional',
-    link: 'https://meli.la/2nmeunk',
-    produtos: 'Shampoo Vitamino Color + Condicionador Absolut Repair + Máscara Nutrioil + Sérum Pro Longer',
-    imagem: 'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg'
-  }, {
-    nome: 'Kit Joico',
-    badge: 'Hidratação',
-    link: 'https://meli.la/2x9xqBe',
-    produtos: 'Shampoo Moisture Recovery + Condicionador + Máscara Intensa + Leave-In K-PAK',
-    imagem: 'https://i.pinimg.com/1200x/55/d6/10/55d610f599b3c10b5fe4cafceb5104fc.jpg'
-  }]
-};
 
 // ============================================================
 // DADOS: CORTES (30 itens)
