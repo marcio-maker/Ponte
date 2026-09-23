@@ -11,9 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ============================================================
-       TOKENS HAIR-OS
-       ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
@@ -59,9 +56,7 @@
     * { scrollbar-width: none; }
     *::-webkit-scrollbar { width: 0; height: 0; }
 
-    /* ============================================================
-       HEADER
-       ============================================================ */
+    /* HEADER */
     .header {
       margin-bottom: 1.4rem;
       text-align: center;
@@ -99,9 +94,7 @@
       opacity: 0.7;
     }
 
-    /* ============================================================
-       FILTROS
-       ============================================================ */
+    /* FILTROS */
     .filtros {
       display: flex;
       gap: 0.5rem;
@@ -142,13 +135,8 @@
       font-weight: 600;
     }
 
-    /* ============================================================
-       MASONRY PRINCIPAL
-       ============================================================ */
-    .gallery {
-      column-count: 2;
-      column-gap: 10px;
-    }
+    /* MASONRY */
+    .gallery { column-count: 2; column-gap: 10px; }
 
     .hair-card {
       break-inside: avoid;
@@ -162,12 +150,10 @@
       position: relative;
       animation: fadeInUp .55s var(--ease-luxury) both;
     }
-
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px) scale(.97); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
     .hair-card:hover, .hair-card:focus-within {
       border-color: var(--border-gold);
       transform: translateY(-4px) scale(1.015);
@@ -181,7 +167,6 @@
       overflow: hidden;
       background: #0e0b09;
     }
-
     .hair-card img {
       width: 100%;
       display: block;
@@ -189,11 +174,9 @@
       object-position: center top;
       transition: transform .6s cubic-bezier(.25, .46, .45, .94);
     }
-
     .hair-card img.h-md { height: 200px; }
     .hair-card img.h-lg { height: 260px; }
     .hair-card img.h-xl { height: 320px; }
-
     .hair-card:hover img { transform: scale(1.06); }
 
     .hair-card-categoria {
@@ -216,9 +199,7 @@
       transition: opacity var(--transition);
     }
     .hair-card:hover .hair-card-categoria,
-    .hair-card:focus-within .hair-card-categoria {
-      opacity: 1;
-    }
+    .hair-card:focus-within .hair-card-categoria { opacity: 1; }
 
     .hair-card-title {
       position: absolute;
@@ -253,9 +234,7 @@
       background: rgba(10, 8, 8, .95);
     }
 
-    /* ============================================================
-       MODAL 1: VARIAÇÕES (após clicar no card principal)
-       ============================================================ */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -284,7 +263,6 @@
       position: relative;
       transform: translateY(14px);
       transition: transform .35s var(--ease-luxury);
-      animation: none;
     }
     .modal-overlay.active .modal-content { transform: translateY(0); }
 
@@ -381,11 +359,8 @@
       text-align: center;
     }
 
-    /* Masonry das variações */
-    .variacoes-masonry {
-      column-count: 2;
-      column-gap: 10px;
-    }
+    /* Masonry variações */
+    .variacoes-masonry { column-count: 2; column-gap: 10px; }
 
     .variacao-card {
       break-inside: avoid;
@@ -404,8 +379,6 @@
       box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
       z-index: 5;
     }
-    .variacao-card:active { transform: scale(0.99); }
-
     .variacao-card img {
       width: 100%;
       display: block;
@@ -417,7 +390,6 @@
     .variacao-card img.h-md { height: 180px; }
     .variacao-card img.h-lg { height: 230px; }
     .variacao-card img.h-xl { height: 290px; }
-
     .variacao-card:hover img { transform: scale(1.05); }
 
     .variacao-numero {
@@ -439,12 +411,10 @@
       transition: opacity var(--transition);
     }
     .variacao-card:hover .variacao-numero,
-    .variacao-card:focus-within .variacao-numero {
-      opacity: 1;
-    }
+    .variacao-card:focus-within .variacao-numero { opacity: 1; }
 
     /* ============================================================
-       CARD DETALHADO (após escolher uma variação)
+       CARD DETALHADO (dentro do modal)
        ============================================================ */
     .card-section {
       background: var(--bg-card);
@@ -486,6 +456,62 @@
       line-height: 1.6;
     }
 
+    /* QR Code section (para o PC) */
+    .qrcode-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(0, 0, 0, .35);
+      padding: 1.2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+    .qrcode-section p {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.7rem;
+      font-weight: 500;
+    }
+    #qrcode-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+    }
+    #qrcode-container canvas,
+    #qrcode-container img {
+      display: block;
+      width: 160px;
+      height: 160px;
+    }
+    .qr-hint {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 0.8rem;
+      text-align: center;
+      word-break: break-all;
+      opacity: 0.6;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       SÓ APARECE NO CELULAR (card completo)
+       ============================================================ */
+    .mobile-only { display: none; }
+
+    @media (max-width: 768px) {
+      .desktop-only { display: none !important; }
+      .mobile-only { display: block; }
+    }
+
+    /* Fase 2 */
     .fase2-titulo {
       font-size: 0.65rem;
       text-transform: uppercase;
@@ -497,7 +523,6 @@
       opacity: 0.85;
     }
 
-    /* Miniaturas para trocar a imagem de referência */
     .variacoes-rapidas {
       display: flex;
       gap: 0.5rem;
@@ -519,10 +544,7 @@
       background: #0e0b09;
       opacity: 0.6;
     }
-    .variacoes-rapidas img:hover {
-      opacity: 1;
-      border-color: var(--border-gold);
-    }
+    .variacoes-rapidas img:hover { opacity: 1; border-color: var(--border-gold); }
     .variacoes-rapidas img.active {
       border-color: var(--gold);
       opacity: 1;
@@ -577,9 +599,7 @@
       border: 1px solid var(--gold);
       box-shadow: none;
     }
-    .btn-action.fase2:hover {
-      background: var(--gold-glow);
-    }
+    .btn-action.fase2:hover { background: var(--gold-glow); }
 
     .aviso-fase1 {
       background: rgba(46, 204, 113, .08);
@@ -777,28 +797,6 @@
       transform: scale(1.08);
     }
 
-    .btn-voltar {
-      display: inline-block;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      margin-bottom: 1rem;
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 0.5rem 1rem;
-      border-radius: 40px;
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: all var(--transition);
-    }
-    .btn-voltar:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-      outline: var(--focus-ring);
-    }
-
     .hidden { display: none !important; }
 
     .footer-note {
@@ -824,51 +822,37 @@
       column-span: all;
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
+    /* RESPONSIVE */
     @media (min-width: 600px) {
       body { padding: 1.4rem 1rem 2.4rem; }
-
       .gallery { column-count: 3; column-gap: 14px; }
       .hair-card { margin-bottom: 14px; }
       .variacoes-masonry { column-count: 3; column-gap: 14px; }
       .variacao-card { margin-bottom: 14px; }
-
       .header h1 { font-size: 2.1rem; }
-      .header p { font-size: 0.72rem; }
-
       .hair-card img.h-md { height: 240px; }
       .hair-card img.h-lg { height: 300px; }
       .hair-card img.h-xl { height: 360px; }
-
       .variacao-card img.h-md { height: 220px; }
       .variacao-card img.h-lg { height: 280px; }
       .variacao-card img.h-xl { height: 340px; }
-
       .modal-content { padding: 1.6rem 1.2rem 3rem; }
     }
 
     @media (min-width: 900px) {
       body { padding: 1.8rem 1.4rem 3rem; }
-
       .gallery { column-count: 4; column-gap: 18px; }
       .hair-card { margin-bottom: 18px; }
       .variacoes-masonry { column-count: 4; column-gap: 18px; }
       .variacao-card { margin-bottom: 18px; }
-
       .header h1 { font-size: 2.4rem; }
-
       .hair-card img.h-md { height: 260px; }
       .hair-card img.h-lg { height: 320px; }
       .hair-card img.h-xl { height: 380px; }
-
       .variacao-card img.h-md { height: 240px; }
       .variacao-card img.h-lg { height: 300px; }
       .variacao-card img.h-xl { height: 360px; }
-
       .hair-card-categoria { opacity: 0.9; }
-
       .modal-content { padding: 2rem 1.4rem 3rem; }
     }
 
@@ -876,20 +860,10 @@
       .header h1 { font-size: 1.6rem; }
       .modal-header-title { font-size: 1.1rem; }
       .card-hair-name { font-size: 1.35rem; }
-      .instructions li { font-size: 0.78rem; }
-
       .gallery { column-count: 2; column-gap: 8px; }
       .hair-card { margin-bottom: 8px; }
       .variacoes-masonry { column-count: 2; column-gap: 8px; }
       .variacao-card { margin-bottom: 8px; }
-
-      .hair-card img.h-md { height: 180px; }
-      .hair-card img.h-lg { height: 220px; }
-      .hair-card img.h-xl { height: 270px; }
-
-      .variacao-card img.h-md { height: 160px; }
-      .variacao-card img.h-lg { height: 200px; }
-      .variacao-card img.h-xl { height: 240px; }
     }
   </style>
 </head>
@@ -908,9 +882,8 @@
     <div class="gallery" id="gallery">
       <div class="loading-msg">Carregando do HairOS...</div>
     </div>
-    <div id="card-area" class="hidden"></div>
 
-    <!-- MODAL 1: VARIAÇÕES -->
+    <!-- MODAL -->
     <div class="modal-overlay" id="modalOverlay">
       <div class="modal-content" id="modalContent">
         <div class="modal-header">
@@ -927,6 +900,9 @@
           Escolha uma referência
         </div>
         <div class="variacoes-masonry" id="modalVariacoes"></div>
+
+        <!-- Container que recebe o card detalhado (dentro do modal) -->
+        <div id="detalhe-area-modal" class="hidden"></div>
       </div>
     </div>
 
@@ -945,6 +921,11 @@
 
     function getAlturaAleatoria() {
       return ALTURAS[Math.floor(Math.random() * ALTURAS.length)];
+    }
+
+    // Detecta se é celular (tela pequena OU user agent mobile)
+    function isMobile() {
+      return window.matchMedia('(max-width: 768px)').matches;
     }
 
     // ============================================================
@@ -1059,7 +1040,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return window.location.origin + window.location.pathname;
     }
 
-    // URL do card: ?item=ID&ref=INDICE
     function buildItemUrl(id, refIndex) {
       const base = getBaseUrl();
       if (typeof refIndex === 'number' && refIndex >= 0) {
@@ -1074,9 +1054,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     // 5. DOM
     // ============================================================
     const galleryEl = document.getElementById('gallery');
-    const cardArea = document.getElementById('card-area');
     const filtrosEl = document.getElementById('filtros');
-
     const modalOverlay = document.getElementById('modalOverlay');
     const modalContent = document.getElementById('modalContent');
     const modalBackBtn = document.getElementById('modalBackBtn');
@@ -1086,6 +1064,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     const modalHeaderCount = document.getElementById('modalHeaderCount');
     const modalSectionLabel = document.getElementById('modalSectionLabel');
     const modalVariacoes = document.getElementById('modalVariacoes');
+    const detalheAreaModal = document.getElementById('detalhe-area-modal');
 
     let filtroAtual = 'corte';
     let itemAtualModal = null;
@@ -1151,14 +1130,21 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     function openModalVariacoes(item) {
       itemAtualModal = item;
 
-      // Cabeçalho
       modalHeaderCat.textContent = item.categoria === 'corte' ? 'Corte' : 'Coloração';
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
       modalHeaderCount.textContent = item.variantes.length + ' refs';
       modalSectionLabel.textContent = 'Escolha uma referência para simular';
 
-      // Renderiza variações
+      // Limpa o container do card detalhado
+      detalheAreaModal.innerHTML = '';
+      detalheAreaModal.classList.add('hidden');
+
+      // Mostra as variações
+      modalVariacoes.classList.remove('hidden');
+      modalSectionLabel.classList.remove('hidden');
+      modalHeaderCount.classList.remove('hidden');
+
       modalVariacoes.innerHTML = item.variantes.map((url, idx) => {
         const altura = getAlturaAleatoria();
         return `
@@ -1172,7 +1158,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         `;
       }).join('');
 
-      // Eventos nas variações
       modalVariacoes.querySelectorAll('.variacao-card').forEach(card => {
         card.addEventListener('click', () => {
           const idx = parseInt(card.dataset.refIndex, 10);
@@ -1198,34 +1183,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       itemAtualModal = null;
     }
 
-    modalBackBtn.addEventListener('click', () => {
-      // Se estiver no card detalhado, volta pro modal de variações
-      if (!cardArea.classList.contains('hidden')) {
-        closeCardDetalhado();
-        if (itemAtualModal) {
-          openModalVariacoes(itemAtualModal);
-        } else {
-          renderGallery();
-        }
-        return;
-      }
-      closeModalVariacoes();
-    });
-
-    // Fecha modal ao clicar fora do conteúdo (mas não no card detalhado)
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay && cardArea.classList.contains('hidden')) {
-        closeModalVariacoes();
-      }
-    });
-
     // ============================================================
     // 9. CARD DETALHADO
     // ============================================================
     function openCardDetalhado(item, refIndex, imagemUrl) {
-      // Esconde galeria e o conteúdo do modal
-      galleryEl.classList.add('hidden');
-      filtrosEl.classList.add('hidden');
+      // Esconde as variações
       modalVariacoes.classList.add('hidden');
       modalSectionLabel.classList.add('hidden');
       modalHeaderCount.classList.add('hidden');
@@ -1235,27 +1197,30 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
 
-      // Renderiza card detalhado DENTRO do modal (mesma tela)
-      renderCardDetalhado(item, refIndex, imagemUrl);
+      // Mostra o container do card detalhado
+      detalheAreaModal.classList.remove('hidden');
+      detalheAreaModal.innerHTML = '';
 
-      // Rola pro topo
+      renderCardDetalhadoNoModal(item, refIndex, imagemUrl, detalheAreaModal);
+
       modalContent.scrollTop = 0;
     }
 
     function closeCardDetalhado() {
-      // Restaura o modal de variações
-      cardArea.classList.add('hidden');
-      cardArea.innerHTML = '';
+      detalheAreaModal.innerHTML = '';
+      detalheAreaModal.classList.add('hidden');
+
       modalVariacoes.classList.remove('hidden');
       modalSectionLabel.classList.remove('hidden');
       modalHeaderCount.classList.remove('hidden');
     }
 
-    function renderCardDetalhado(item, refIndex, imagemUrl) {
+    function renderCardDetalhadoNoModal(item, refIndex, imagemUrl, container) {
       const prompt = gerarPrompt(item);
       const produtos = produtosRelacionados(item);
+      const mobile = isMobile();
 
-      // Miniaturas para trocar a referência rapidamente
+      // Miniaturas de trocas rápidas (só no celular)
       const miniaturasHtml = item.variantes.length > 1 ? `
         <div class="fase2-titulo">outras referências</div>
         <div class="variacoes-rapidas" id="variacoesRapidas">
@@ -1277,170 +1242,225 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         </a>
       `).join('');
 
-      cardArea.innerHTML = `
+      // ============================================================
+      // O QUE APARECE NO PC: imagem + QR Code
+      // O QUE APARECE NO CELULAR: imagem + prompt + botão Gemini + produtos
+      // ============================================================
+
+      container.innerHTML = `
         <div class="card-section">
           <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
                onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
           <h2 class="card-hair-name">${item.nome}</h2>
           <p class="card-hair-desc">${item.descricao}</p>
 
-          ${miniaturasHtml}
+          <!-- ========== DESKTOP: só QR Code ========== -->
+          <div class="desktop-only">
+            <div class="qrcode-section">
+              <p>📱 Aponte a câmera do celular</p>
+              <div id="qrcode-container"></div>
+              <div class="qr-hint" id="qrHint"></div>
+            </div>
+          </div>
 
-          <button class="btn-action" id="acaoBtn">
-            🚀 Preparar simulação
-          </button>
+          <!-- ========== MOBILE: card completo ========== -->
+          <div class="mobile-only">
+            ${miniaturasHtml}
 
-          <div id="conteudoArea"></div>
+            <button class="btn-action" id="acaoBtn">
+              🚀 Preparar simulação
+            </button>
 
-          <div class="products-title">Produtos recomendados</div>
-          ${productsHtml}
+            <div id="conteudoArea"></div>
+
+            <div class="products-title">Produtos recomendados</div>
+            ${productsHtml}
+          </div>
         </div>
       `;
 
-      cardArea.classList.remove('hidden');
+      // ============================================================
+      // GERAR QR CODE (só no desktop)
+      // ============================================================
+      if (!mobile) {
+        const qrcodeContainer = document.getElementById('qrcode-container');
+        const qrHint = document.getElementById('qrHint');
+        const url = buildItemUrl(item.id, refIndex);
 
-      // Trocas rápidas de referência
-      const variacoesRapidas = document.getElementById('variacoesRapidas');
-      if (variacoesRapidas) {
-        variacoesRapidas.addEventListener('click', (e) => {
-          const img = e.target.closest('img');
-          if (!img) return;
-          const novaUrl = img.dataset.url;
-          if (novaUrl) {
-            document.getElementById('imagemPrincipal').src = novaUrl;
-            variacoesRapidas.querySelectorAll('img').forEach(i => i.classList.remove('active'));
-            img.classList.add('active');
+        qrHint.textContent = url;
+
+        if (qrcodeContainer) {
+          if (typeof QRCode === 'undefined') {
+            qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="font-size:0.8rem;color:#d4b07a;">🔗 abrir link</a>`;
+          } else {
+            try {
+              new QRCode(qrcodeContainer, {
+                text: url,
+                width: 160,
+                height: 160,
+                colorDark: '#0a0808',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+              });
+            } catch (err) {
+              qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="color:#d4b07a;">🔗 abrir</a>`;
+            }
           }
-        });
+        }
       }
 
       // ============================================================
-      // FLUXO DE 2 FASES
+      // FLUXO MOBILE (2 fases) — só anexa se estiver no celular
       // ============================================================
-      let fase = 1;
-      const acaoBtn = document.getElementById('acaoBtn');
-      const conteudoArea = document.getElementById('conteudoArea');
+      if (mobile) {
+        const acaoBtn = document.getElementById('acaoBtn');
+        const conteudoArea = document.getElementById('conteudoArea');
 
-      acaoBtn.addEventListener('click', async () => {
-        if (fase === 1) {
-          let promptOk = false;
-          try {
-            await navigator.clipboard.writeText(prompt);
-            promptOk = true;
-          } catch (err) {
-            console.warn('Clipboard falhou:', err);
-          }
-
-          try {
-            window.open('https://gemini.google.com', '_blank');
-          } catch (err) {
-            console.warn('window.open bloqueado:', err);
-          }
-
-          conteudoArea.innerHTML = `
-            <div class="aviso-fase1">
-              <strong>✓ Prompt copiado</strong>
-              ${promptOk ? '' : '⚠️ Se não copiou, use o campo abaixo.<br>'}
-              ✨ O Gemini está abrindo em outra aba...
-            </div>
-            ${!promptOk ? `
-              <div class="aviso-fallback">
-                <div>Copie o prompt manualmente</div>
-                <textarea readonly>${prompt}</textarea>
-              </div>
-            ` : ''}
-          `;
-
-          acaoBtn.textContent = '👁️ Ver imagem + prompt';
-          acaoBtn.classList.add('fase2');
-          fase = 2;
-          return;
+        // Trocas rápidas de referência
+        const variacoesRapidas = document.getElementById('variacoesRapidas');
+        if (variacoesRapidas) {
+          variacoesRapidas.addEventListener('click', (e) => {
+            const img = e.target.closest('img');
+            if (!img) return;
+            const novaUrl = img.dataset.url;
+            if (novaUrl) {
+              document.getElementById('imagemPrincipal').src = novaUrl;
+              variacoesRapidas.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+              img.classList.add('active');
+            }
+          });
         }
 
-        if (fase === 2) {
-          const imagemAtual = document.getElementById('imagemPrincipal').src;
+        if (acaoBtn && conteudoArea) {
+          let fase = 1;
 
-          conteudoArea.innerHTML = `
-            <div class="aviso-fase1">
-              <strong>✓ Prompt já foi copiado</strong>
-              O Gemini está aberto em outra aba. Agora salve a imagem abaixo.
-            </div>
+          acaoBtn.addEventListener('click', async () => {
+            if (fase === 1) {
+              let promptOk = false;
+              try {
+                await navigator.clipboard.writeText(prompt);
+                promptOk = true;
+              } catch (err) {
+                console.warn('Clipboard falhou:', err);
+              }
 
-            <div class="fase2-titulo">Imagem de referência</div>
-            <div class="fase2-img-wrap">
-              <img src="${imagemAtual}" alt="${item.nome}"
-                   onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
-            </div>
-            <div class="fase2-img-hint">
-              👆 Toque e segure para salvar<br>
-              ou tire um print
-            </div>
+              try {
+                window.open('https://gemini.google.com', '_blank');
+              } catch (err) {
+                console.warn('window.open bloqueado:', err);
+              }
 
-            <div class="fase2-titulo">Prompt</div>
-            <div class="prompt-box">${prompt}</div>
+              conteudoArea.innerHTML = `
+                <div class="aviso-fase1">
+                  <strong>✓ Prompt copiado</strong>
+                  ${promptOk ? '' : '⚠️ Se não copiou, use o campo abaixo.<br>'}
+                  ✨ O Gemini está abrindo em outra aba...
+                </div>
+                ${!promptOk ? `
+                  <div class="aviso-fallback">
+                    <div>Copie o prompt manualmente</div>
+                    <textarea readonly>${prompt}</textarea>
+                  </div>
+                ` : ''}
+              `;
 
-            <div class="fase2-titulo">Instruções</div>
-            <div class="instructions">
-              <li>Copie o prompt (já foi copiado).</li>
-              <li>Abra o Gemini (já está aberto).</li>
-              <li>Envie <strong>sua foto</strong>.</li>
-              <li>Envie <strong>a imagem de referência</strong> acima.</li>
-              <li>Cole o prompt.</li>
-              <li>Gere sua simulação.</li>
-            </div>
+              acaoBtn.textContent = '👁️ Ver imagem + prompt';
+              acaoBtn.classList.add('fase2');
+              fase = 2;
+              return;
+            }
 
-            <a class="btn-gemini" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
-              ✨ Abrir Gemini novamente
-            </a>
-          `;
+            if (fase === 2) {
+              const imagemAtual = document.getElementById('imagemPrincipal').src;
 
-          acaoBtn.textContent = '🔄 Preparar novamente';
-          acaoBtn.classList.remove('fase2');
-          fase = 1;
-          return;
+              conteudoArea.innerHTML = `
+                <div class="aviso-fase1">
+                  <strong>✓ Prompt já foi copiado</strong>
+                  O Gemini está aberto em outra aba. Agora salve a imagem abaixo.
+                </div>
+
+                <div class="fase2-titulo">Imagem de referência</div>
+                <div class="fase2-img-wrap">
+                  <img src="${imagemAtual}" alt="${item.nome}"
+                       onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
+                </div>
+                <div class="fase2-img-hint">
+                  👆 Toque e segure para salvar<br>
+                  ou tire um print
+                </div>
+
+                <div class="fase2-titulo">Prompt</div>
+                <div class="prompt-box">${prompt}</div>
+
+                <div class="fase2-titulo">Instruções</div>
+                <div class="instructions">
+                  <li>Copie o prompt (já foi copiado).</li>
+                  <li>Abra o Gemini (já está aberto).</li>
+                  <li>Envie <strong>sua foto</strong>.</li>
+                  <li>Envie <strong>a imagem de referência</strong> acima.</li>
+                  <li>Cole o prompt.</li>
+                  <li>Gere sua simulação.</li>
+                </div>
+
+                <a class="btn-gemini" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
+                  ✨ Abrir Gemini novamente
+                </a>
+              `;
+
+              acaoBtn.textContent = '🔄 Preparar novamente';
+              acaoBtn.classList.remove('fase2');
+              fase = 1;
+              return;
+            }
+          });
         }
-      });
+      }
     }
 
     // ============================================================
-    // 10. INIT
+    // 10. BOTÃO VOLTAR
+    // ============================================================
+    modalBackBtn.addEventListener('click', () => {
+      const detalheVisivel = !detalheAreaModal.classList.contains('hidden');
+      if (detalheVisivel) {
+        closeCardDetalhado();
+        return;
+      }
+      closeModalVariacoes();
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay && detalheAreaModal.classList.contains('hidden')) {
+        closeModalVariacoes();
+      }
+    });
+
+    // ============================================================
+    // 11. INIT
     // ============================================================
     function init() {
       const params = new URLSearchParams(window.location.search);
       const itemId = params.get('item');
       const refIndex = params.get('ref');
+      const mobile = isMobile();
 
       if (itemId) {
         const item = getItemById(itemId);
         if (item) {
-          // Se veio com ref específica (QR Code), abre direto no card detalhado
           const idx = refIndex !== null ? parseInt(refIndex, 10) : 0;
           const url = item.variantes[idx] || item.imagem;
 
-          // Abre o modal já com o card detalhado
           itemAtualModal = item;
-          modalHeaderCat.textContent = item.categoria === 'corte' ? 'Corte' : 'Coloração';
-          modalHeaderTitle.textContent = item.nome;
-          modalHeaderSub.textContent = item.titulo || '';
 
-          galleryEl.classList.add('hidden');
-          filtrosEl.classList.add('hidden');
-          modalVariacoes.classList.add('hidden');
-          modalSectionLabel.classList.add('hidden');
-          modalHeaderCount.classList.add('hidden');
-
-          renderCardDetalhado(item, idx, url);
           modalOverlay.classList.add('active');
           document.body.style.overflow = 'hidden';
+
+          // Se veio com parâmetro (?item=&ref=), abre direto no card detalhado
+          openCardDetalhado(item, idx, url);
 
           document.title = `${item.nome} · HairOS`;
         } else {
           renderGallery();
-          const aviso = document.createElement('p');
-          aviso.style.cssText = 'text-align:center;color:#d4b07a;margin-top:1rem;font-size:0.85rem;';
-          aviso.textContent = 'Item não encontrado. Selecione um da galeria.';
-          cardArea.appendChild(aviso);
-          cardArea.classList.remove('hidden');
         }
       } else {
         renderGallery();
