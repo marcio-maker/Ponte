@@ -6,14 +6,13 @@
   <title>HairOS · referência · QR · simulação IA</title>
   <meta name="theme-color" content="#0a0808">
 
-  <!-- Fontes do HairOS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     /* ============================================================
-       TOKENS HAIR-OS (mesma paleta da vitrine)
+       TOKENS HAIR-OS
        ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -30,7 +29,7 @@
       --border: rgba(212, 176, 122, .10);
       --border-gold: rgba(212, 176, 122, .28);
       --radius: 14px;
-      --radius-lg: 24px;
+      --radius-lg: 20px;
       --transition: .4s cubic-bezier(.22, .61, .36, 1);
       --ease-luxury: cubic-bezier(.23, 1, .32, 1);
       --shadow: 0 8px 32px rgba(0, 0, 0, .6);
@@ -45,19 +44,18 @@
       min-height: 100vh;
       line-height: 1.65;
       font-size: 16px;
-    }
-
-    body {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       overflow-x: hidden;
     }
 
-    .app { max-width: 460px; width: 100%; margin: 0 auto; }
+    body {
+      padding: 1rem 0.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-    /* Scrollbar invisível (igual HairOS) */
+    .app { max-width: 1280px; width: 100%; margin: 0 auto; }
+
     * { scrollbar-width: none; }
     *::-webkit-scrollbar { width: 0; height: 0; }
 
@@ -65,9 +63,9 @@
        HEADER
        ============================================================ */
     .header {
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.4rem;
       text-align: center;
-      padding: 0.5rem 0 1.2rem;
+      padding: 0.5rem 0 1rem;
       border-bottom: 1px solid var(--border);
       position: relative;
     }
@@ -81,7 +79,6 @@
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
-
     .header h1 {
       font-family: 'Playfair Display', serif;
       font-style: italic;
@@ -92,9 +89,8 @@
       line-height: 1;
     }
     .header h1 span { color: var(--gold); }
-
     .header p {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       margin-top: 0.5rem;
       text-transform: uppercase;
@@ -111,8 +107,10 @@
       gap: 0.5rem;
       overflow-x: auto;
       padding-bottom: 0.8rem;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
       scrollbar-width: none;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     .filtros::-webkit-scrollbar { display: none; }
 
@@ -124,9 +122,9 @@
       background: transparent;
       color: var(--text-muted);
       font-family: 'Inter', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 400;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
       transition: all var(--transition);
@@ -145,28 +143,36 @@
     }
 
     /* ============================================================
-       GALERIA (cards)
+       MASONRY PRINCIPAL
        ============================================================ */
     .gallery {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
+      column-count: 2;
+      column-gap: 10px;
     }
 
     .hair-card {
+      break-inside: avoid;
+      margin-bottom: 10px;
       background: var(--bg-card);
       border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: var(--shadow);
       cursor: pointer;
       border: 1px solid var(--border);
       transition: all var(--transition);
       position: relative;
+      animation: fadeInUp .55s var(--ease-luxury) both;
     }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .hair-card:hover, .hair-card:focus-within {
       border-color: var(--border-gold);
-      transform: translateY(-4px);
+      transform: translateY(-4px) scale(1.015);
       box-shadow: 0 16px 48px rgba(0, 0, 0, .5);
+      z-index: 5;
     }
     .hair-card:active { transform: translateY(-2px) scale(0.99); }
 
@@ -175,185 +181,270 @@
       overflow: hidden;
       background: #0e0b09;
     }
+
     .hair-card img {
       width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
+      object-position: center top;
       transition: transform .6s cubic-bezier(.25, .46, .45, .94);
     }
-    .hair-card:hover img { transform: scale(1.05); }
 
-    .hair-card-info {
-      padding: 1rem 1.1rem 1.1rem;
-      position: relative;
-    }
-    .hair-card-info h2 {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.15rem;
-      line-height: 1.2;
-    }
-    .hair-card-info p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      font-weight: 300;
-      line-height: 1.5;
-    }
+    .hair-card img.h-md { height: 200px; }
+    .hair-card img.h-lg { height: 260px; }
+    .hair-card img.h-xl { height: 320px; }
+
+    .hair-card:hover img { transform: scale(1.06); }
+
     .hair-card-categoria {
       position: absolute;
-      top: 0.9rem;
-      right: 1rem;
-      font-size: 0.55rem;
+      top: 0.6rem;
+      right: 0.6rem;
+      font-size: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--gold);
-      background: rgba(10, 8, 8, .75);
+      background: rgba(10, 8, 8, .8);
       backdrop-filter: blur(8px);
-      padding: 3px 10px;
+      -webkit-backdrop-filter: blur(8px);
+      padding: 3px 8px;
       border-radius: 20px;
       border: 1px solid var(--border-gold);
       font-weight: 600;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .hair-card:hover .hair-card-categoria,
+    .hair-card:focus-within .hair-card-categoria {
+      opacity: 1;
+    }
+
+    .hair-card-title {
+      position: absolute;
+      bottom: 0.7rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(10, 8, 8, .85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-gold);
+      padding: 5px 14px;
+      border-radius: 24px;
+      transition: all var(--transition);
+      white-space: nowrap;
+      opacity: 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hair-card:hover .hair-card-title,
+    .hair-card:focus-within .hair-card-title {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      border-color: var(--gold);
+      background: rgba(10, 8, 8, .95);
     }
 
     /* ============================================================
-       MODAL QR
+       MODAL 1: VARIAÇÕES (após clicar no card principal)
        ============================================================ */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.88);
+      background: rgba(0, 0, 0, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 1rem;
+      padding: 0;
       z-index: 1000;
       visibility: hidden;
       opacity: 0;
       transition: opacity .35s ease, visibility .35s;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .modal-overlay.active { visibility: visible; opacity: 1; }
 
     .modal-content {
-      background: linear-gradient(145deg, var(--bg-card), #100e0c);
-      border: 1px solid var(--border-gold);
-      border-radius: var(--radius-lg);
-      max-width: 420px;
+      background: var(--bg);
       width: 100%;
-      padding: 1.4rem 1.3rem 1.5rem;
+      max-width: 1280px;
+      min-height: 100vh;
+      padding: 1.2rem 0.75rem 3rem;
       position: relative;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, .8);
-      transform: translateY(14px) scale(.98);
+      transform: translateY(14px);
       transition: transform .35s var(--ease-luxury);
+      animation: none;
     }
-    .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
 
-    .modal-close {
+    /* Header do modal */
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .modal-header::after {
+      content: '';
       position: absolute;
-      top: 12px;
-      right: 14px;
+      bottom: -1px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .modal-back {
       background: rgba(201, 169, 110, .08);
       border: 1px solid var(--border-gold);
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
       color: var(--gold);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all var(--transition);
-      line-height: 1;
+      flex-shrink: 0;
       padding: 0;
     }
-    .modal-close:hover {
+    .modal-back:hover {
       background: var(--gold);
       color: #1b1209;
-      transform: rotate(90deg);
+      transform: translateX(-3px);
     }
 
-    .modal-hair-img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      border-radius: var(--radius);
-      margin-bottom: 1.1rem;
-      background: #0e0b09;
-      border: 1px solid var(--border);
-    }
+    .modal-header-info { flex: 1; min-width: 0; }
 
-    .modal-hair-name {
+    .modal-header-cat {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      font-weight: 600;
+      opacity: 0.85;
+    }
+    .modal-header-title {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.3rem;
       line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .modal-hair-desc {
-      font-size: 0.85rem;
+    .modal-header-sub {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
       font-weight: 300;
-      line-height: 1.5;
+      margin-top: 0.1rem;
     }
 
-    .qrcode-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: rgba(0, 0, 0, .35);
-      padding: 1.2rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-    }
-    .qrcode-section p {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--gold);
-      margin-bottom: 0.7rem;
-      font-weight: 500;
-    }
-    #qrcode-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: white;
-      padding: 0.75rem;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
-    }
-    #qrcode-container canvas,
-    #qrcode-container img {
-      display: block;
-      width: 140px;
-      height: 140px;
-    }
-    .qr-hint {
+    .modal-header-count {
       font-size: 0.65rem;
       color: var(--text-muted);
-      margin-top: 0.8rem;
+      background: rgba(212, 176, 122, .1);
+      border: 1px solid var(--border-gold);
+      padding: 4px 10px;
+      border-radius: 40px;
+      flex-shrink: 0;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-section-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+      opacity: 0.85;
       text-align: center;
-      word-break: break-all;
-      opacity: 0.55;
-      font-weight: 300;
+    }
+
+    /* Masonry das variações */
+    .variacoes-masonry {
+      column-count: 2;
+      column-gap: 10px;
+    }
+
+    .variacao-card {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+      position: relative;
+    }
+    .variacao-card:hover, .variacao-card:focus-within {
+      border-color: var(--border-gold);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+      z-index: 5;
+    }
+    .variacao-card:active { transform: scale(0.99); }
+
+    .variacao-card img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      background: #0e0b09;
+      transition: transform .6s cubic-bezier(.25, .46, .45, .94);
+    }
+    .variacao-card img.h-md { height: 180px; }
+    .variacao-card img.h-lg { height: 230px; }
+    .variacao-card img.h-xl { height: 290px; }
+
+    .variacao-card:hover img { transform: scale(1.05); }
+
+    .variacao-numero {
+      position: absolute;
+      bottom: 0.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 8, 8, .85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-gold);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.6rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .variacao-card:hover .variacao-numero,
+    .variacao-card:focus-within .variacao-numero {
+      opacity: 1;
     }
 
     /* ============================================================
-       CARD DETALHADO
+       CARD DETALHADO (após escolher uma variação)
        ============================================================ */
     .card-section {
       background: var(--bg-card);
@@ -361,13 +452,11 @@
       border-radius: var(--radius-lg);
       padding: 1.4rem 1.2rem 1.5rem;
       margin-top: 0.5rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
       box-shadow: var(--shadow);
       animation: fadeInUp .5s var(--ease-luxury);
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .card-hair-img {
@@ -397,7 +486,6 @@
       line-height: 1.6;
     }
 
-    /* Mini galeria de variações */
     .fase2-titulo {
       font-size: 0.65rem;
       text-transform: uppercase;
@@ -409,7 +497,8 @@
       opacity: 0.85;
     }
 
-    .variacoes {
+    /* Miniaturas para trocar a imagem de referência */
+    .variacoes-rapidas {
       display: flex;
       gap: 0.5rem;
       overflow-x: auto;
@@ -417,32 +506,29 @@
       margin-bottom: 0.5rem;
       scrollbar-width: none;
     }
-    .variacoes::-webkit-scrollbar { display: none; }
-    .variacoes img {
+    .variacoes-rapidas::-webkit-scrollbar { display: none; }
+    .variacoes-rapidas img {
       flex-shrink: 0;
-      width: 68px;
-      height: 68px;
-      border-radius: 12px;
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
       object-fit: cover;
       cursor: pointer;
       border: 2px solid transparent;
       transition: all var(--transition);
       background: #0e0b09;
-      opacity: 0.7;
+      opacity: 0.6;
     }
-    .variacoes img:hover {
+    .variacoes-rapidas img:hover {
       opacity: 1;
       border-color: var(--border-gold);
     }
-    .variacoes img.active {
+    .variacoes-rapidas img.active {
       border-color: var(--gold);
       opacity: 1;
       box-shadow: 0 0 0 3px var(--gold-glow);
     }
 
-    /* ============================================================
-       PROMPT BOX
-       ============================================================ */
     .prompt-box {
       background: rgba(0, 0, 0, .35);
       border: 1px solid var(--border);
@@ -457,9 +543,6 @@
       line-height: 1.55;
     }
 
-    /* ============================================================
-       BOTÃO PRINCIPAL
-       ============================================================ */
     .btn-action {
       display: flex;
       align-items: center;
@@ -488,7 +571,6 @@
       box-shadow: 0 12px 32px rgba(212, 176, 122, .35);
     }
     .btn-action:active { transform: translateY(0); }
-
     .btn-action.fase2 {
       background: transparent;
       color: var(--gold);
@@ -497,12 +579,8 @@
     }
     .btn-action.fase2:hover {
       background: var(--gold-glow);
-      box-shadow: 0 8px 24px rgba(212, 176, 122, .15);
     }
 
-    /* ============================================================
-       AVISOS
-       ============================================================ */
     .aviso-fase1 {
       background: rgba(46, 204, 113, .08);
       border: 1px solid rgba(46, 204, 113, .35);
@@ -550,9 +628,6 @@
       outline: none;
     }
 
-    /* ============================================================
-       IMAGEM FASE 2
-       ============================================================ */
     .fase2-img-wrap {
       border-radius: var(--radius);
       overflow: hidden;
@@ -575,9 +650,6 @@
       font-weight: 300;
     }
 
-    /* ============================================================
-       INSTRUÇÕES
-       ============================================================ */
     .instructions {
       background: rgba(0, 0, 0, .3);
       border: 1px solid var(--border);
@@ -616,9 +688,6 @@
       justify-content: center;
     }
 
-    /* ============================================================
-       BOTÃO GEMINI
-       ============================================================ */
     .btn-gemini {
       display: flex;
       align-items: center;
@@ -647,9 +716,6 @@
       transform: translateY(-1px);
     }
 
-    /* ============================================================
-       PRODUTOS
-       ============================================================ */
     .products-title {
       font-size: 0.65rem;
       text-transform: uppercase;
@@ -711,9 +777,6 @@
       transform: scale(1.08);
     }
 
-    /* ============================================================
-       BOTÃO VOLTAR
-       ============================================================ */
     .btn-voltar {
       display: inline-block;
       font-size: 0.72rem;
@@ -736,9 +799,6 @@
       outline: var(--focus-ring);
     }
 
-    /* ============================================================
-       UTILITÁRIOS
-       ============================================================ */
     .hidden { display: none !important; }
 
     .footer-note {
@@ -761,16 +821,75 @@
       font-style: italic;
       font-family: 'Playfair Display', serif;
       opacity: 0.7;
+      column-span: all;
     }
 
     /* ============================================================
        RESPONSIVE
        ============================================================ */
+    @media (min-width: 600px) {
+      body { padding: 1.4rem 1rem 2.4rem; }
+
+      .gallery { column-count: 3; column-gap: 14px; }
+      .hair-card { margin-bottom: 14px; }
+      .variacoes-masonry { column-count: 3; column-gap: 14px; }
+      .variacao-card { margin-bottom: 14px; }
+
+      .header h1 { font-size: 2.1rem; }
+      .header p { font-size: 0.72rem; }
+
+      .hair-card img.h-md { height: 240px; }
+      .hair-card img.h-lg { height: 300px; }
+      .hair-card img.h-xl { height: 360px; }
+
+      .variacao-card img.h-md { height: 220px; }
+      .variacao-card img.h-lg { height: 280px; }
+      .variacao-card img.h-xl { height: 340px; }
+
+      .modal-content { padding: 1.6rem 1.2rem 3rem; }
+    }
+
+    @media (min-width: 900px) {
+      body { padding: 1.8rem 1.4rem 3rem; }
+
+      .gallery { column-count: 4; column-gap: 18px; }
+      .hair-card { margin-bottom: 18px; }
+      .variacoes-masonry { column-count: 4; column-gap: 18px; }
+      .variacao-card { margin-bottom: 18px; }
+
+      .header h1 { font-size: 2.4rem; }
+
+      .hair-card img.h-md { height: 260px; }
+      .hair-card img.h-lg { height: 320px; }
+      .hair-card img.h-xl { height: 380px; }
+
+      .variacao-card img.h-md { height: 240px; }
+      .variacao-card img.h-lg { height: 300px; }
+      .variacao-card img.h-xl { height: 360px; }
+
+      .hair-card-categoria { opacity: 0.9; }
+
+      .modal-content { padding: 2rem 1.4rem 3rem; }
+    }
+
     @media (max-width: 400px) {
       .header h1 { font-size: 1.6rem; }
-      .modal-hair-name { font-size: 1.25rem; }
+      .modal-header-title { font-size: 1.1rem; }
       .card-hair-name { font-size: 1.35rem; }
       .instructions li { font-size: 0.78rem; }
+
+      .gallery { column-count: 2; column-gap: 8px; }
+      .hair-card { margin-bottom: 8px; }
+      .variacoes-masonry { column-count: 2; column-gap: 8px; }
+      .variacao-card { margin-bottom: 8px; }
+
+      .hair-card img.h-md { height: 180px; }
+      .hair-card img.h-lg { height: 220px; }
+      .hair-card img.h-xl { height: 270px; }
+
+      .variacao-card img.h-md { height: 160px; }
+      .variacao-card img.h-lg { height: 200px; }
+      .variacao-card img.h-xl { height: 240px; }
     }
   </style>
 </head>
@@ -781,7 +900,6 @@
       <p>referência · QR · simulação IA</p>
     </header>
 
-    <!-- FILTROS -->
     <div class="filtros" id="filtros">
       <button class="filtro-btn active" data-filtro="corte">Cortes</button>
       <button class="filtro-btn" data-filtro="coloracao">Colorações</button>
@@ -792,36 +910,42 @@
     </div>
     <div id="card-area" class="hidden"></div>
 
-    <!-- MODAL QR -->
+    <!-- MODAL 1: VARIAÇÕES -->
     <div class="modal-overlay" id="modalOverlay">
-      <div class="modal-content">
-        <button class="modal-close" id="modalCloseBtn" aria-label="Fechar">×</button>
-        <img class="modal-hair-img" id="modalHairImg" src="" alt="Estilo">
-        <h3 class="modal-hair-name" id="modalHairName"></h3>
-        <p class="modal-hair-desc" id="modalHairDesc"></p>
-        <div class="qrcode-section">
-          <p>📱 Aponte a câmera</p>
-          <div id="qrcode-container"></div>
-          <div class="qr-hint" id="qrHint"></div>
+      <div class="modal-content" id="modalContent">
+        <div class="modal-header">
+          <button class="modal-back" id="modalBackBtn" aria-label="Voltar">←</button>
+          <div class="modal-header-info">
+            <div class="modal-header-cat" id="modalHeaderCat">Corte</div>
+            <div class="modal-header-title" id="modalHeaderTitle">—</div>
+            <div class="modal-header-sub" id="modalHeaderSub">—</div>
+          </div>
+          <div class="modal-header-count" id="modalHeaderCount">0 refs</div>
         </div>
+
+        <div class="modal-section-label" id="modalSectionLabel">
+          Escolha uma referência
+        </div>
+        <div class="variacoes-masonry" id="modalVariacoes"></div>
       </div>
     </div>
 
     <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
 
-  <!-- 1) BASE DE DADOS -->
   <script src="data.js"></script>
-
-  <!-- 2) QR CODE -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-  <!-- 3) LÓGICA -->
   <script>
     // ============================================================
     // CONFIGURAÇÃO
     // ============================================================
     const URL_PUBLICA_MANUAL = '';
+    const ALTURAS = ['h-md', 'h-lg', 'h-xl'];
+
+    function getAlturaAleatoria() {
+      return ALTURAS[Math.floor(Math.random() * ALTURAS.length)];
+    }
 
     // ============================================================
     // 1. ADAPTADOR
@@ -861,7 +985,8 @@
           descricao: desc,
           imagem: img,
           variantes: variantesProcessadas,
-          categoria: categoria
+          categoria: categoria,
+          altura: getAlturaAleatoria()
         });
       });
 
@@ -903,7 +1028,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     // ============================================================
     function produtosRelacionados(item) {
       const produtos = [];
-
       if (typeof coloracaoKits !== 'undefined' && coloracaoKits.kits) {
         coloracaoKits.kits.forEach(kit => {
           produtos.push({ nome: kit.nome, desc: kit.produtos, link: kit.link });
@@ -919,7 +1043,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           produtos.push({ nome: it[2], desc: it[3], link: '#' });
         });
       }
-
       return produtos.slice(0, 4);
     }
 
@@ -936,7 +1059,15 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return window.location.origin + window.location.pathname;
     }
 
-    function buildItemUrl(id) { return `${getBaseUrl()}?item=${id}`; }
+    // URL do card: ?item=ID&ref=INDICE
+    function buildItemUrl(id, refIndex) {
+      const base = getBaseUrl();
+      if (typeof refIndex === 'number' && refIndex >= 0) {
+        return `${base}?item=${id}&ref=${refIndex}`;
+      }
+      return `${base}?item=${id}`;
+    }
+
     function getItemById(id) { return ITENS.find(c => c.id === id); }
 
     // ============================================================
@@ -944,16 +1075,20 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     // ============================================================
     const galleryEl = document.getElementById('gallery');
     const cardArea = document.getElementById('card-area');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
-    const modalHairImg = document.getElementById('modalHairImg');
-    const modalHairName = document.getElementById('modalHairName');
-    const modalHairDesc = document.getElementById('modalHairDesc');
-    const qrcodeContainer = document.getElementById('qrcode-container');
-    const qrHint = document.getElementById('qrHint');
     const filtrosEl = document.getElementById('filtros');
 
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+    const modalBackBtn = document.getElementById('modalBackBtn');
+    const modalHeaderCat = document.getElementById('modalHeaderCat');
+    const modalHeaderTitle = document.getElementById('modalHeaderTitle');
+    const modalHeaderSub = document.getElementById('modalHeaderSub');
+    const modalHeaderCount = document.getElementById('modalHeaderCount');
+    const modalSectionLabel = document.getElementById('modalSectionLabel');
+    const modalVariacoes = document.getElementById('modalVariacoes');
+
     let filtroAtual = 'corte';
+    let itemAtualModal = null;
 
     // ============================================================
     // 6. GALERIA
@@ -966,18 +1101,18 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         return;
       }
 
-      galleryEl.innerHTML = itensFiltrados.map(item => {
+      galleryEl.innerHTML = itensFiltrados.map((item, idx) => {
         const catLabel = item.categoria === 'corte' ? 'Corte' : 'Coloração';
+        const delay = (idx * 0.03).toFixed(2);
         return `
-          <div class="hair-card" data-item-id="${item.id}" tabindex="0" role="button" aria-label="${item.nome}">
+          <div class="hair-card" data-item-id="${item.id}" tabindex="0" role="button"
+               aria-label="${item.nome}" style="animation-delay: ${delay}s">
             <div class="hair-card-img-wrap">
               <img src="${item.imagem}" alt="${item.nome}" loading="lazy"
+                   class="${item.altura}"
                    onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
               <span class="hair-card-categoria">${catLabel}</span>
-            </div>
-            <div class="hair-card-info">
-              <h2>${item.nome}</h2>
-              <p>${item.descricao}</p>
+              <span class="hair-card-title">${item.nome}</span>
             </div>
           </div>
         `;
@@ -986,13 +1121,13 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       document.querySelectorAll('.hair-card').forEach(card => {
         card.addEventListener('click', () => {
           const item = getItemById(card.dataset.itemId);
-          if (item) openModal(item);
+          if (item) openModalVariacoes(item);
         });
         card.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             const item = getItemById(card.dataset.itemId);
-            if (item) openModal(item);
+            if (item) openModalVariacoes(item);
           }
         });
       });
@@ -1011,67 +1146,122 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     });
 
     // ============================================================
-    // 8. MODAL QR
+    // 8. MODAL DE VARIAÇÕES
     // ============================================================
-    function openModal(item) {
-      modalHairImg.src = item.imagem;
-      modalHairImg.alt = item.nome;
-      modalHairName.textContent = item.nome;
-      modalHairDesc.textContent = item.descricao;
-      renderQRCode(item.id);
+    function openModalVariacoes(item) {
+      itemAtualModal = item;
+
+      // Cabeçalho
+      modalHeaderCat.textContent = item.categoria === 'corte' ? 'Corte' : 'Coloração';
+      modalHeaderTitle.textContent = item.nome;
+      modalHeaderSub.textContent = item.titulo || '';
+      modalHeaderCount.textContent = item.variantes.length + ' refs';
+      modalSectionLabel.textContent = 'Escolha uma referência para simular';
+
+      // Renderiza variações
+      modalVariacoes.innerHTML = item.variantes.map((url, idx) => {
+        const altura = getAlturaAleatoria();
+        return `
+          <div class="variacao-card" data-ref-index="${idx}" tabindex="0" role="button"
+               aria-label="Referência ${idx + 1}">
+            <img src="${url}" alt="Referência ${idx + 1}" loading="lazy"
+                 class="${altura}"
+                 onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
+            <span class="variacao-numero">#${idx + 1}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Eventos nas variações
+      modalVariacoes.querySelectorAll('.variacao-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const idx = parseInt(card.dataset.refIndex, 10);
+          const url = item.variantes[idx];
+          openCardDetalhado(item, idx, url);
+        });
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+
       modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      modalContent.scrollTop = 0;
     }
 
-    function closeModal() {
+    function closeModalVariacoes() {
       modalOverlay.classList.remove('active');
-      qrcodeContainer.innerHTML = '';
+      document.body.style.overflow = '';
+      itemAtualModal = null;
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) closeModal();
-    });
-
-    function renderQRCode(itemId) {
-      qrcodeContainer.innerHTML = '';
-      const url = buildItemUrl(itemId);
-      qrHint.textContent = url;
-
-      if (typeof QRCode === 'undefined') {
-        qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="font-size:0.8rem;color:#d4b07a;">🔗 abrir link</a>`;
+    modalBackBtn.addEventListener('click', () => {
+      // Se estiver no card detalhado, volta pro modal de variações
+      if (!cardArea.classList.contains('hidden')) {
+        closeCardDetalhado();
+        if (itemAtualModal) {
+          openModalVariacoes(itemAtualModal);
+        } else {
+          renderGallery();
+        }
         return;
       }
+      closeModalVariacoes();
+    });
 
-      try {
-        new QRCode(qrcodeContainer, {
-          text: url,
-          width: 140,
-          height: 140,
-          colorDark: '#0a0808',
-          colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.H
-        });
-      } catch (err) {
-        qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="color:#d4b07a;">🔗 abrir</a>`;
+    // Fecha modal ao clicar fora do conteúdo (mas não no card detalhado)
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay && cardArea.classList.contains('hidden')) {
+        closeModalVariacoes();
       }
-    }
+    });
 
     // ============================================================
     // 9. CARD DETALHADO
     // ============================================================
-    function renderHairCard(item) {
+    function openCardDetalhado(item, refIndex, imagemUrl) {
+      // Esconde galeria e o conteúdo do modal
       galleryEl.classList.add('hidden');
       filtrosEl.classList.add('hidden');
+      modalVariacoes.classList.add('hidden');
+      modalSectionLabel.classList.add('hidden');
+      modalHeaderCount.classList.add('hidden');
 
+      // Atualiza cabeçalho
+      modalHeaderCat.textContent = item.categoria === 'corte' ? 'Corte' : 'Coloração';
+      modalHeaderTitle.textContent = item.nome;
+      modalHeaderSub.textContent = item.titulo || '';
+
+      // Renderiza card detalhado DENTRO do modal (mesma tela)
+      renderCardDetalhado(item, refIndex, imagemUrl);
+
+      // Rola pro topo
+      modalContent.scrollTop = 0;
+    }
+
+    function closeCardDetalhado() {
+      // Restaura o modal de variações
+      cardArea.classList.add('hidden');
+      cardArea.innerHTML = '';
+      modalVariacoes.classList.remove('hidden');
+      modalSectionLabel.classList.remove('hidden');
+      modalHeaderCount.classList.remove('hidden');
+    }
+
+    function renderCardDetalhado(item, refIndex, imagemUrl) {
       const prompt = gerarPrompt(item);
       const produtos = produtosRelacionados(item);
 
-      const variacoesHtml = item.variantes.length > 1 ? `
+      // Miniaturas para trocar a referência rapidamente
+      const miniaturasHtml = item.variantes.length > 1 ? `
         <div class="fase2-titulo">outras referências</div>
-        <div class="variacoes" id="variacoes">
+        <div class="variacoes-rapidas" id="variacoesRapidas">
           ${item.variantes.map((v, i) => `
-            <img src="${v}" alt="Variação ${i + 1}" data-url="${v}" loading="lazy"
-                 class="${i === 0 ? 'active' : ''}"
+            <img src="${v}" alt="Ref ${i + 1}" data-url="${v}" data-index="${i}" loading="lazy"
+                 class="${i === refIndex ? 'active' : ''}"
                  onerror="this.style.display='none'">
           `).join('')}
         </div>
@@ -1088,17 +1278,13 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       `).join('');
 
       cardArea.innerHTML = `
-        <button class="btn-voltar" onclick="window.location.href='${getBaseUrl()}'">
-          ← Voltar
-        </button>
-
         <div class="card-section">
-          <img class="card-hair-img" id="imagemPrincipal" src="${item.imagem}" alt="${item.nome}"
+          <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
                onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
           <h2 class="card-hair-name">${item.nome}</h2>
           <p class="card-hair-desc">${item.descricao}</p>
 
-          ${variacoesHtml}
+          ${miniaturasHtml}
 
           <button class="btn-action" id="acaoBtn">
             🚀 Preparar simulação
@@ -1113,16 +1299,16 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.classList.remove('hidden');
 
-      // Trocar imagem principal
-      const variacoesEl = document.getElementById('variacoes');
-      if (variacoesEl) {
-        variacoesEl.addEventListener('click', (e) => {
+      // Trocas rápidas de referência
+      const variacoesRapidas = document.getElementById('variacoesRapidas');
+      if (variacoesRapidas) {
+        variacoesRapidas.addEventListener('click', (e) => {
           const img = e.target.closest('img');
           if (!img) return;
           const novaUrl = img.dataset.url;
           if (novaUrl) {
             document.getElementById('imagemPrincipal').src = novaUrl;
-            variacoesEl.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+            variacoesRapidas.querySelectorAll('img').forEach(i => i.classList.remove('active'));
             img.classList.add('active');
           }
         });
@@ -1136,7 +1322,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       const conteudoArea = document.getElementById('conteudoArea');
 
       acaoBtn.addEventListener('click', async () => {
-        // FASE 1
         if (fase === 1) {
           let promptOk = false;
           try {
@@ -1172,7 +1357,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           return;
         }
 
-        // FASE 2
         if (fase === 2) {
           const imagemAtual = document.getElementById('imagemPrincipal').src;
 
@@ -1224,11 +1408,31 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     function init() {
       const params = new URLSearchParams(window.location.search);
       const itemId = params.get('item');
+      const refIndex = params.get('ref');
 
       if (itemId) {
         const item = getItemById(itemId);
         if (item) {
-          renderHairCard(item);
+          // Se veio com ref específica (QR Code), abre direto no card detalhado
+          const idx = refIndex !== null ? parseInt(refIndex, 10) : 0;
+          const url = item.variantes[idx] || item.imagem;
+
+          // Abre o modal já com o card detalhado
+          itemAtualModal = item;
+          modalHeaderCat.textContent = item.categoria === 'corte' ? 'Corte' : 'Coloração';
+          modalHeaderTitle.textContent = item.nome;
+          modalHeaderSub.textContent = item.titulo || '';
+
+          galleryEl.classList.add('hidden');
+          filtrosEl.classList.add('hidden');
+          modalVariacoes.classList.add('hidden');
+          modalSectionLabel.classList.add('hidden');
+          modalHeaderCount.classList.add('hidden');
+
+          renderCardDetalhado(item, idx, url);
+          modalOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+
           document.title = `${item.nome} · HairOS`;
         } else {
           renderGallery();
