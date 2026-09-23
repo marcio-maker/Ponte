@@ -1,279 +1,339 @@
-// data.js
-// Base de dados completa do HairOS - 95 estilos
+// ============================================================
+// data.js — HairOS Database v4 (final)
+// Motor: v2 (normalizeItem, searchItems, alturas determinísticas)
+// Dados: v4 (cortes, colorações, produtos, kits e ferramentas)
+//
+// ESTRUTURA
+//   Cada item aceita array legado [id, cat, corte, title, desc, img, variants]
+//   OU objeto { id, cat, corte, title, desc, img, variants, tags, comprimento }.
+//
+// SEÇÕES
+//   1. Utilitários e normalização
+//   2. Kits de afiliado (fonte única)
+//   3. Helpers de consulta
+//   4. createCard — montador principal
+//   5. Dados: Cortes (30 itens)
+//   6. Dados: Colorações (25 itens)
+//   7. Dados: Produtos (15 itens)   ← Parte 2
+//   8. Dados: Kits (15 itens)       ← Parte 2
+//   9. Dados: Ferramentas (15 itens) ← Parte 2
+//  10. Bootstrap                    ← Parte 2
 // ============================================================
 
-// ============================================================
-// VARIAÇÕES DE ALTURA PARA CARDS
-// ============================================================
-var alturasHome = ['h-md', 'h-lg'];
-
-function getAlturaHome() {
-  return Math.random() < 0.5 ? 'h-md' : 'h-lg';
-}
 
 // ============================================================
-// FUNÇÃO PARA EMBARALHAR ARRAY
+// 1. UTILITÁRIOS
 // ============================================================
+
 function shuffleArray(arr) {
   for (var i = arr.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
-    var temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
   }
   return arr;
 }
 
+function getAlturaById(id) {
+  if (!id) return 'h-md';
+  return (id.charCodeAt(0) % 2 === 0) ? 'h-md' : 'h-lg';
+}
+
+function getAlturaHome() {
+  return 'h-md';
+}
+
+function normalizeItem(item) {
+  if (Array.isArray(item)) {
+    return {
+      id:          item[0] || '',
+      cat:         item[1] || '',
+      corte:       item[2] || '',
+      title:       item[3] || '',
+      desc:        item[4] || '',
+      img:         item[5] || '',
+      variants:    Array.isArray(item[6]) ? item[6] : [],
+      tags:        [],
+      comprimento: null
+    };
+  }
+  return {
+    id:          item.id          || '',
+    cat:         item.cat         || item.categoria || '',
+    corte:       item.corte       || '',
+    title:       item.title       || '',
+    desc:        item.desc        || '',
+    img:         item.img         || '',
+    variants:    Array.isArray(item.variants) ? item.variants : [],
+    tags:        Array.isArray(item.tags)     ? item.tags     : [],
+    comprimento: item.comprimento || null
+  };
+}
+
+function _getVariantUrl(v) {
+  return (typeof v === 'object' && v !== null) ? v.img : v;
+}
+
+function _dedupeVariantsByUrl(variants) {
+  var seen = {}, unique = [];
+  variants.forEach(function(v) {
+    var url = _getVariantUrl(v);
+    if (url && !seen[url]) { seen[url] = true; unique.push(v); }
+  });
+  return unique;
+}
+
+var FALLBACK_IMG = 'https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg';
+
+function safeImg(url) {
+  return url || FALLBACK_IMG;
+}
+
+
 // ============================================================
-// KITS DE AFILIADO — FONTE ÚNICA (Mercado Livre)
+// 2. KITS DE AFILIADO — fonte única (Mercado Livre)
 // ============================================================
 var kitsAfiliados = [
+
   // ---------- COLORAÇÃO ----------
   {
-    id: 'kit-keune',
-    nome: 'Kit Keune',
-    badge: 'Comercial',
-    categoria: 'coloracao',
-    link: 'https://meli.la/1GbiW7M',
+    id:       'kit-keune',
+    nome:     'Kit Keune',
+    badge:    'Comercial',
+    categoria:'coloracao',
+    link:     'https://meli.la/1GbiW7M',
     produtos: 'Tinta Color + Semi Color + Oxidante 20 vol + Ativador de Cor',
-    imagem: 'https://i.pinimg.com/736x/f9/71/b6/f971b6679e2c7fda2f777c25d6e49b66.jpg'
+    imagem:   'https://i.pinimg.com/736x/f9/71/b6/f971b6679e2c7fda2f777c25d6e49b66.jpg'
   },
   {
-    id: 'kit-loreal-inoa',
-    nome: "Kit L'Oréal",
-    badge: 'Técnico',
-    categoria: 'coloracao',
-    link: 'https://meli.la/28LpPj2',
+    id:       'kit-loreal-inoa',
+    nome:     "Kit L'Oréal",
+    badge:    'Técnico',
+    categoria:'coloracao',
+    link:     'https://meli.la/28LpPj2',
     produtos: 'Tinta INOA + Tonalizante Dia Color + Oxidante 20 vol + Revelador 9 vol',
-    imagem: 'https://i.pinimg.com/1200x/8a/c7/0e/8ac70e6de8ca914b0a3e53ff6b93a0cc.jpg'
+    imagem:   'https://i.pinimg.com/1200x/8a/c7/0e/8ac70e6de8ca914b0a3e53ff6b93a0cc.jpg'
   },
 
   // ---------- CUIDADOS ----------
   {
-    id: 'kit-kerastase',
-    nome: 'Kit Kerastase',
-    badge: 'Premium',
-    categoria: 'cuidados',
-    link: 'https://meli.la/1MwSY7v',
+    id:       'kit-kerastase',
+    nome:     'Kit Kerastase',
+    badge:    'Premium',
+    categoria:'cuidados',
+    link:     'https://meli.la/1MwSY7v',
     produtos: 'Shampoo Nutritive + Condicionador Resistance + Máscara Genesis + Leave-In Elixir Ultime',
-    imagem: 'https://i.pinimg.com/1200x/0c/dd/f1/0cddf1a088784488cc73ffbedfa53ebf.jpg'
+    imagem:   'https://i.pinimg.com/1200x/0c/dd/f1/0cddf1a088784488cc73ffbedfa53ebf.jpg'
   },
   {
-    id: 'kit-loreal-expert',
-    nome: "Kit L'Oréal Expert",
-    badge: 'Profissional',
-    categoria: 'cuidados',
-    link: 'https://meli.la/2nmeunk',
+    id:       'kit-loreal-expert',
+    nome:     "Kit L'Oréal Expert",
+    badge:    'Profissional',
+    categoria:'cuidados',
+    link:     'https://meli.la/2nmeunk',
     produtos: 'Shampoo Vitamino Color + Condicionador Absolut Repair + Máscara Nutrioil + Sérum Pro Longer',
-    imagem: 'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg'
+    imagem:   'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg'
   },
   {
-    id: 'kit-joico',
-    nome: 'Kit Joico',
-    badge: 'Hidratação',
-    categoria: 'cuidados',
-    link: 'https://meli.la/2x9xqBe',
+    id:       'kit-joico',
+    nome:     'Kit Joico',
+    badge:    'Hidratação',
+    categoria:'cuidados',
+    link:     'https://meli.la/2x9xqBe',
     produtos: 'Shampoo Moisture Recovery + Condicionador + Máscara Intensa + Leave-In K-PAK',
-    imagem: 'https://i.pinimg.com/1200x/55/d6/10/55d610f599b3c10b5fe4cafceb5104fc.jpg'
+    imagem:   'https://i.pinimg.com/1200x/55/d6/10/55d610f599b3c10b5fe4cafceb5104fc.jpg'
   },
 
   // ---------- FERRAMENTAS ----------
   {
-    id: 'kit-ferramentas',
-    nome: 'Kit Ferramentas Profissionais',
-    badge: 'Ferramentas',
-    categoria: 'ferramentas',
-    link: 'https://meli.la/2H5F4mn',
+    id:       'kit-ferramentas',
+    nome:     'Kit Ferramentas Profissionais',
+    badge:    'Ferramentas',
+    categoria:'ferramentas',
+    link:     'https://meli.la/2H5F4mn',
     produtos: 'Secador Iônico Pro + Prancha de Titânio + Escova Rotativa',
-    imagem: null
+    imagem:   'https://i.pinimg.com/736x/7f/4d/8b/7f4d8b424f29dffaa67ad8856df09263.jpg'
   }
 ];
 
-// Helpers para consumir os kits
+
+// ============================================================
+// 3. HELPERS DE CONSULTA
+// ============================================================
+
 function getKitsByCategoria(cat) {
-  return kitsAfiliados.filter(function (k) { return k.categoria === cat; });
+  return kitsAfiliados.filter(function(k) { return k.categoria === cat; });
 }
 
 function getKitById(id) {
-  return kitsAfiliados.filter(function (k) { return k.id === id; })[0] || null;
+  return kitsAfiliados.find(function(k) { return k.id === id; }) || null;
 }
 
-// ============================================================
-// COMPATIBILIDADE — mantém coloracaoKits e cuidadosKits
-// apontando para a fonte única (nada quebra no createCard)
-// ============================================================
-var coloracaoKits = { kits: getKitsByCategoria('coloracao') };
-var cuidadosKits = { kits: getKitsByCategoria('cuidados') };
+var coloracaoKits   = { kits: getKitsByCategoria('coloracao')   };
+var cuidadosKits    = { kits: getKitsByCategoria('cuidados')    };
 var ferramentasKits = { kits: getKitsByCategoria('ferramentas') };
 
-// ============================================================
-// FUNÇÃO PARA BUSCAR PRODUTOS COMPLETOS
-// ============================================================
-function getOtherProductsData(currentId, categoria, count) {
-  var allProducts = [];
-  var sourceData;
-  if (categoria === 'kit') sourceData = kitsData;
-  else if (categoria === 'ferramentas') sourceData = ferramentasData;
-  else sourceData = produtosData;
+function getOtherProducts(currentId, sourceArray, count) {
+  var pool = [];
+  var seenImgs = {};
 
-  sourceData.forEach(function (item) {
-    var id = item[0];
-    var cat = item[1];
-    var corte = item[2];
-    var title = item[3];
-    var desc = item[4];
-    var img = item[5];
-    var variants = item[6];
+  sourceArray.forEach(function(raw) {
+    var item = normalizeItem(raw);
+    if (item.id === currentId) return;
 
-    if (id !== currentId) {
-      allProducts.push({
-        id: id,
-        categoria: cat,
-        corte: corte,
-        title: title,
-        desc: desc,
-        img: img,
-        variants: variants ? variants.slice(0, 3) : [img]
+    var mainImg = item.variants.length > 0 ? _getVariantUrl(item.variants[0]) : item.img;
+    if (!mainImg || seenImgs[mainImg]) return;
+    seenImgs[mainImg] = true;
+
+    pool.push({
+      id:       item.id,
+      cat:      item.cat,
+      corte:    item.corte,
+      title:    item.title,
+      desc:     item.desc,
+      img:      item.img,
+      variants: item.variants.slice(0, 3)
+    });
+  });
+
+  shuffleArray(pool);
+  return pool.slice(0, count);
+}
+
+function searchItems(query, filters) {
+  filters = filters || {};
+  var q = (query || '').toLowerCase().trim();
+  var all = []
+    .concat(cortesData, coloracoesData, produtosData, kitsData, ferramentasData)
+    .map(normalizeItem);
+
+  return all.filter(function(item) {
+    if (filters.cat && item.cat !== filters.cat) return false;
+    if (filters.comprimento && item.comprimento !== filters.comprimento) return false;
+    if (filters.tags && filters.tags.length) {
+      var hasTag = filters.tags.some(function(t) {
+        return item.tags.indexOf(t) !== -1;
       });
+      if (!hasTag) return false;
     }
+    if (!q) return true;
+    return (
+      item.id.toLowerCase().indexOf(q) !== -1 ||
+      item.corte.toLowerCase().indexOf(q) !== -1 ||
+      item.title.toLowerCase().indexOf(q) !== -1 ||
+      item.desc.toLowerCase().indexOf(q) !== -1 ||
+      item.tags.join(' ').toLowerCase().indexOf(q) !== -1
+    );
   });
-
-  shuffleArray(allProducts);
-
-  var unique = [];
-  var seen = {};
-  allProducts.forEach(function (item) {
-    if (!seen[item.id]) {
-      seen[item.id] = true;
-      unique.push(item);
-    }
-  });
-
-  return unique.slice(0, count);
 }
+
+function getByCategoria(cat) {
+  return searchItems('', { cat: cat });
+}
+
+function getItemById(id) {
+  var all = []
+    .concat(cortesData, coloracoesData, produtosData, kitsData, ferramentasData)
+    .map(normalizeItem);
+  return all.find(function(item) { return item.id === id; }) || null;
+}
+
 
 // ============================================================
-// HELPERS INTERNOS DO createCard
+// 4. createCard — montador principal
 // ============================================================
-function _getVariantUrl(variant) {
-  if (typeof variant === 'object' && variant !== null) return variant.img;
-  return variant;
-}
 
-function _dedupeVariantsByUrl(variants) {
-  var seen = {};
-  var unique = [];
-  variants.forEach(function (v) {
-    var url = _getVariantUrl(v);
-    if (url && !seen[url]) {
-      seen[url] = true;
-      unique.push(v);
+function _buildProdutoKitVariants(norm, sourceArray) {
+  var ownImgs = _dedupeVariantsByUrl(
+    norm.variants.length > 0 ? norm.variants.slice(0, 3) : [norm.img]
+  );
+
+  var finalVariants = ownImgs.map(function(imgUrl) {
+    return { img: imgUrl, corte: norm.corte, title: norm.title, desc: norm.desc, own: true };
+  });
+
+  var others = getOtherProducts(norm.id, sourceArray, 7);
+  others.forEach(function(p) {
+    var img = (p.variants && p.variants.length > 0)
+      ? _getVariantUrl(p.variants[0])
+      : p.img;
+    finalVariants.push({ img: img, corte: p.corte, title: p.title, desc: p.desc,
+                         own: false, productId: p.id });
+  });
+
+  if (finalVariants.length < 10 && ownImgs.length > 0) {
+    var seenInFinal = {};
+    finalVariants.forEach(function(v) { seenInFinal[_getVariantUrl(v)] = true; });
+    var filled = 0;
+    while (finalVariants.length < 10 && filled < ownImgs.length * 3) {
+      var candidate = ownImgs[filled % ownImgs.length];
+      var url = _getVariantUrl(candidate);
+      if (!seenInFinal[url]) {
+        seenInFinal[url] = true;
+        finalVariants.push({ img: url, corte: norm.corte, title: norm.title,
+                              desc: norm.desc, own: true });
+      }
+      filled++;
     }
-  });
-  return unique;
-}
-
-function _buildProdutoKitVariants(id, categoria, corte, title, desc, img, variants) {
-  var finalVariants = [];
-
-  var ownImages = Array.isArray(variants) && variants.length > 0
-    ? variants.slice(0, 3)
-    : [img];
-
-  ownImages.forEach(function (imgUrl) {
-    finalVariants.push({
-      img: imgUrl,
-      corte: corte,
-      title: title,
-      desc: desc,
-      own: true
-    });
-  });
-
-  var otherProducts = getOtherProductsData(id, categoria, 7);
-
-  otherProducts.forEach(function (product) {
-    var otherImg = (product.variants && product.variants.length > 0)
-      ? product.variants[0]
-      : product.img;
-
-    finalVariants.push({
-      img: otherImg,
-      corte: product.corte,
-      title: product.title,
-      desc: product.desc,
-      own: false,
-      productId: product.id
-    });
-  });
-
-  while (finalVariants.length < 10) {
-    var randomImg = ownImages[Math.floor(Math.random() * ownImages.length)];
-    finalVariants.push({
-      img: randomImg,
-      corte: corte,
-      title: title,
-      desc: desc,
-      own: true
-    });
   }
 
-  return { finalVariants: finalVariants, otherProducts: otherProducts };
+  return { finalVariants: finalVariants, otherProducts: others };
 }
 
-function _buildCorteColoracaoVariants(img, variants) {
-  var rawVariants = Array.isArray(variants) && variants.length > 0
-    ? variants.slice(0, 10)
-    : [img];
-
-  var unique = _dedupeVariantsByUrl(rawVariants);
-
-  if (unique.length === 0) unique = [img];
-
-  return unique;
+function _buildCorteColoracaoVariants(norm) {
+  var raw = norm.variants.length > 0 ? norm.variants.slice(0, 10) : [norm.img];
+  var unique = _dedupeVariantsByUrl(raw);
+  return unique.length > 0 ? unique : [norm.img];
 }
 
-// ============================================================
-// FUNÇÃO PRINCIPAL
-// ============================================================
 function createCard(id, categoria, corte, title, desc, img, variants) {
+  var norm = normalizeItem({ id: id, cat: categoria, corte: corte,
+                              title: title, desc: desc, img: safeImg(img),
+                              variants: variants || [] });
+
   var finalVariants = [];
   var otherProductsData = [];
+  var isProduto = ['produto', 'kit', 'ferramentas'].indexOf(norm.cat) !== -1;
+  var sourceMap = {
+    'kit':         kitsData,
+    'ferramentas': ferramentasData,
+    'produto':     produtosData
+  };
 
-  var isProdutoKit = (categoria === 'produto' || categoria === 'kit' || categoria === 'ferramentas');
-  var isCorteColoracao = (categoria === 'corte' || categoria === 'coloracao');
-
-  if (isProdutoKit) {
-    var resultado = _buildProdutoKitVariants(id, categoria, corte, title, desc, img, variants);
-    finalVariants = resultado.finalVariants;
-    otherProductsData = resultado.otherProducts;
-  } else if (isCorteColoracao) {
-    finalVariants = _buildCorteColoracaoVariants(img, variants);
+  if (isProduto) {
+    var source = sourceMap[norm.cat] || produtosData;
+    var result = _buildProdutoKitVariants(norm, source);
+    finalVariants    = result.finalVariants;
+    otherProductsData= result.otherProducts;
+  } else {
+    finalVariants = _buildCorteColoracaoVariants(norm);
   }
 
   return {
-    id: id,
-    categoria: categoria,
-    corte: corte,
-    title: title,
-    desc: desc,
-    img: img,
-    variants: finalVariants,
-    otherProductsData: otherProductsData,
-    coloracao: coloracaoKits,
-    cuidados: cuidadosKits,
-    ferramentas: ferramentasKits,
-    altura: getAlturaHome(),
-    isUserPhoto: id && id.startsWith('user_')
+    id:               norm.id,
+    categoria:        norm.cat,
+    corte:            norm.corte,
+    title:            norm.title,
+    desc:             norm.desc,
+    img:              norm.img,
+    tags:             norm.tags,
+    comprimento:      norm.comprimento,
+    variants:         finalVariants,
+    otherProductsData:otherProductsData,
+    coloracao:        coloracaoKits,
+    cuidados:         cuidadosKits,
+    ferramentas:      ferramentasKits,
+    altura:           getAlturaById(norm.id),
+    isUserPhoto:      norm.id && norm.id.startsWith('user_')
   };
 }
 
+
 // ============================================================
-// DADOS: CORTES (30 itens)
+// 5. DADOS: CORTES (30 itens) — nomes curtos + descrições 3 linhas
 // ============================================================
 var cortesData = [
-  ['velvet-bob', 'corte', 'Velvet Bob', 'Bob Texturizado',
-    'Bob com camadas internas que criam volume sem peso. Ideal para cabelos finos que precisam de movimento.',
+  ['velvet-bob', 'corte', 'Velvet', 'Bob Texturizado',
+    'Camadas internas que dão volume sem peso. Oval, redondo e coração. Manutenção baixa, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/d7/a8/8c/d7a88c60e5f7ce217264486e3fc506f4.jpg',
     [
       'https://i.pinimg.com/736x/4a/d9/5b/4ad95bf7e6b141aadff33031fd09e9c5.jpg',
@@ -288,8 +348,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/12/97/7a/12977a09186ad656e31bd1820ebca998.jpg'
     ]
   ],
-  ['pixie-cut', 'corte', 'Pixie Cut', 'Corte Curto Texturizado',
-    'Corte curto e prático com volume no topo. Perfeito para quem busca um visual moderno e de fácil manutenção.',
+  ['pixie-cut', 'corte', 'Pixie', 'Corte Curto Texturizado',
+    'Topo volumoso com laterais curtas e proporcionais. Oval, coração e triângulo invertido. Manutenção alta, retoque a cada 4 semanas.',
     'https://i.pinimg.com/736x/34/27/f8/3427f83ed4451e1e17aa9822e4201d96.jpg',
     [
       'https://i.pinimg.com/736x/c7/96/f6/c796f647e8e72985856e0032ffba1bd1.jpg',
@@ -304,8 +364,8 @@ var cortesData = [
       'https://i.pinimg.com/236x/ad/e7/ab/ade7ab449fad2d5f26c782b0aea4988f.jpg'
     ]
   ],
-  ['butterfly-cut', 'corte', 'Butterfly Cut', 'Camadas em Asa',
-    'Camadas em formato de asas que emolduram o rosto e mantêm o comprimento. Ótimo para dar leveza aos fios.',
+  ['butterfly-cut', 'corte', 'Butterfly', 'Camadas em Asa',
+    'Duas camadas em asa com base pesada e movimento. Oval, alongado e retangular. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/08/ab/69/08ab69db905060f2e62a6bed57d3e74e.jpg',
     [
       'https://i.pinimg.com/736x/5d/03/57/5d03576e6204c75b1bcd95d3f60c0e49.jpg',
@@ -320,8 +380,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/3e/08/65/3e0865833599c47473882c25165ecbfc.jpg'
     ]
   ],
-  ['blunt-cut', 'corte', 'Blunt Cut', 'Corte Reto Preciso',
-    'Corte reto e preciso, sem camadas. Realça a densidade e o peso dos fios, com acabamento marcante.',
+  ['blunt-cut', 'corte', 'Blunt', 'Corte Reto Preciso',
+    'Zero camadas: linha reta e precisa. Oval, alongado e retangular. Manutenção baixa, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/06/15/ff/0615ff8b4ad4d40cf86d8f738b91eb44.jpg',
     [
       'https://i.pinimg.com/736x/87/1e/58/871e58b257c2ea53fbf7d71e76ffac3d.jpg',
@@ -336,8 +396,8 @@ var cortesData = [
       'https://i.pinimg.com/236x/09/99/a2/0999a2392476e22f3e1540928e506741.jpg'
     ]
   ],
-  ['shaggy-hair', 'corte', 'Shaggy Hair', 'Camadas Desconectadas',
-    'Camadas desconectadas e franja despretensiosa. Estilo despojado com textura e movimento natural.',
+  ['shaggy-hair', 'corte', 'Shaggy', 'Camadas Desconectadas',
+    'Camadas cruas e desconectadas com franja despretensiosa. Oval, quadrado e coração. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/e7/6a/22/e76a22e038cba1d1daad41e6f2238004.jpg',
     [
       'https://i.pinimg.com/736x/6b/2f/c2/6b2fc2069e0ab8ba141565ea5e582d58.jpg',
@@ -352,8 +412,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/46/bb/b8/46bbb8d4c1c4a748cb6cd717378d2e1a.jpg'
     ]
   ],
-  ['long-bob', 'corte', 'Long Bob', 'Bob Ombro Inclinado',
-    'Base na altura dos ombros com leve inclinação frontal. Versátil e fácil de modelar.',
+  ['long-bob', 'corte', 'Lob', 'Bob Ombro Inclinado',
+    'Base inclinada para frente, mais longo na frente. Redondo, quadrado e coração. Manutenção baixa, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/63/fc/05/63fc05a4610ab0214e2e74e3d6a0014f.jpg',
     [
       'https://i.pinimg.com/736x/96/ed/ba/96edbad796f6419dde511218d30b4a89.jpg',
@@ -368,8 +428,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/62/56/a8/6256a87f0bc5ce4ad04e5008e3e75c3c.jpg'
     ]
   ],
-  ['french-bob', 'corte', 'French Bob', 'Chanel com Franja',
-    'Chanel curto na altura do maxilar com franja reta. Clássico, sofisticado e atemporal.',
+  ['french-bob', 'corte', 'French', 'Chanel com Franja',
+    'Curtíssimo no maxilar com franja reta. O mais curto dos bobs. Oval, coração e alongado. Manutenção alta, retoque a cada 6 semanas.',
     'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
     [
       'https://i.pinimg.com/736x/dd/80/09/dd80099cba2352f7f65c919016a5dbe1.jpg',
@@ -384,8 +444,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/19/1d/6c/191d6c53cbf97ef7288ede40819b29df.jpg'
     ]
   ],
-  ['italian-bob', 'corte', 'Italian Bob', 'Bob com Repicados',
-    'Bob na altura do pescoço com repicados internos. Dá corpo e movimento sem perder a estrutura.',
+  ['italian-bob', 'corte', 'Italian', 'Bob com Repicados',
+    'Repicados internos com volume concentrado na base. Oval, alongado e retangular. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/f5/fe/29/f5fe294a026ca252b16fdfb6eab958e5.jpg',
     [
       'https://i.pinimg.com/1200x/8e/f9/30/8ef93086d8b7f7754433ce6ca6e9d011.jpg',
@@ -400,8 +460,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/8e/d8/bc/8ed8bcdab25ed919ae05c43dcd2113e0.jpg'
     ]
   ],
-  ['wolf-cut', 'corte', 'Wolf Cut', 'Topo Volumoso',
-    'Topo volumoso e curto que afina em camadas até a nuca. Visual selvagem e cheio de atitude.',
+  ['wolf-cut', 'corte', 'Wolf', 'Topo Volumoso',
+    'Topo curto e rebelde com nuca longa. Mullet + shag. Oval, quadrado e coração. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
     [
       'https://i.pinimg.com/736x/e2/ab/f8/e2abf8b4b139df7b29c8551f40d4d338.jpg',
@@ -416,8 +476,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/4b/19/93/4b19933dfa61235577390ad03438181a.jpg'
     ]
   ],
-  ['bixie-cut', 'corte', 'Bixie Cut', 'Híbrido Pixie-Bob',
-    'Híbrido de pixie e bob: prático, desfiado e com movimento. Ideal para transição de cortes.',
+  ['bixie-cut', 'corte', 'Bixie', 'Híbrido Pixie-Bob',
+    'Meio pixie, meio bob, desfiado e prático. Oval, coração e triângulo invertido. Manutenção média, retoque a cada 6 semanas.',
     'https://i.pinimg.com/736x/4e/66/83/4e66838f18fe2212fa8ac412d9985447.jpg',
     [
       'https://i.pinimg.com/736x/ff/cb/e9/ffcbe9b68c10a9bf44b1610bbc6c3c0f.jpg',
@@ -432,8 +492,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/2d/1f/46/2d1f4608b8bfb22fddf1d34d834e436c.jpg'
     ]
   ],
-  ['soft-layers', 'corte', 'Soft Layers', 'Camadas Longas',
-    'Camadas longas e contínuas que dão movimento sem marcar divisões. Efeito natural e fluido.',
+  ['soft-layers', 'corte', 'Soft', 'Camadas Longas',
+    'Camadas contínuas sem marcação: efeito natural e fluido. Oval, redondo e retangular. Manutenção baixa, retoque a cada 12 semanas.',
     'https://i.pinimg.com/1200x/e9/12/96/e91296a700072a42b4d9cfaafeb48ac7.jpg',
     [
       'https://i.pinimg.com/736x/96/31/54/96315450669e7b501f2c3a3df3d22c64.jpg',
@@ -448,8 +508,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/23/ed/1a/23ed1a0d684e9c188c09ae26b62ff6cb.jpg'
     ]
   ],
-  ['modern-mullet', 'corte', 'Modern Mullet', 'Laterais Curtas',
-    'Laterais e topo curtos contrastando com comprimento alongado na nuca. Estilo ousado e moderno.',
+  ['modern-mullet', 'corte', 'Mullet', 'Laterais Curtas',
+    'Contraste entre laterais curtas e nuca alongada. Oval, quadrado e alongado. Manutenção alta, retoque a cada 5 semanas.',
     'https://i.pinimg.com/736x/20/58/ac/2058ac84b233324378f9e26d578ef819.jpg',
     [
       'https://i.pinimg.com/236x/e6/a1/82/e6a1828757f3ecd53a78bdd550faaba6.jpg',
@@ -465,7 +525,7 @@ var cortesData = [
     ]
   ],
   ['clavicut', 'corte', 'Clavicut', 'Altura da Clavícula',
-    'Corte reto na altura da clavícula. Um médio versátil que combina com qualquer textura.',
+    'Comprimento na clavícula: o mais longo dos bobs. Redondo, quadrado e alongado. Manutenção baixa, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/11/d9/e1/11d9e1a01d57ed8d1ea57700a636fa74.jpg',
     [
       'https://i.pinimg.com/736x/f6/fd/10/f6fd109767ac8c5eecc8eff4627a29b4.jpg',
@@ -480,8 +540,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/38/6b/70/386b70f42ee9c113ebd832de0b3d7af0.jpg'
     ]
   ],
-  ['octopus-cut', 'corte', 'Octopus Cut', 'Topo Arredondado',
-    'Topo arredondado e volumoso com camadas inferiores mais finas. Visual leve e cheio de personalidade.',
+  ['octopus-cut', 'corte', 'Octopus', 'Topo Arredondado',
+    'Topo redondo e volumoso com camadas longas e finas na base. Oval, redondo e coração. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/1200x/99/a7/7c/99a77c4f583bad5a0d1c9319f44ade9b.jpg',
     [
       'https://i.pinimg.com/1200x/fe/b3/81/feb381a2026228724751dcf1770a61b8.jpg',
@@ -496,8 +556,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/3c/f7/25/3cf7255b744af3c6fad16b48929493b7.jpg'
     ]
   ],
-  ['hush-cut', 'corte', 'Hush Cut', 'Camadas Profundas',
-    'Camadas profundas e leves com franja transparente. Corte suave e de acabamento natural.',
+  ['hush-cut', 'corte', 'Hush', 'Camadas Profundas',
+    'Versão suave do shag: camadas wispy e franja fina. Oval, alongado e retangular. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/7c/1b/0b/7c1b0bae28ed1074ae441064c1d40b0b.jpg',
     [
       'https://i.pinimg.com/236x/27/65/7d/27657de35a3184d3bb88750265351f1e.jpg',
@@ -512,8 +572,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/87/7c/dd/877cddceab43b6a2b126e00b1f5c1ccf.jpg'
     ]
   ],
-  ['curtain-bang', 'corte', 'Curtain Bang', 'Franja Cortininha',
-    'Franja dividida ao meio que abre como uma cortina, emoldurando o rosto suavemente.',
+  ['curtain-bang', 'corte', 'Curtain', 'Franja Cortininha',
+    'Franja dividida ao meio que emoldura o rosto. Redondo, quadrado e coração. Manutenção alta, retoque a cada 4 semanas.',
     'https://i.pinimg.com/736x/c7/83/c4/c783c422b3a1b9b4a980b2c3a472118f.jpg',
     [
       'https://i.pinimg.com/736x/ac/71/25/ac7125df02150a4f398ba23f8cb8e343.jpg',
@@ -529,8 +589,8 @@ var cortesData = [
       'https://i.pinimg.com/236x/0c/53/77/0c53779e821b89d4fd13555db779b783.jpg'
     ]
   ],
-  ['parisian-fringe', 'corte', 'Parisian Fringe', 'Bob Arredondado com Franja Texturizada',
-    'Bob arredondado na altura do queixo com franja texturizada, inspirado no estilo parisiense. Chique, moderno e atemporal.',
+  ['parisian-fringe', 'corte', 'Parisian', 'Bob Arredondado com Franja Texturizada',
+    'Bob arredondado + franja texturizada: romântico e chique. Oval, coração e alongado. Manutenção alta, retoque a cada 6 semanas.',
     'https://i.pinimg.com/1200x/f3/90/60/f39060b00b2661fd7c071a5d47bbbc09.jpg',
     [
       'https://i.pinimg.com/736x/43/c4/cc/43c4cc25480f779f66f7e2d2139d58f4.jpg',
@@ -545,8 +605,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/0f/17/97/0f1797b50fa870d18d32c417b460677f.jpg'
     ]
   ],
-  ['milano-layered', 'corte', 'Milano Layered', 'Camadas Longas com Brilho Espelhado',
-    'Camadas longas com caimento pesado, denso e brilho espelhado, inspirado no estilo milanês. Sofisticado e elegante.',
+  ['milano-layered', 'corte', 'Milano', 'Camadas Longas com Brilho Espelhado',
+    'Camadas longas com caimento denso e uniforme. Oval, alongado e retangular. Manutenção baixa, retoque a cada 12 semanas.',
     'https://i.pinimg.com/736x/e4/a2/98/e4a2980910025f69802da870b53d03db.jpg',
     [
       'https://i.pinimg.com/736x/02/6a/7f/026a7f2e233dcdbfd69213ced0a499d2.jpg',
@@ -561,8 +621,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/45/84/d0/4584d0c441b4c7059f4dd1fd6e02046c.jpg'
     ]
   ],
-  ['brazilian-beach-wave', 'corte', 'Brazilian Beach Wave', 'Long Bob com Ondas Tropicais',
-    'Long bob com ondas largas, movimento tropical e textura desestruturada. Inspirado nas praias brasileiras.',
+  ['brazilian-beach-wave', 'corte', 'Brazilian', 'Long Bob com Ondas Tropicais',
+    'Long bob + ondas largas: textura tropical desestruturada. Oval, redondo e coração. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
     [
       'https://i.pinimg.com/236x/78/1a/5c/781a5cc85cf1c9e7f85d6c6427b8d7d3.jpg',
@@ -577,8 +637,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/04/9c/03/049c03a989436455996c8d3b7833d945.jpg'
     ]
   ],
-  ['riviera-pixie', 'corte', 'Riviera Pixie', 'Pixie com Topo Longo e Maleável',
-    'Pixie com nuca e laterais bem curtas contrastando com um topo longo, maleável e versátil. Inspirado na Riviera.',
+  ['riviera-pixie', 'corte', 'Riviera', 'Pixie com Topo Longo e Maleável',
+    'Laterais bem curtas + topo longo e maleável. Oval, coração e triângulo invertido. Manutenção alta, retoque a cada 5 semanas.',
     'https://i.pinimg.com/1200x/f8/a9/c5/f8a9c55929c8099041078b816afaf6de.jpg',
     [
       'https://i.pinimg.com/736x/6b/60/c0/6b60c0d06ef711d77012ae907d0ea7a2.jpg',
@@ -593,9 +653,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/08/79/77/087977d38daafff023d115da707a257e.jpg'
     ]
   ],
-  // ===== NOVOS CORTES — 1ª LEVA (5) =====
-  ['bob-desfiado', 'corte', 'Bob Desfiado', 'Long Bob com Textura',
-    'Long bob com pontas desfiadas e camadas leves. Cria movimento natural e remove o peso excessivo, ideal para cabelos médios que buscam leveza.',
+  ['bob-desfiado', 'corte', 'Shag', 'Long Bob com Textura',
+    'Pontas desfiadas com camadas leves. Oval, quadrado e alongado. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/8e/c2/dd/8ec2dda6ef4765196da9032189869f96.jpg',
     [
       'https://i.pinimg.com/736x/8e/c2/dd/8ec2dda6ef4765196da9032189869f96.jpg',
@@ -610,8 +669,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/b6/ba/71/b6ba71ea65fb533b1844d0049d7ac88c.jpg'
     ]
   ],
-  ['curly-shag', 'corte', 'Curly Shag', 'Camadas para Cacheados',
-    'Shag adaptado para cabelos cacheados e ondulados. Camadas desconectadas que valorizam a curvatura natural e criam volume controlado.',
+  ['curly-shag', 'corte', 'Curly', 'Camadas para Cacheados',
+    'Shag adaptado para cacheados: valoriza a curvatura. Oval, redondo e coração. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
     [
       'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
@@ -626,8 +685,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/73/5f/f2/735ff2faf255057979d4b640c0dc451b.jpg'
     ]
   ],
-  ['micro-bob', 'corte', 'Micro Bob', 'Chanel Minimalista',
-    'Bob curtíssimo na altura da mandíbula ou acima. Minimalista, ousado e de baixa manutenção, com acabamento preciso e moderno.',
+  ['micro-bob', 'corte', 'Micro', 'Chanel Minimalista',
+    'Acima do maxilar: o mais curto dos bobs. Oval, coração e alongado. Manutenção alta, retoque a cada 4 semanas.',
     'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
     [
       'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
@@ -642,8 +701,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/98/6f/3b/986f3b7f6ece364be7d82c4748a47d19.jpg'
     ]
   ],
-  ['wavy-bob', 'corte', 'Wavy Bob', 'Long Bob Ondulado',
-    'Long bob com ondas naturais e camadas suaves. Perfeito para cabelos ondulados que buscam um visual elegante e despretensioso.',
+  ['wavy-bob', 'corte', 'Wavy', 'Long Bob Ondulado',
+    'Long bob + ondas suaves: elegante e despretensioso. Oval, redondo e quadrado. Manutenção baixa, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
     [
       'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
@@ -658,8 +717,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/eb/b4/fd/ebb4fdc9371ef33e2b78585cbbcd892c.jpg'
     ]
   ],
-  ['layered-pixie', 'corte', 'Layered Pixie', 'Pixie com Camadas Longas',
-    'Pixie com camadas mais longas no topo e laterais. Versátil, permite modelar de diferentes formas e cresce com elegância.',
+  ['layered-pixie', 'corte', 'Layered', 'Pixie com Camadas Longas',
+    'Camadas longas no topo: versátil e cresce bem. Oval, coração e triângulo invertido. Manutenção média, retoque a cada 6 semanas.',
     'https://i.pinimg.com/736x/f9/ff/75/f9ff7537091c6e00b3f1415474f6ec12.jpg',
     [
       'https://i.pinimg.com/1200x/f8/a9/c5/f8a9c55929c8099041078b816afaf6de.jpg',
@@ -674,9 +733,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/1f/52/79/1f527930458ad3122be76c324b3f4dd1.jpg'
     ]
   ],
-  // ===== NOVOS CORTES — 2ª LEVA · ALTA ALFAIATARIA (5) =====
-  ['kitty-cut', 'corte', 'Kitty Cut', 'Bob-Shag Fluido na Altura dos Ombros',
-    'Meio-termo sofisticado entre o bob e o shag. Linha de base reta na altura dos ombros com camadas internas suaves e desconectadas que só se revelam no movimento. Caimento fluido e pendular, com moldura frontal que ilumina os traços. Ideal para quem busca elegância contemporânea sem abrir mão da leveza.',
+  ['kitty-cut', 'corte', 'Kitty', 'Bob-Shag Fluido na Altura dos Ombros',
+    'Bob-shag híbrido: base reta + camadas desconectadas que só aparecem no movimento. Oval, redondo e alongado. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/14/1c/a1/141ca123597b6962ddde805e87d9d0d3.jpg',
     [
       'https://i.pinimg.com/736x/6c/73/a4/6c73a4e52df16ad5a56b701ad63b37b2.jpg',
@@ -691,8 +749,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/44/a5/5a/44a55a3e2482ac313cc34e9c3af37145.jpg'
     ]
   ],
-  ['side-cut', 'corte', 'Side Cut', 'Desconexão Lateral com Contraste Marcado',
-    'Corte ousado com uma das laterais raspadas, gerando forte contraste e atitude urbana. Estrutura assimétrica com ponto de desconexão vertical e linha levemente curvada. O lado longo cria uma cortina de cabelo que pode ser jogada sobre a lateral raspada, criando jogo de forças e efeito meia-lua. Perfeito para quem tem maxilar definido e quer uma declaração estética.',
+  ['side-cut', 'corte', 'Sidecut', 'Desconexão Lateral com Contraste Marcado',
+    'Lateral raspada: contraste máximo e atitude urbana. Oval, quadrado e coração. Manutenção alta, retoque a cada 4 semanas.',
     'https://i.pinimg.com/1200x/de/4d/24/de4d244b7955694a245cfdb0d916a70c.jpg',
     [
       'https://i.pinimg.com/1200x/dd/33/25/dd3325325c0c52ff69a73cf687686e7f.jpg',
@@ -708,7 +766,7 @@ var cortesData = [
     ]
   ],
   ['long-pixie', 'corte', 'Long Pixie', 'Pixie com Zonas Alta e Frontal Alongadas',
-    'Evolução do pixie tradicional com zonas alta e frontal mais longas, garantindo versatilidade e volume maleável. Estrutura em três zonas com transição calculada: nuca curta com graduação fechada, parietais intermediários e topo longo que pode ser jogado para trás, dividido ao meio ou texturizado para frente. Peso invertido concentrado no topo cria movimento e permite penteados variados. Crescimento elegante.',
+    'Zonas alta e frontal longas: o mais longo dos pixies. Oval, coração e triângulo invertido. Manutenção média, retoque a cada 6 semanas.',
     'https://i.pinimg.com/1200x/db/4f/81/db4f816a70651d7b8864a9ff79df6acb.jpg',
     [
       'https://i.pinimg.com/736x/fc/c5/68/fcc568fcce15a692ef2eafce1d4e21af.jpg',
@@ -723,8 +781,8 @@ var cortesData = [
       'https://i.pinimg.com/1200x/fc/39/d6/fc39d673b0eaaba1709b3f32a2951b56.jpg'
     ]
   ],
-  ['curly-bob', 'corte', 'Curly Bob', 'Bob Cacheado Arredondado',
-    'Bob cacheado com volume arredondado e cachos definidos que emolduram o rosto. Corte na altura do queixo ou maxilar que valoriza a curvatura natural dos fios, criando um visual elegante, moderno e cheio de personalidade. Ideal para cabelos cacheados e ondulados que buscam um corte estruturado sem perder o movimento natural dos cachos.',
+  ['curly-bob', 'corte', 'Coily', 'Bob Cacheado Arredondado',
+    'Volume arredondado + cachos definidos: para cacheados. Oval, alongado e retangular. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/1b/b9/46/1bb9462f667f122ff09fbf65e46105e1.jpg',
     [
       'https://i.pinimg.com/736x/d5/8b/68/d58b688061c24a0c99820580c0046d3f.jpg',
@@ -739,8 +797,8 @@ var cortesData = [
       'https://i.pinimg.com/736x/30/6a/98/306a9837d67ea1def17c30d76f2ef76d.jpg'
     ]
   ],
-  ['asymmetric-cut', 'corte', 'Asymmetric Cut', 'Corte Assimétrico com Lados Diferentes',
-    'Corte com lados deliberadamente diferentes, criando contraste e movimento assimétrico. Um lado pode ser mais curto ou ter camadas distintas do outro, resultando em um visual moderno, ousado e cheio de personalidade. A assimetria pode ser sutil (diferença de comprimento) ou marcada (desconexão visível), adaptando-se a diferentes estilos. Perfeito para quem quer sair do convencional e criar um look único e cheio de atitude.',
+  ['asymmetric-cut', 'corte', 'Asymmetric', 'Corte Assimétrico com Lados Diferentes',
+    'Lados deliberadamente diferentes: movimento assimétrico. Oval, redondo e coração. Manutenção alta, retoque a cada 6 semanas.',
     'https://i.pinimg.com/236x/de/f5/a3/def5a3a55b260e9e25250fa02efc9a97.jpg',
     [
       'https://i.pinimg.com/736x/6d/cd/16/6dcd166e935626302ca928759ddd33dd.jpg',
@@ -757,12 +815,13 @@ var cortesData = [
   ]
 ];
 
+
 // ============================================================
-// DADOS: COLORAÇÕES (20 itens)
+// 6. DADOS: COLORAÇÕES (25 itens) — nomes finais + descrições 3 linhas
 // ============================================================
 var coloracoesData = [
-  ['ombre-tiger-eye', 'coloracao', 'Ombré Tiger Eye', 'Transição Dourada',
-    'Transição suave do escuro para o dourado. Efeito olho de tigre. Ex.: base 5.0/6.0 + mechas 8.3/9.3 (dourado).',
+  ['ombre-tiger-eye', 'coloracao', 'Tiger Eye', 'Transição Dourada',
+    'Degradê quente do escuro ao dourado que ilumina o rosto e alonga o visual. Ex.: base 5.0/6.0 + mechas 8.3/9.3. Pele quente e neutra.',
     'https://i.pinimg.com/1200x/fc/77/96/fc7796a5b8212a0fd41f43792ede5351.jpg',
     [
       'https://i.pinimg.com/1200x/fc/77/96/fc7796a5b8212a0fd41f43792ede5351.jpg',
@@ -777,8 +836,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/41/c0/6d/41c06d6ed54a7b4605c5aa131a7b14b7.jpg'
     ]
   ],
-  ['babylights-morena', 'coloracao', 'Babylights Morena', 'Luzes Finíssimas',
-    'Luzes finíssimas que imitam o efeito natural do sol. Ex.: base 4.0/5.0 + babylights 7.3/8.3 (caramelo dourado).',
+  ['babylights-morena', 'coloracao', 'Babylights', 'Luzes Finíssimas',
+    'Luzes finíssimas que imitam o efeito natural do sol com crescimento suave. Ex.: base 4.0/5.0 + babylights 7.3/8.3. Pele quente e neutra.',
     'https://i.pinimg.com/1200x/37/c9/1c/37c91cbb94c03b8a37157bf367a3dfbc.jpg',
     [
       'https://i.pinimg.com/736x/69/c8/3b/69c83bfd72fd3022f6a6dc49b2b3f232.jpg',
@@ -793,8 +852,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/b3/4a/0b/b34a0be19ad5436bcfd2dea58da00f6e.jpg'
     ]
   ],
-  ['contour-highlights', 'coloracao', 'Contour Highlights', 'Luzes Estratégicas',
-    'Luzes estratégicas que valorizam o formato do rosto. Ex.: contorno facial 8.3/9.0 ou 7.3 + 8.0.',
+  ['contour-highlights', 'coloracao', 'Contour', 'Luzes Estratégicas',
+    'Luzes posicionadas para iluminar e valorizar o formato do rosto. Ex.: contorno 8.3/9.0 ou 7.3 + 8.0. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/a2/8b/0d/a28b0d206e5cc72f3ba38aafa9ad8031.jpg',
     [
       'https://i.pinimg.com/736x/81/cf/e1/81cfe196df3e580425a842f6af8f12e3.jpg',
@@ -809,8 +868,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/aa/cb/cf/aacbcffaf13927ee047eabcbda8cc1aa.jpg'
     ]
   ],
-  ['balayage-loira', 'coloracao', 'Balayage Loira', 'Luzes Naturais',
-    'Técnica de luzes naturais com efeito degradê e movimento. Ex.: base 6.0/7.0 + balayage 8.3/9.3 + gloss 9.0.',
+  ['balayage-loira', 'coloracao', 'Balayage', 'Luzes Naturais',
+    'Mechas pintadas à mão que criam efeito "beijado pelo sol" com crescimento discreto. Ex.: base 6.0/7.0 + mechas 8.3/9.3 + gloss 9.0. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
     [
       'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
@@ -825,8 +884,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/4f/4c/c3/4f4cc384ba311066a815ec3ba62db5af.jpg'
     ]
   ],
-  ['californianas', 'coloracao', 'Californianas', 'Efeito Sol',
-    'Luzes que criam um efeito de sol californiano. Ex.: base 5.0/6.0 + pontas 8.3/9.3 (dourado quente).',
+  ['californianas', 'coloracao', 'California', 'Efeito Sol',
+    'Luzes que reproduzem o efeito do sol californiano com transição natural. Ex.: base 5.0/6.0 + pontas 8.3/9.3. Pele quente e neutra.',
     'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
     [
       'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
@@ -841,8 +900,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/ce/af/83/ceaf83e5c53995750f53dacccb66f162.jpg'
     ]
   ],
-  ['mechas-contour', 'coloracao', 'Mechas Contour', 'Contorno Facial',
-    'Luzes que contornam o rosto, iluminando e valorizando. Ex.: mechas frontais 8.0/9.0 ou 8.3 + 9.0.',
+  ['mechas-contour', 'coloracao', 'Framing', 'Contorno Facial',
+    'Mechas frontais que emolduram o rosto sem contraste forte. Ex.: 8.0/9.0 ou 8.3 + 9.0. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/05/42/66/05426622b672a5271cdfcd4813595269.jpg',
     [
       'https://i.pinimg.com/1200x/05/42/66/05426622b672a5271cdfcd4813595269.jpg',
@@ -856,8 +915,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/72/3a/68/723a6849cd6b74d8aa9b1282cfceb7c9.jpg'
     ]
   ],
-  ['highlights-loira', 'coloracao', 'Highlights Loira', 'Luzes Loiras',
-    'Luzes suaves que adicionam dimensão e brilho ao cabelo loiro. Ex.: 8.1/9.1 (acinzentado) ou 8.3/9.3 (dourado).',
+  ['highlights-loira', 'coloracao', 'Highlights', 'Luzes Loiras',
+    'Luzes suaves que adicionam dimensão e brilho ao loiro. Ex.: 8.1/9.1 (acinzentado) ou 8.3/9.3 (dourado). Pele fria, neutra e quente.',
     'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
     [
       'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
@@ -872,8 +931,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/c5/2b/92/c52b9243137efa0fce9887e9b4511028.jpg'
     ]
   ],
-  ['cherry-cola', 'coloracao', 'Cherry Cola', 'Vermelho Cereja',
-    'Tom ruivo intenso com nuances de cereja e cola. Vibrante. Ex.: 4.6/5.6 ou 5.62 + 6.45 (vermelho-marrom).',
+  ['cherry-cola', 'coloracao', 'Cherry', 'Vermelho Cereja',
+    'Vermelho profundo com nuances de cereja e cola, vibrante e marcante. Ex.: 4.6/5.6 ou 5.62 + 6.45. Pele fria e neutra.',
     'https://i.pinimg.com/736x/72/3a/68/723a6849cd6b74d8aa9b1282cfceb7c9.jpg',
     [
       'https://i.pinimg.com/736x/d8/23/26/d823267f6084eb8dbea4746f9e460be2.jpg',
@@ -888,8 +947,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/f2/09/5b/f2095b75d4f28a90b51e0b954094eab5.jpg'
     ]
   ],
-  ['cowgirl-copper', 'coloracao', 'Cowgirl Copper', 'Cobre Western',
-    'Tom cobre intenso com inspiração western. Moderno e ousado. Ex.: 6.4/7.4 ou 7.43 + 6.45 (cobre).',
+  ['cowgirl-copper', 'coloracao', 'Copper', 'Cobre Western',
+    'Cobre intenso e vibrante com atitude moderna e inspiração western. Ex.: 6.4/7.4 ou 7.43 + 6.45. Pele quente e oliva.',
     'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
     [
       'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
@@ -904,8 +963,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/c0/f0/cd/c0f0cd5ace640f47763a8f7712796ef1.jpg'
     ]
   ],
-  ['ruivo-doce-leite', 'coloracao', 'Ruivo Doce de Leite', 'Ruivo Caramelo',
-    'Tom ruivo com nuances carameladas e suaves. Sofisticado. Ex.: 7.4/8.34 ou 7.43 + 8.3 (caramelo).',
+  ['ruivo-doce-leite', 'coloracao', 'Dulce', 'Ruivo Caramelo',
+    'Ruivo suave com nuances carameladas, sofisticado e luminoso. Ex.: 7.4/8.34 ou 7.43 + 8.3. Pele quente e neutra.',
     'https://i.pinimg.com/736x/8a/7c/d4/8a7cd4c0523d1384c8ac71d6b97b1541.jpg',
     [
       'https://i.pinimg.com/736x/8a/7c/d4/8a7cd4c0523d1384c8ac71d6b97b1541.jpg',
@@ -920,8 +979,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/35/14/e7/3514e79edee91c65c433bcaa322d2500.jpg'
     ]
   ],
-  ['grisalhos-frios', 'coloracao', 'Grisalhos Frios', 'Cinza Prateado',
-    'Transição natural com tons de cinza prateado. Sofisticação. Ex.: 7.1/8.1 ou 8.11 + 9.1 (acinzentado).',
+  ['grisalhos-frios', 'coloracao', 'Silver', 'Cinza Prateado',
+    'Cinza prateado sofisticado que neutraliza tons quentes indesejados. Ex.: 7.1/8.1 ou 8.11 + 9.1. Pele fria e neutra.',
     'https://i.pinimg.com/1200x/0f/8b/f7/0f8bf776c83fa00d99150792aac564fd.jpg',
     [
       'https://i.pinimg.com/1200x/50/4e/3e/504e3eb7e864269f264fab931c66029d.jpg',
@@ -936,8 +995,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/34/dd/25/34dd2553acc5f670fa634dac1fbc6948.jpg'
     ]
   ],
-  ['grisalhos-quentes', 'coloracao', 'Grisalhos Quentes', 'Cinza Avermelhado',
-    'Transição com tons de cinza mais quentes e acinzentados. Ex.: 7.13/8.13 ou 8.3 + 8.1 (cinza quente).',
+  ['grisalhos-quentes', 'coloracao', 'Ash Gold', 'Cinza Avermelhado',
+    'Cinza com nuances quentes e acinzentadas, transição natural e moderna. Ex.: 7.13/8.13 ou 8.3 + 8.1. Pele quente e neutra.',
     'https://i.pinimg.com/736x/1e/aa/75/1eaa7549f9babe98cf52aee19771aa68.jpg',
     [
       'https://i.pinimg.com/736x/1e/aa/75/1eaa7549f9babe98cf52aee19771aa68.jpg',
@@ -952,8 +1011,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/96/c8/41/96c841cc2444b3b648ba1d25f2ba5742.jpg'
     ]
   ],
-  ['mocha-mousse', 'coloracao', 'Mocha Mousse', 'Marrom Café',
-    'Marrom intenso com nuances suaves que lembram o café com leite. Ex.: 5.0/6.0 ou 6.7 + 5.3 (bege-marrom).',
+  ['mocha-mousse', 'coloracao', 'Mocha', 'Marrom Café',
+    'Marrom intenso com nuances suaves que lembram café com leite. Ex.: 5.0/6.0 ou 6.7 + 5.3. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/2b/aa/ea/2baaea4f4dc0674819552e1a00063c01.jpg',
     [
       'https://i.pinimg.com/736x/9b/15/b9/9b15b9e256a6114b5148bee2650c1364.jpg',
@@ -968,8 +1027,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/6e/d4/f1/6ed4f1cd71a34cc7c9964ac0f6cd24ea.jpg'
     ]
   ],
-  ['expensive-brunette', 'coloracao', 'Expensive Brunette', 'Morena Premium',
-    'Morena com reflexos estratégicos que criam um visual caro e sofisticado. Ex.: base 4.0/5.0 + reflexos 6.3/7.3.',
+  ['expensive-brunette', 'coloracao', 'Brunette', 'Morena Premium',
+    'Morena com reflexos estratégicos que criam visual caro e sofisticado. Ex.: base 4.0/5.0 + reflexos 6.3/7.3. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/9b/15/b9/9b15b9e256a6114b5148bee2650c1364.jpg',
     [
       'https://i.pinimg.com/1200x/3e/b2/3d/3eb23d9fc16593ff95825fe42012d267.jpg',
@@ -984,8 +1043,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/67/11/fb/6711fba091577ed47ccefa55989e16b9.jpg'
     ]
   ],
-  ['vanilla-blonde', 'coloracao', 'Vanilla Blonde', 'Loira Baunilha',
-    'Loira suave e cremosa com tons de baunilha e caramelo. Exemplos aproximados: 9.7 / 9.3 ou mistura 8.3 + 9.0 (oxidante 10 vol).',
+  ['vanilla-blonde', 'coloracao', 'Vanilla', 'Loira Baunilha',
+    'Loira suave e cremosa com tons de baunilha e caramelo. Ex.: 9.7/9.3 ou mistura 8.3 + 9.0 (10 vol). Pele quente e neutra.',
     'https://i.pinimg.com/736x/0f/d3/d1/0fd3d1b4918ed11c72d2fca3e8c8a8a7.jpg',
     [
       'https://i.pinimg.com/736x/36/2e/76/362e768aeb7ed3f16afb82c85bf8bb7e.jpg',
@@ -1000,9 +1059,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/27/dc/08/27dc0830061a5ab30fb7e4fa82b6b5a3.jpg'
     ]
   ],
-  // ===== NOVAS COLORAÇÕES (5) =====
-  ['blond-de-provence', 'coloracao', 'Blond de Provence', 'Loiro Dourado Provençal',
-    'Loiro dourado com nuances quentes inspirado na luz da Provença. Natural, luminoso e sofisticado. Ex.: base 7.0/8.0 + mechas 9.3/10.3 (dourado) + gloss 9.0.',
+  ['blond-de-provence', 'coloracao', 'Provence', 'Loiro Dourado Provençal',
+    'Loiro dourado com nuances quentes inspirado na luz da Provença. Ex.: base 7.0/8.0 + mechas 9.3/10.3 + gloss 9.0. Pele quente e neutra.',
     'https://i.pinimg.com/736x/5a/74/d5/5a74d546fc0b084124a730c7307d57c0.jpg',
     [
       'https://i.pinimg.com/1200x/07/4e/ea/074eeae2442517936b7e83335b0c31fb.jpg',
@@ -1017,8 +1075,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/b7/15/82/b71582e483db5ee57b2dee5002605dd5.jpg'
     ]
   ],
-  ['castanho-veneza', 'coloracao', 'Castanho Veneza', 'Castanho Profundo com Reflexos Quentes',
-    'Castanho profundo com reflexos quentes inspirado na tradição veneziana. Envolvente e elegante. Ex.: base 4.0/5.0 + reflexos 5.3/6.3 (dourado quente).',
+  ['castanho-veneza', 'coloracao', 'Venice', 'Castanho Profundo com Reflexos Quentes',
+    'Castanho profundo com reflexos quentes inspirado na tradição veneziana. Ex.: base 4.0/5.0 + reflexos 5.3/6.3. Pele quente e oliva.',
     'https://i.pinimg.com/1200x/d6/03/48/d6034885db6c8ed5ec5d84f05db7033c.jpg',
     [
       'https://i.pinimg.com/1200x/3c/f5/34/3cf53462c0d6e87f978248ebe70f3fe6.jpg',
@@ -1033,8 +1091,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/37/b6/c9/37b6c9c11eba90179150f789c458d5e3.jpg'
     ]
   ],
-  ['morena-iluminada-carioca', 'coloracao', 'Morena Iluminada Carioca', 'Castanho com Mechas Tropicais',
-    'Castanho com mechas iluminadas que capturam a luz do sol carioca. Vibrante, natural e cheio de movimento. Ex.: base 5.0/6.0 + mechas 8.3/9.3 (dourado) + babylights 7.3.',
+  ['morena-iluminada-carioca', 'coloracao', 'Tropical', 'Castanho com Mechas Tropicais',
+    'Castanho com mechas que capturam a luz do sol carioca, vibrante e natural. Ex.: base 5.0/6.0 + mechas 8.3/9.3 + babylights 7.3. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/e8/cc/fd/e8ccfd0d23c0a67cdec7b3518588c87a.jpg',
     [
       'https://i.pinimg.com/1200x/46/9d/b3/469db33b0463950876ea5d975da0e566.jpg',
@@ -1049,8 +1107,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/52/21/f8/5221f8901b131e40fa5a6f5ae7d0e8ea.jpg'
     ]
   ],
-  ['brunette-romantique', 'coloracao', 'Brunette Romantique', 'Castanho com Nuances Suaves',
-    'Castanho com nuances suaves e românticas inspirado no estilo francês. Delicado e atemporal. Ex.: base 5.0/6.0 + reflexos 6.7/7.7 (bege) ou 6.3/7.3 (dourado suave).',
+  ['brunette-romantique', 'coloracao', 'Romantique', 'Castanho com Nuances Suaves',
+    'Castanho com nuances suaves e românticas inspirado no estilo francês. Ex.: base 5.0/6.0 + reflexos 6.7/7.7 ou 6.3/7.3. Pele quente e neutra.',
     'https://i.pinimg.com/1200x/48/ee/44/48ee440c6712e07c385f64752e866ae9.jpg',
     [
       'https://i.pinimg.com/1200x/5e/2b/f0/5e2bf098d9eca6e2b22a34e19fda4ae9.jpg',
@@ -1065,8 +1123,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/0b/15/fa/0b15fa533f2633f86402eb94a9a399d7.jpg'
     ]
   ],
-  ['rosso-romano', 'coloracao', 'Rosso Romano', 'Ruivo Intenso com Alma Romana',
-    'Ruivo intenso com alma romana. Vibrante, profundo e cheio de personalidade. Ex.: 5.6/6.6 ou 6.45 + 5.62 (vermelho-marrom intenso).',
+  ['rosso-romano', 'coloracao', 'Rubino', 'Ruivo Intenso',
+    'Ruivo intenso com alma romana, vibrante e cheio de personalidade. Ex.: 5.6/6.6 ou 6.45 + 5.62. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/0d/d4/74/0dd474599a2c97cc033d4b286d328fd2.jpg',
     [
       'https://i.pinimg.com/1200x/3f/75/5d/3f755dd2ec59ecb93a8ac5c7291ab6f3.jpg',
@@ -1080,522 +1138,435 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/b3/cc/22/b3cc2294403e9110b15f21ab51480cb0.jpg',
       'https://i.pinimg.com/1200x/fe/82/eb/fe82ebac89f09eecaaa255ed2b426376.jpg'
     ]
+  ],
+  ['glazed-pecan-brunette', 'coloracao', 'Pecan', 'Castanho Envernizado',
+    'Balayage suave com gloss que cria profundidade e brilho espelhado. Ex.: base 5.0/6.0 + nozes 6.3/7.3 + toque de cobre. Pele quente e neutra.',
+    'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg',
+    [
+      'https://i.pinimg.com/1200x/48/ee/44/48ee440c6712e07c385f64752e866ae9.jpg',
+      'https://i.pinimg.com/1200x/5e/2b/f0/5e2bf098d9eca6e2b22a34e19fda4ae9.jpg',
+      'https://i.pinimg.com/736x/0a/5e/12/0a5e12f20ca2415b8fddbd1f5583b391.jpg',
+      'https://i.pinimg.com/736x/9a/6e/27/9a6e279af8b3895e161b38107d50ab8e.jpg',
+      'https://i.pinimg.com/736x/c9/3f/9d/c93f9d9610909597859d5aefda31f151.jpg',
+      'https://i.pinimg.com/736x/ad/a1/46/ada146678d7950cc55fe4ad4f01cbd15.jpg',
+      'https://i.pinimg.com/1200x/57/b9/90/57b99020f9f86cd96d54316f31db2103.jpg',
+      'https://i.pinimg.com/1200x/61/6d/45/616d45b91da4964e7e022f58d7a0eb44.jpg',
+      'https://i.pinimg.com/1200x/b7/8a/b6/b78ab6932e183d7e89fbe62ede38fec6.jpg',
+      'https://i.pinimg.com/736x/c3/7c/04/c37c04c8558653e9e0168e13f1a8e1f8.jpg'
+    ]
+  ],
+  ['champagne-brunette', 'coloracao', 'Champagne', 'Castanho com Mechas Champagne',
+    'Mechas finas nas pontas com raiz esfumada, transição suave e baixa manutenção. Ex.: base 6.0/7.0 + babylights 8.3/9.0 + gloss bege. Pele quente, neutra e oliva.',
+    'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
+    [
+      'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
+      'https://i.pinimg.com/1200x/9c/38/2e/9c382e31a4eaafd69ce5d685d82f238b.jpg',
+      'https://i.pinimg.com/1200x/85/03/4b/85034b9e76143badec90e47cdac4ae36.jpg',
+      'https://i.pinimg.com/1200x/bf/f2/4b/bff24b95458ec3242c742d7c7014996b.jpg',
+      'https://i.pinimg.com/736x/b2/70/53/b27053d5918d3a819f9e48f0b864cb56.jpg',
+      'https://i.pinimg.com/736x/69/81/cb/6981cbf1d971c00a4a4268120a2199be.jpg',
+      'https://i.pinimg.com/1200x/a6/2c/4e/a62c4e52baecfd4e5a0cb7203b7c6dd9.jpg',
+      'https://i.pinimg.com/736x/92/b3/fa/92b3fad62db6657d1d34725075a9cc0d.jpg',
+      'https://i.pinimg.com/1200x/71/91/a0/7191a072c196f845426a91c111b5757b.jpg',
+      'https://i.pinimg.com/736x/4f/4c/c3/4f4cc384ba311066a815ec3ba62db5af.jpg'
+    ]
+  ],
+  ['tuscan-leather', 'coloracao', 'Tuscan', 'Castanho Dourado Difuminado',
+    'Color melting com subtom dourado sutil que emerge como couro iluminado pelo sol. Ex.: base 5.0/6.0 + fusão 6.3/7.3. Pele quente e neutra.',
+    'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
+    [
+      'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
+      'https://i.pinimg.com/736x/9b/30/3c/9b303c2040de9482f8391090b7cf8cfa.jpg',
+      'https://i.pinimg.com/1200x/80/f3/bb/80f3bbce1fb5bb37fd8c921cd8ada7d2.jpg',
+      'https://i.pinimg.com/736x/99/a0/1b/99a01b1ffd110e8e7fcadf5876a06dc7.jpg',
+      'https://i.pinimg.com/1200x/9d/f8/60/9df860fa26577c0589865d7e85eaded1.jpg',
+      'https://i.pinimg.com/736x/68/75/32/68753259a972205ad340a4a45186bce7.jpg',
+      'https://i.pinimg.com/236x/0a/1e/b2/0a1eb224c389443cbcba956be1b3afc9.jpg',
+      'https://i.pinimg.com/736x/67/55/9b/67559bf4b3891156ca4ea79c89f1a538.jpg',
+      'https://i.pinimg.com/736x/6f/eb/38/6feb38fbbd82b0f67ed85dc10da2012f.jpg',
+      'https://i.pinimg.com/736x/ce/af/83/ceaf83e5c53995750f53dacccb66f162.jpg'
+    ]
+  ],
+  ['sun-washed-soft-lights', 'coloracao', 'Lumière', 'Luzes Suaves Efeito Sol',
+    'Mechas delicadas que simulam o efeito do sol com crescimento natural. Ex.: base 7.0/8.0 + soft-lights 9.3/10.0. Pele quente e neutra.',
+    'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
+    [
+      'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
+      'https://i.pinimg.com/736x/be/54/1b/be541bc6bb2d9f143c119d52059c66cf.jpg',
+      'https://i.pinimg.com/736x/1c/47/4d/1c474dc342e307953abf1eccd45328b1.jpg',
+      'https://i.pinimg.com/736x/25/41/59/2541596666a5f2094ff755f0bf14d08d.jpg',
+      'https://i.pinimg.com/1200x/b7/9a/bd/b79abd9da6b665d43b474d3844e72d07.jpg',
+      'https://i.pinimg.com/1200x/60/15/22/601522009cf3871b56174b99341f5a08.jpg',
+      'https://i.pinimg.com/736x/3d/11/34/3d11348cc83f29fbc5fb10873f8d104e.jpg',
+      'https://i.pinimg.com/1200x/07/4e/ea/074eeae2442517936b7e83335b0c31fb.jpg',
+      'https://i.pinimg.com/736x/35/a4/d1/35a4d1f4457d1905d4d3b9d868bbf799.jpg',
+      'https://i.pinimg.com/736x/c5/2b/92/c52b9243137efa0fce9887e9b4511028.jpg'
+    ]
+  ],
+  ['whisky-copper', 'coloracao', 'Whisky', 'Cobre Âmbar Sofisticado',
+    'Cobre profundo com tons de âmbar e canela, evolução sofisticada do cobre vibrante. Ex.: base 6.0/7.0 + mechas 7.4/8.34. Pele quente e oliva.',
+    'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
+    [
+      'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
+      'https://i.pinimg.com/736x/39/11/3b/39113b115f5d033e0bd7a1e57a5edb74.jpg',
+      'https://i.pinimg.com/736x/9c/aa/f0/9caaf070bac7c0b853e549a47cc288b5.jpg',
+      'https://i.pinimg.com/736x/90/2f/8d/902f8dda8998aabe79bbb1efa6a96cfa.jpg',
+      'https://i.pinimg.com/1200x/96/d2/e0/96d2e00dd6756da11140d8eb10327ae5.jpg',
+      'https://i.pinimg.com/1200x/61/53/9d/61539dda3ba5eb0844362b440f7904e3.jpg',
+      'https://i.pinimg.com/736x/7f/2f/16/7f2f16fe8a47abab83bc2d05914a73d2.jpg',
+      'https://i.pinimg.com/1200x/3b/0e/82/3b0e827b274418c8d1013c497fa8db7a.jpg',
+      'https://i.pinimg.com/736x/01/f6/b8/01f6b8f1aa7b90c91f5262f11d01d552.jpg',
+      'https://i.pinimg.com/736x/c0/f0/cd/c0f0cd5ace640f47763a8f7712796ef1.jpg'
+    ]
   ]
 ];
 
 // ============================================================
-// DADOS: PRODUTOS (15 itens)
+// 7. DADOS: PRODUTOS (15 itens)
 // ============================================================
 var produtosData = [
-  ['kerastase-resistance-shampoo', 'produto', 'Kérastase Resistance Shampoo',
-    'Força e Reconstrução',
-    'Shampoo fortalecedor da linha Resistance, com Tecnologia Fibra-Kératine. Reconstrói a fibra capilar danificada, reduzindo a quebra e devolvendo resistência e elasticidade aos fios.',
+  ['kerastase-resistance-shampoo', 'produto', 'Kérastase Resistance Shampoo', 'Força e Reconstrução',
+    'Shampoo reconstrutor com Fibra-Kératine que devolve força e elasticidade. Indicado para cabelos danificados e quebradiços. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/1200x/82/3a/72/823a7254a510ec701bcee0e480ba8315.jpg',
-    [
-      'https://i.pinimg.com/736x/78/c0/a0/78c0a0db1783a7951c45cf16793df640.jpg',
-      'https://i.pinimg.com/1200x/82/3a/72/823a7254a510ec701bcee0e480ba8315.jpg',
-      'https://i.pinimg.com/1200x/88/0c/ad/880cadbbbe402961bb3bc96bb3b5ca54.jpg'
-    ]
+    ['https://i.pinimg.com/736x/78/c0/a0/78c0a0db1783a7951c45cf16793df640.jpg',
+     'https://i.pinimg.com/1200x/82/3a/72/823a7254a510ec701bcee0e480ba8315.jpg',
+     'https://i.pinimg.com/1200x/88/0c/ad/880cadbbbe402961bb3bc96bb3b5ca54.jpg']
   ],
-  ['kerastase-resistance-conditioner', 'produto', 'Kérastase Resistance Conditioner',
-    'Reconstrução Diária',
-    'Condicionador da linha Resistance que nutre e reconstrói a fibra capilar. Deixa os fios mais fortes, macios e com brilho intenso, ideal para cabelos danificados.',
+  ['kerastase-resistance-conditioner', 'produto', 'Kérastase Resistance Conditioner', 'Reconstrução Diária',
+    'Condicionador reconstrutor que nutre e fortalece a fibra. Indicado para cabelos danificados. Uso diário, após o shampoo.',
     'https://i.pinimg.com/736x/fa/45/3b/fa453bcb817656633d0c07edf6aa8050.jpg',
-    [
-      'https://i.pinimg.com/736x/cb/3a/6a/cb3a6a212e772729875a40bf24d531f8.jpg',
-      'https://i.pinimg.com/736x/24/0e/b1/240eb125b9e37fe19a69d67fe456df27.jpg',
-      'https://i.pinimg.com/736x/ab/d4/6f/abd46fc8a83389a59dd9b55eb16037f9.jpg'
-    ]
+    ['https://i.pinimg.com/736x/cb/3a/6a/cb3a6a212e772729875a40bf24d531f8.jpg',
+     'https://i.pinimg.com/736x/24/0e/b1/240eb125b9e37fe19a69d67fe456df27.jpg',
+     'https://i.pinimg.com/736x/ab/d4/6f/abd46fc8a83389a59dd9b55eb16037f9.jpg']
   ],
-  ['kerastase-resistance-mask', 'produto', 'Kérastase Resistance Mask',
-    'Reconstrução Profunda',
-    'Máscara de tratamento intensivo da linha Resistance. Com ação profunda, reconstrói a fibra capilar danificada por processos químicos e térmicos, devolvendo força e vitalidade.',
+  ['kerastase-resistance-mask', 'produto', 'Kérastase Resistance Mask', 'Reconstrução Profunda',
+    'Máscara de reconstrução intensiva com Fibra-Kératine. Indicada para cabelos danificados por química e calor. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/736x/8d/eb/c3/8debc3b7fb7a7e165e3870776c00c7e6.jpg',
-    [
-      'https://i.pinimg.com/1200x/13/c3/75/13c37585028872dc32a4297eee127e6e.jpg',
-      'https://i.pinimg.com/736x/a0/2e/cf/a02ecf93acaae6f8bf0aa5d91d0ffa71.jpg',
-      'https://i.pinimg.com/736x/3a/64/48/3a6448de3f6a44a84b7cab17c7a11071.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/13/c3/75/13c37585028872dc32a4297eee127e6e.jpg',
+     'https://i.pinimg.com/736x/a0/2e/cf/a02ecf93acaae6f8bf0aa5d91d0ffa71.jpg',
+     'https://i.pinimg.com/736x/3a/64/48/3a6448de3f6a44a84b7cab17c7a11071.jpg']
   ],
-  ['kerastase-chronologiste-oil', 'produto', 'Kérastase Chronologiste Oil',
-    'Óleo Regenerador',
-    'Óleo capilar regenerador com tecnologia Quantum. Nutre, repara e protege os fios, proporcionando brilho extremo e maciez. Ideal para cabelos danificados e ressecados.',
+  ['kerastase-chronologiste-oil', 'produto', 'Kérastase Chronologiste Oil', 'Óleo Regenerador',
+    'Óleo regenerador com tecnologia Quantum que nutre e protege. Indicado para cabelos secos e opacos. Aplicar nas pontas, sem enxaguar.',
     'https://i.pinimg.com/1200x/59/d8/dd/59d8dd9ea4a78fdeb7e0b420ffcdda0a.jpg',
-    [
-      'https://i.pinimg.com/736x/59/c0/57/59c0570e163d499dc010ccd33581ce6d.jpg',
-      'https://i.pinimg.com/736x/51/d7/7d/51d77d1ba30e0bd6e67cb598001aadbd.jpg',
-      'https://i.pinimg.com/736x/e5/63/30/e56330b7327b151f6085b8daa5aa6a8e.jpg'
-    ]
+    ['https://i.pinimg.com/736x/59/c0/57/59c0570e163d499dc010ccd33581ce6d.jpg',
+     'https://i.pinimg.com/736x/51/d7/7d/51d77d1ba30e0bd6e67cb598001aadbd.jpg',
+     'https://i.pinimg.com/736x/e5/63/30/e56330b7327b151f6085b8daa5aa6a8e.jpg']
   ],
-  ['kerastase-thermique', 'produto', 'Kérastase Resistance Thermique',
-    'Protetor Térmico',
-    'Protetor térmico da linha Resistance que prepara os fios para secagem e modelagem. Protege até 230°C, evitando danos causados pelo calor e preservando a saúde capilar.',
+  ['kerastase-thermique', 'produto', 'Kérastase Resistance Thermique', 'Protetor Térmico',
+    'Protetor térmico que protege até 230°C. Indicado para todos os tipos de cabelo. Aplicar antes da secagem e modelagem.',
     'https://i.pinimg.com/736x/f6/62/3d/f6623df560fe941b4fce33574488031c.jpg',
-    [
-      'https://i.pinimg.com/736x/a4/3d/4e/a43d4e01816a1ac5f01f449c1e4ddf5e.jpg',
-      'https://i.pinimg.com/736x/b4/8d/97/b48d9783d0ab18919321f36e1386c0bc.jpg',
-      'https://i.pinimg.com/1200x/5f/fd/db/5ffddb136e62711a585f1c040fe847ad.jpg'
-    ]
+    ['https://i.pinimg.com/736x/a4/3d/4e/a43d4e01816a1ac5f01f449c1e4ddf5e.jpg',
+     'https://i.pinimg.com/736x/b4/8d/97/b48d9783d0ab18919321f36e1386c0bc.jpg',
+     'https://i.pinimg.com/1200x/5f/fd/db/5ffddb136e62711a585f1c040fe847ad.jpg']
   ],
-  ['joico-moisture-shampoo', 'produto', 'Joico Moisture Shampoo',
-    'Hidratação Intensa',
-    'Shampoo hidratante da linha Moisture Recovery com tecnologia Bio-Advanced Peptide Complex. Restaura a umidade dos cabelos secos e danificados, devolvendo maciez e brilho.',
+  ['joico-moisture-shampoo', 'produto', 'Joico Moisture Shampoo', 'Hidratação Intensa',
+    'Shampoo hidratante com Bio-Advanced Peptide Complex. Indicado para cabelos secos e danificados. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/736x/76/24/51/7624516be549ec68f4b74a9d481fe8c2.jpg',
-    [
-      'https://i.pinimg.com/736x/aa/91/ef/aa91ef7f58d2efed392dea3444690a5d.jpg',
-      'https://i.pinimg.com/1200x/e3/93/4c/e3934c0c465aa33ef0c295d9fb6e5e65.jpg',
-      'https://i.pinimg.com/736x/76/24/51/7624516be549ec68f4b74a9d481fe8c2.jpg'
-    ]
+    ['https://i.pinimg.com/736x/aa/91/ef/aa91ef7f58d2efed392dea3444690a5d.jpg',
+     'https://i.pinimg.com/1200x/e3/93/4c/e3934c0c465aa33ef0c295d9fb6e5e65.jpg',
+     'https://i.pinimg.com/736x/76/24/51/7624516be549ec68f4b74a9d481fe8c2.jpg']
   ],
-  ['joico-moisture-conditioner', 'produto', 'Joico Moisture Conditioner',
-    'Nutrição e Maciez',
-    'Condicionador da linha Moisture Recovery que nutre e desembaraça os fios. Proporciona hidratação profunda, maciez e proteção contra agressores externos.',
+  ['joico-moisture-conditioner', 'produto', 'Joico Moisture Conditioner', 'Nutrição e Maciez',
+    'Condicionador hidratante com maciez e proteção. Indicado para cabelos secos. Uso diário, após o shampoo.',
     'https://i.pinimg.com/1200x/d6/b4/fc/d6b4fc118f3fdfa53cb3a9e842a4da52.jpg',
-    [
-      'https://i.pinimg.com/736x/21/23/3f/21233f6f00420dfd920ff5deda8f32f1.jpg',
-      'https://i.pinimg.com/736x/ec/b3/8b/ecb38bd4b30677f9ec9b63fb3b274c6e.jpg',
-      'https://i.pinimg.com/736x/7b/f8/b2/7bf8b2cb9df40798577467ce0953004f.jpg'
-    ]
+    ['https://i.pinimg.com/736x/21/23/3f/21233f6f00420dfd920ff5deda8f32f1.jpg',
+     'https://i.pinimg.com/736x/ec/b3/8b/ecb38bd4b30677f9ec9b63fb3b274c6e.jpg',
+     'https://i.pinimg.com/736x/7b/f8/b2/7bf8b2cb9df40798577467ce0953004f.jpg']
   ],
-  ['joico-moisture-mask', 'produto', 'Joico Moisture Mask',
-    'Hidratação Profunda',
-    'Máscara de hidratação intensiva da linha Moisture Recovery. Repõe a umidade perdida, recupera a elasticidade e devolve o brilho a cabelos secos e danificados.',
+  ['joico-moisture-mask', 'produto', 'Joico Moisture Mask', 'Hidratação Profunda',
+    'Máscara de hidratação intensa com Bio-Advanced Peptide. Indicada para cabelos secos e opacos. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/1200x/6d/38/3b/6d383b8f18eae583c30adb655611d86d.jpg',
-    [
-      'https://i.pinimg.com/1200x/45/cc/98/45cc98b8de46cd2c214dde346fd16ed1.jpg',
-      'https://i.pinimg.com/736x/2b/b8/31/2bb831c5fd89a70851841665fae8b96b.jpg',
-      'https://i.pinimg.com/1200x/ff/d2/b9/ffd2b9808ccc298af28afb560b59c9ad.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/45/cc/98/45cc98b8de46cd2c214dde346fd16ed1.jpg',
+     'https://i.pinimg.com/736x/2b/b8/31/2bb831c5fd89a70851841665fae8b96b.jpg',
+     'https://i.pinimg.com/1200x/ff/d2/b9/ffd2b9808ccc298af28afb560b59c9ad.jpg']
   ],
-  ['joico-color-endure', 'produto', 'Joico Color Endure Shampoo',
-    'Proteção de Cor',
-    'Shampoo da linha Color Endure que protege a cor e intensifica o brilho. Com Tecnologia Peptide Complex, prolonga a durabilidade da coloração e mantém os fios saudáveis.',
+  ['joico-color-endure', 'produto', 'Joico Color Endure Shampoo', 'Proteção de Cor',
+    'Shampoo protetor de cor com Peptide Complex. Indicado para cabelos coloridos. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/1200x/7b/72/ce/7b72ce51623ca5386e74a59598dc9de3.jpg',
-    [
-      'https://i.pinimg.com/1200x/0c/26/86/0c26865afb8790fd2e02a2714cb5e683.jpg',
-      'https://i.pinimg.com/1200x/c8/01/3f/c8013fa8af539f27af838956ccd3effe.jpg',
-      'https://i.pinimg.com/736x/18/6e/5a/186e5aab3bba985de96fe34acca5d2ea.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/0c/26/86/0c26865afb8790fd2e02a2714cb5e683.jpg',
+     'https://i.pinimg.com/1200x/c8/01/3f/c8013fa8af539f27af838956ccd3effe.jpg',
+     'https://i.pinimg.com/736x/18/6e/5a/186e5aab3bba985de96fe34acca5d2ea.jpg']
   ],
-  ['joico-defy-damage', 'produto', 'Joico Defy Damage Shampoo',
-    'Defesa Antidano',
-    'Shampoo da linha Defy Damage com Tecnologia Smart Release. Protege contra danos diários, poluição e calor, fortalecendo a fibra capilar e prevenindo a quebra e o ressecamento.',
+  ['joico-defy-damage', 'produto', 'Joico Defy Damage Shampoo', 'Defesa Antidano',
+    'Shampoo protetor com Smart Release que defende de danos diários. Indicado para cabelos fragilizados. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/1200x/47/dd/21/47dd2172feacdaee8088c8119187edf3.jpg',
-    [
-      'https://i.pinimg.com/736x/7f/b9/b8/7fb9b8eae64870529b3c85c71e352f42.jpg',
-      'https://i.pinimg.com/1200x/22/10/a0/2210a03151a42c9cb2b1623d4feef886.jpg',
-      'https://i.pinimg.com/736x/24/35/1d/24351d93b8f043103eac576654cb5344.jpg'
-    ]
+    ['https://i.pinimg.com/736x/7f/b9/b8/7fb9b8eae64870529b3c85c71e352f42.jpg',
+     'https://i.pinimg.com/1200x/22/10/a0/2210a03151a42c9cb2b1623d4feef886.jpg',
+     'https://i.pinimg.com/736x/24/35/1d/24351d93b8f043103eac576654cb5344.jpg']
   ],
-  ['expert-absolut-repair-shampoo', 'produto', 'Expert Absolut Repair Shampoo',
-    'Reconstrução',
-    'Shampoo da linha Absolut Repair com Tecnologia Lipid-Repair. Reconstrói cabelos quimicamente danificados, devolvendo força, maciez e brilho intenso.',
+  ['expert-absolut-repair-shampoo', 'produto', 'Expert Absolut Repair Shampoo', 'Reconstrução',
+    'Shampoo reconstrutor com Lipid-Repair. Indicado para cabelos quimicamente danificados. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/1200x/b2/69/d0/b269d04d3de7148082db4c45c179f2e6.jpg',
-    [
-      'https://i.pinimg.com/736x/be/1f/d5/be1fd51303ae794b19534394da3a861a.jpg',
-      'https://i.pinimg.com/736x/89/6b/1c/896b1c1390819bb687feee9ad8ae7297.jpg',
-      'https://i.pinimg.com/736x/82/a2/c8/82a2c82c0b93bf4eebacac702dfb3b6e.jpg'
-    ]
+    ['https://i.pinimg.com/736x/be/1f/d5/be1fd51303ae794b19534394da3a861a.jpg',
+     'https://i.pinimg.com/736x/89/6b/1c/896b1c1390819bb687feee9ad8ae7297.jpg',
+     'https://i.pinimg.com/736x/82/a2/c8/82a2c82c0b93bf4eebacac702dfb3b6e.jpg']
   ],
-  ['expert-absolut-repair-conditioner', 'produto', 'Expert Absolut Repair Conditioner',
-    'Reconstrução Diária',
-    'Condicionador da linha Absolut Repair que reconstrói a fibra capilar profundamente. Desembaraça, nutre e fortalece os fios danificados por processos químicos.',
+  ['expert-absolut-repair-conditioner', 'produto', 'Expert Absolut Repair Conditioner', 'Reconstrução Diária',
+    'Condicionador reconstrutor que desembaraça e fortalece. Indicado para cabelos danificados. Uso diário, após o shampoo.',
     'https://i.pinimg.com/1200x/f7/0d/00/f70d00dddda6b8019e9fb55d0d92c63d.jpg',
-    [
-      'https://i.pinimg.com/736x/ac/e6/94/ace69459b5f955c0fefd0b873fe43f14.jpg',
-      'https://i.pinimg.com/736x/82/5f/da/825fda428e6be4547421a812c0dabdea.jpg',
-      'https://i.pinimg.com/736x/f6/2e/e0/f62ee03b99af4d0b7576e2ae45ba7633.jpg'
-    ]
+    ['https://i.pinimg.com/736x/ac/e6/94/ace69459b5f955c0fefd0b873fe43f14.jpg',
+     'https://i.pinimg.com/736x/82/5f/da/825fda428e6be4547421a812c0dabdea.jpg',
+     'https://i.pinimg.com/736x/f6/2e/e0/f62ee03b99af4d0b7576e2ae45ba7633.jpg']
   ],
-  ['expert-absolut-repair-mask', 'produto', 'Expert Absolut Repair Mask',
-    'Reconstrução Profunda',
-    'Máscara de reconstrução intensiva da linha Absolut Repair. Recupera a integridade da fibra capilar, devolvendo força, elasticidade e brilho a cabelos severamente danificados.',
+  ['expert-absolut-repair-mask', 'produto', 'Expert Absolut Repair Mask', 'Reconstrução Profunda',
+    'Máscara reconstrutora com Lipid-Repair. Indicada para cabelos severamente danificados. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/736x/cf/a0/80/cfa0808650dee9524e0165d430e0098e.jpg',
-    [
-      'https://i.pinimg.com/736x/34/59/ce/3459cebc3044e956410bb887d8a53457.jpg',
-      'https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
-      'https://i.pinimg.com/736x/6d/55/05/6d55050a72f3a6e613c062c5f1a2a047.jpg'
-    ]
+    ['https://i.pinimg.com/736x/34/59/ce/3459cebc3044e956410bb887d8a53457.jpg',
+     'https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
+     'https://i.pinimg.com/736x/6d/55/05/6d55050a72f3a6e613c062c5f1a2a047.jpg']
   ],
-  ['expert-vitamino-color', 'produto', 'Expert Vitamino Color Shampoo',
-    'Proteção de Cor Diária',
-    'Shampoo da linha Vitamino Color com Tecnologia Neo-Pigment. Protege a cor, intensifica o brilho e mantém a vitalidade dos fios coloridos por mais tempo.',
+  ['expert-vitamino-color', 'produto', 'Expert Vitamino Color Shampoo', 'Proteção de Cor Diária',
+    'Shampoo protetor de cor com Neo-Pigment. Indicado para cabelos coloridos. Uso diário, em cabelos úmidos.',
     'https://i.pinimg.com/736x/8c/4a/25/8c4a254ff5b4a4541a900bad2089b9c2.jpg',
-    [
-      'https://i.pinimg.com/1200x/3c/6a/9c/3c6a9cbababc27152504ca4953e738ff.jpg',
-      'https://i.pinimg.com/736x/c7/df/b2/c7dfb25b28a11dcd98eb8ec001fb95c6.jpg',
-      'https://i.pinimg.com/1200x/49/13/db/4913db0aeb90eaa39af627682e595518.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/3c/6a/9c/3c6a9cbababc27152504ca4953e738ff.jpg',
+     'https://i.pinimg.com/736x/c7/df/b2/c7dfb25b28a11dcd98eb8ec001fb95c6.jpg',
+     'https://i.pinimg.com/1200x/49/13/db/4913db0aeb90eaa39af627682e595518.jpg']
   ],
-  ['expert-metal-detox', 'produto', 'Expert Metal Detox',
-    'Desintoxicação Capilar',
-    'Tratamento pré-coloração da linha Metal Detox que remove partículas metálicas da fibra capilar. Garante coloração mais uniforme, brilhante e duradoura.',
+  ['expert-metal-detox', 'produto', 'Expert Metal Detox', 'Desintoxicação Capilar',
+    'Tratamento pré-coloração que remove partículas metálicas. Indicado para todos os tipos de cabelo antes da química. Aplicar antes da coloração.',
     'https://i.pinimg.com/736x/3d/0f/ec/3d0fece6981e4f8fedac2225a2515c96.jpg',
-    [
-      'https://i.pinimg.com/736x/dd/fa/e3/ddfae3b1f8f559f1843aea2610ac3176.jpg',
-      'https://i.pinimg.com/1200x/b8/6e/fe/b86efec2e8686d63a0ab7149e0ff6f54.jpg',
-      'https://i.pinimg.com/1200x/dd/fd/86/ddfd86b022f90fb7491aea4eb55b76d3.jpg'
-    ]
+    ['https://i.pinimg.com/736x/dd/fa/e3/ddfae3b1f8f559f1843aea2610ac3176.jpg',
+     'https://i.pinimg.com/1200x/b8/6e/fe/b86efec2e8686d63a0ab7149e0ff6f54.jpg',
+     'https://i.pinimg.com/1200x/dd/fd/86/ddfd86b022f90fb7491aea4eb55b76d3.jpg']
   ]
 ];
 
+
 // ============================================================
-// DADOS: KITS (15 itens)
+// 8. DADOS: KITS (15 itens)
 // ============================================================
 var kitsData = [
   ['kit-kerastase-resistance', 'kit', 'Kérastase Resistance Kit', 'Reconstrução Completa',
-    'Kit completo com Shampoo, Condicionador e Máscara da linha Resistance. Reconstrução intensiva para cabelos danificados, devolvendo força, elasticidade e brilho.',
+    'Shampoo + Condicionador + Máscara Resistance. Reconstrução intensiva para cabelos danificados. Uso semanal, em 3 etapas.',
     'https://i.pinimg.com/1200x/0c/dd/f1/0cddf1a088784488cc73ffbedfa53ebf.jpg',
-    [
-      'https://i.pinimg.com/736x/ed/d3/f2/edd3f267f2d995ca3ddd2f4316a2ea66.jpg',
-      'https://i.pinimg.com/736x/26/59/83/26598308d3e280c3e5c12172fd30e8bc.jpg',
-      'https://i.pinimg.com/736x/c4/19/c5/c419c52357f3293954cb12235bb8a567.jpg'
-    ]
+    ['https://i.pinimg.com/736x/ed/d3/f2/edd3f267f2d995ca3ddd2f4316a2ea66.jpg',
+     'https://i.pinimg.com/736x/26/59/83/26598308d3e280c3e5c12172fd30e8bc.jpg',
+     'https://i.pinimg.com/736x/c4/19/c5/c419c52357f3293954cb12235bb8a567.jpg']
   ],
   ['kit-kerastase-chronologiste', 'kit', 'Kérastase Chronologiste Kit', 'Regeneração e Brilho',
-    'Kit com Óleo Regenerador e Protetor Térmico Chronologiste. Nutrição profunda, reparação e proteção térmica para cabelos danificados e ressecados.',
+    'Óleo Regenerador + Protetor Térmico Chronologiste. Nutrição profunda e proteção térmica. Uso diário, antes e após a modelagem.',
     'https://i.pinimg.com/736x/c1/4a/bb/c14abbd5fb1d4528ab1371784cd4503b.jpg',
-    [
-      'https://i.pinimg.com/1200x/0d/39/ae/0d39aeeb056fd43fc060a56555480565.jpg',
-      'https://i.pinimg.com/736x/85/2f/4d/852f4d0951ce8b754038f12f99c8b4ed.jpg',
-      'https://i.pinimg.com/1200x/81/a8/bf/81a8bf33b07433341cb8f58c305bf429.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/0d/39/ae/0d39aeeb056fd43fc060a56555480565.jpg',
+     'https://i.pinimg.com/736x/85/2f/4d/852f4d0951ce8b754038f12f99c8b4ed.jpg',
+     'https://i.pinimg.com/1200x/81/a8/bf/81a8bf33b07433341cb8f58c305bf429.jpg']
   ],
   ['kit-kerastase-thermique', 'kit', 'Kérastase Thermique Kit', 'Proteção Térmica',
-    'Kit com Protetor Térmico e Óleo Finalizador. Protege os fios contra o calor de ferramentas até 230°C e devolve brilho e maciez intensos.',
+    'Protetor Térmico + Óleo Finalizador. Proteção até 230°C e brilho intenso. Uso diário, antes da secagem.',
     'https://i.pinimg.com/1200x/40/7e/87/407e877f2325ceded92fd59cee423193.jpg',
-    [
-      'https://i.pinimg.com/1200x/c1/3e/5d/c13e5d4ba01867b5a2de1a677d09302d.jpg',
-      'https://i.pinimg.com/736x/a8/b6/fd/a8b6fddb483f3e94c5fd303b373af19c.jpg',
-      'https://i.pinimg.com/736x/c5/31/c6/c531c62a3624f7dde4cdc2ee8ef6d8b6.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/c1/3e/5d/c13e5d4ba01867b5a2de1a677d09302d.jpg',
+     'https://i.pinimg.com/736x/a8/b6/fd/a8b6fddb483f3e94c5fd303b373af19c.jpg',
+     'https://i.pinimg.com/736x/c5/31/c6/c531c62a3624f7dde4cdc2ee8ef6d8b6.jpg']
   ],
   ['kit-kerastase-resistance-mask', 'kit', 'Kérastase Resistance Mask Kit', 'Reconstrução Profunda',
-    'Kit com 2 unidades da Máscara Resistance. Tratamento intensivo que reconstrói a fibra capilar danificada por processos químicos e térmicos.',
+    '2 unidades da Máscara Resistance. Tratamento intensivo para fibra danificada. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/736x/40/b8/c2/40b8c22108d5712a18d9ecd02d5233d5.jpg',
-    [
-      'https://i.pinimg.com/736x/91/e6/86/91e6865f11d7e3d1d6a0677131597e2b.jpg',
-      'https://i.pinimg.com/1200x/b1/9c/a6/b19ca6af05a7a9ac8fc0b1f93982c3ce.jpg',
-      'https://i.pinimg.com/736x/f5/bc/0c/f5bc0c52fd5347eb388ad6a51cb6d010.jpg'
-    ]
+    ['https://i.pinimg.com/736x/91/e6/86/91e6865f11d7e3d1d6a0677131597e2b.jpg',
+     'https://i.pinimg.com/1200x/b1/9c/a6/b19ca6af05a7a9ac8fc0b1f93982c3ce.jpg',
+     'https://i.pinimg.com/736x/f5/bc/0c/f5bc0c52fd5347eb388ad6a51cb6d010.jpg']
   ],
   ['kit-kerastase-hydration', 'kit', 'Kérastase Hydration Kit', 'Hidratação Essencial',
-    'Kit com Shampoo, Condicionador e Máscara da linha Nutritive. Hidratação intensa para cabelos secos e ressecados, devolvendo maciez e brilho.',
+    'Shampoo + Condicionador + Máscara Nutritive. Hidratação intensa para cabelos secos. Uso semanal, em 3 etapas.',
     'https://i.pinimg.com/1200x/5e/59/9d/5e599d616ffdb609f55cc48a92832340.jpg',
-    [
-      'https://i.pinimg.com/736x/4a/a3/f4/4aa3f4b472556d5aa8e6ad2f66bd0595.jpg',
-      'https://i.pinimg.com/1200x/ae/a4/60/aea460c2d74ca14511976aab025a01cf.jpg',
-      'https://i.pinimg.com/236x/8f/46/30/8f463046ad92a0bc308d9c9a68e30d52.jpg'
-    ]
+    ['https://i.pinimg.com/736x/4a/a3/f4/4aa3f4b472556d5aa8e6ad2f66bd0595.jpg',
+     'https://i.pinimg.com/1200x/ae/a4/60/aea460c2d74ca14511976aab025a01cf.jpg',
+     'https://i.pinimg.com/236x/8f/46/30/8f463046ad92a0bc308d9c9a68e30d52.jpg']
   ],
   ['kit-joico-moisture', 'kit', 'Joico Moisture Recovery Kit', 'Hidratação Profunda',
-    'Kit completo com Shampoo, Condicionador e Máscara Moisture Recovery. Hidratação intensiva com tecnologia Bio-Advanced Peptide Complex para cabelos secos e danificados.',
+    'Shampoo + Condicionador + Máscara Moisture Recovery. Hidratação profunda com Bio-Advanced Peptide. Uso semanal, em 3 etapas.',
     'https://i.pinimg.com/1200x/55/d6/10/55d610f599b3c10b5fe4cafceb5104fc.jpg',
-    [
-      'https://i.pinimg.com/1200x/37/eb/38/37eb38f29a15f9f2b571ef4c72e9ae73.jpg',
-      'https://i.pinimg.com/736x/67/be/08/67be084978b5c1f0fdf7170ccb071d9e.jpg',
-      'https://i.pinimg.com/1200x/f0/39/f9/f039f9d99452b6304575864a8695a88b.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/37/eb/38/37eb38f29a15f9f2b571ef4c72e9ae73.jpg',
+     'https://i.pinimg.com/736x/67/be/08/67be084978b5c1f0fdf7170ccb071d9e.jpg',
+     'https://i.pinimg.com/1200x/f0/39/f9/f039f9d99452b6304575864a8695a88b.jpg']
   ],
   ['kit-joico-color-endure', 'kit', 'Joico Color Endure Kit', 'Proteção de Cor',
-    'Kit com Shampoo e Condicionador Color Endure. Protege a cor, intensifica o brilho e prolonga a durabilidade da coloração com Tecnologia Peptide Complex.',
+    'Shampoo + Condicionador Color Endure. Protege e prolonga a durabilidade da cor. Uso diário, em 2 etapas.',
     'https://i.pinimg.com/736x/ed/92/df/ed92dfe26b5bf8d567ffc982ec8335a9.jpg',
-    [
-      'https://i.pinimg.com/736x/55/f6/fb/55f6fbc94440f61acd2b29ce3a0ec87f.jpg',
-      'https://i.pinimg.com/736x/81/5d/a5/815da5dd12b7f501add1182400694ef1.jpg',
-      'https://i.pinimg.com/1200x/c8/45/45/c8454574dc124e61c5ff54b0fa7b4e87.jpg'
-    ]
+    ['https://i.pinimg.com/736x/55/f6/fb/55f6fbc94440f61acd2b29ce3a0ec87f.jpg',
+     'https://i.pinimg.com/736x/81/5d/a5/815da5dd12b7f501add1182400694ef1.jpg',
+     'https://i.pinimg.com/1200x/c8/45/45/c8454574dc124e61c5ff54b0fa7b4e87.jpg']
   ],
   ['kit-joico-defy-damage', 'kit', 'Joico Defy Damage Kit', 'Defesa Antidano',
-    'Kit com Shampoo, Condicionador e Leave-in Defy Damage. Protege contra danos diários, poluição e calor com Tecnologia Smart Release.',
+    'Shampoo + Condicionador + Leave-in Defy Damage. Proteção contra danos diários. Uso diário, em 3 etapas.',
     'https://i.pinimg.com/236x/0b/92/13/0b9213aaedddaf68940bb3a89fb62dc8.jpg',
-    [
-      'https://i.pinimg.com/736x/36/a4/ec/36a4ec1861b63319fe1e9cdd71b533b6.jpg',
-      'https://i.pinimg.com/1200x/d4/7b/cb/d47bcb80c0e571e40b7fc11b454f5059.jpg',
-      'https://i.pinimg.com/736x/a5/87/83/a5878313d7f90c8a328fddb978de7d34.jpg'
-    ]
+    ['https://i.pinimg.com/736x/36/a4/ec/36a4ec1861b63319fe1e9cdd71b533b6.jpg',
+     'https://i.pinimg.com/1200x/d4/7b/cb/d47bcb80c0e571e40b7fc11b454f5059.jpg',
+     'https://i.pinimg.com/736x/a5/87/83/a5878313d7f90c8a328fddb978de7d34.jpg']
   ],
   ['kit-joico-moisture-mask', 'kit', 'Joico Moisture Mask Kit', 'Hidratação Intensiva',
-    'Kit com 2 unidades da Máscara Moisture Recovery. Repõe a umidade perdida, recupera a elasticidade e devolve o brilho a cabelos secos e danificados.',
+    '2 unidades da Máscara Moisture Recovery. Repõe umidade e devolve brilho. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/736x/ca/c4/15/cac415197ee2db5b5d7a12890b225b9a.jpg',
-    [
-      'https://i.pinimg.com/736x/23/cf/33/23cf33cee26dfb383d78663dfd23b864.jpg',
-      'https://i.pinimg.com/736x/ec/b3/8b/ecb38bd4b30677f9ec9b63fb3b274c6e.jpg',
-      'https://i.pinimg.com/736x/6d/38/3b/6d383b8f18eae583c30adb655611d86d.jpg'
-    ]
+    ['https://i.pinimg.com/736x/23/cf/33/23cf33cee26dfb383d78663dfd23b864.jpg',
+     'https://i.pinimg.com/736x/ec/b3/8b/ecb38bd4b30677f9ec9b63fb3b274c6e.jpg',
+     'https://i.pinimg.com/736x/6d/38/3b/6d383b8f18eae583c30adb655611d86d.jpg']
   ],
   ['kit-joico-Volumizing', 'kit', 'Joico Volumizing Kit', 'Volume e Leveza',
-    'Kit com Shampoo e Condicionador Volumizing. Proporciona volume, corpo e leveza aos fios, deixando o cabelo mais encorpado, solto e com movimento.',
+    'Shampoo + Condicionador Volumizing. Proporciona volume, corpo e leveza. Uso diário, em 2 etapas.',
     'https://i.pinimg.com/1200x/94/ff/44/94ff449ed215781b29fa5555920ea95a.jpg',
-    [
-      'https://i.pinimg.com/736x/b1/79/cd/b179cdd3c0691a77521b5246a61e4add.jpg',
-      'https://i.pinimg.com/736x/1d/bc/24/1dbc2405985303d3d5456ea919dfd899.jpg',
-      'https://i.pinimg.com/736x/cf/87/e8/cf87e8b258211b1ec6f288dc243adc80.jpg'
-    ]
+    ['https://i.pinimg.com/736x/b1/79/cd/b179cdd3c0691a77521b5246a61e4add.jpg',
+     'https://i.pinimg.com/736x/1d/bc/24/1dbc2405985303d3d5456ea919dfd899.jpg',
+     'https://i.pinimg.com/736x/cf/87/e8/cf87e8b258211b1ec6f288dc243adc80.jpg']
   ],
   ['kit-expert-absolut-repair', 'kit', 'Expert Absolut Repair Kit', 'Reconstrução Completa',
-    'Kit completo com Shampoo, Condicionador e Máscara Absolut Repair. Reconstrução intensiva com Tecnologia Lipid-Repair para cabelos quimicamente danificados.',
+    'Shampoo + Condicionador + Máscara Absolut Repair. Reconstrução com Lipid-Repair. Uso semanal, em 3 etapas.',
     'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg',
-    [
-      'https://i.pinimg.com/736x/e3/5e/2c/e35e2c9e9d5e31aac8793ea1cc1ebb19.jpg',
-      'https://i.pinimg.com/736x/5c/82/2c/5c822c9dcd5ecae1bda1ee964bd8eeb1.jpg',
-      'https://i.pinimg.com/736x/6d/55/05/6d55050a72f3a6e613c062c5f1a2a047.jpg'
-    ]
+    ['https://i.pinimg.com/736x/e3/5e/2c/e35e2c9e9d5e31aac8793ea1cc1ebb19.jpg',
+     'https://i.pinimg.com/736x/5c/82/2c/5c822c9dcd5ecae1bda1ee964bd8eeb1.jpg',
+     'https://i.pinimg.com/736x/6d/55/05/6d55050a72f3a6e613c062c5f1a2a047.jpg']
   ],
   ['kit-expert-vitamino-color', 'kit', 'Expert Vitamino Color Kit', 'Proteção de Cor Diária',
-    'Kit com Shampoo e Condicionador Vitamino Color. Protege a cor, intensifica o brilho e mantém a vitalidade dos fios coloridos com Tecnologia Neo-Pigment.',
+    'Shampoo + Condicionador Vitamino Color. Protege e intensifica o brilho dos fios coloridos. Uso diário, em 2 etapas.',
     'https://i.pinimg.com/736x/f6/51/d6/f651d62a113c18ac4101aa31c2cec0d0.jpg',
-    [
-      'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg',
-      'https://i.pinimg.com/1200x/3e/ae/bb/3eaebbaa9f8e58142b50b6d713d9ce49.jpg',
-      'https://i.pinimg.com/736x/38/43/23/384323902c28e3c7a44a03ae06db29b7.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg',
+     'https://i.pinimg.com/1200x/3e/ae/bb/3eaebbaa9f8e58142b50b6d713d9ce49.jpg',
+     'https://i.pinimg.com/736x/38/43/23/384323902c28e3c7a44a03ae06db29b7.jpg']
   ],
   ['kit-expert-metal-detox', 'kit', 'Expert Metal Detox Kit', 'Desintoxicação Capilar',
-    'Kit com Tratamento Metal Detox e Shampoo. Remove partículas metálicas da fibra capilar, garantindo coloração mais uniforme, brilhante e duradoura.',
+    'Tratamento + Shampoo Metal Detox. Remove metais e garante cor uniforme. Uso pré-coloração, em 2 etapas.',
     'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg',
-    [
-      'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg',
-      'https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
-      'https://i.pinimg.com/736x/3d/0f/ec/3d0fece6981e4f8fedac2225a2515c96.jpg'
-    ]
+    ['https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
+     'https://i.pinimg.com/736x/3d/0f/ec/3d0fece6981e4f8fedac2225a2515c96.jpg',
+     'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg']
   ],
   ['kit-expert-absolut-repair-mask', 'kit', 'Expert Absolut Repair Mask Kit', 'Reconstrução Profunda',
-    'Kit com 2 unidades da Máscara Absolut Repair. Recupera a integridade da fibra capilar, devolvendo força, elasticidade e brilho a cabelos severamente danificados.',
+    '2 unidades da Máscara Absolut Repair. Recupera a fibra severamente danificada. Uso semanal, após o shampoo.',
     'https://i.pinimg.com/736x/11/51/da/1151da5401aa1ff0533a5a2e221488ab.jpg',
-    [
-      'https://i.pinimg.com/736x/e5/5f/83/e55f83ba1959fc476a7d340f488c3a1a.jpg',
-      'https://i.pinimg.com/736x/79/9b/c9/799bc972103f05b8e50a5e4d3337c14b.jpg',
-      'https://i.pinimg.com/736x/3a/43/ef/3a43efa8384793d904ed8aee02c9d172.jpg'
-    ]
+    ['https://i.pinimg.com/736x/e5/5f/83/e55f83ba1959fc476a7d340f488c3a1a.jpg',
+     'https://i.pinimg.com/736x/79/9b/c9/799bc972103f05b8e50a5e4d3337c14b.jpg',
+     'https://i.pinimg.com/736x/3a/43/ef/3a43efa8384793d904ed8aee02c9d172.jpg']
   ],
   ['kit-expert-serum', 'kit', 'Expert Serum Kit', 'Brilho e Maciez',
-    'Kit com Sérum Finalizador e Óleo Capilar. Brilho intenso, maciez e nutrição para os fios, com proteção contra agressores externos e finalização profissional.',
+    'Sérum Finalizador + Óleo Capilar. Brilho intenso, maciez e proteção. Uso diário, após a modelagem.',
     'https://i.pinimg.com/736x/19/57/93/1957934cfe15752a65f5bd14dff91a7a.jpg',
-    [
-      'https://i.pinimg.com/1200x/d1/94/cf/d194cf9242db006d8c2340d16c656c18.jpg',
-      'https://i.pinimg.com/736x/73/70/87/737087916e22525775a637957ab6962f.jpg',
-      'https://i.pinimg.com/1200x/64/3d/8d/643d8de41d7c632d14be74923199d10a.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/d1/94/cf/d194cf9242db006d8c2340d16c656c18.jpg',
+     'https://i.pinimg.com/736x/73/70/87/737087916e22525775a637957ab6962f.jpg',
+     'https://i.pinimg.com/1200x/64/3d/8d/643d8de41d7c632d14be74923199d10a.jpg']
   ]
 ];
 
+
 // ============================================================
-// DADOS: FERRAMENTAS (15 itens)
+// 9. DADOS: FERRAMENTAS (15 itens)
 // ============================================================
 var ferramentasData = [
-  [
-    'secador-ionico-pro',
-    'ferramentas',
-    'Secador Iônico Pro',
-    'Secagem Rápida e Antifrizz',
-    'Secador profissional com tecnologia iônica que reduz o frizz, acelera a secagem e ajuda a proporcionar um acabamento mais alinhado e brilhante. Indicado para uso profissional e diferentes tipos de cabelo.',
+  ['secador-ionico-pro', 'ferramentas', 'Secador Iônico Pro', 'Secagem Rápida e Antifrizz',
+    'Secador com tecnologia iônica que reduz frizz e acelera a secagem. Ideal para uso profissional e doméstico. Potência alta com controle de temperatura.',
     'https://i.pinimg.com/736x/7f/4d/8b/7f4d8b424f29dffaa67ad8856df09263.jpg',
-    [
-      'https://i.pinimg.com/1200x/ef/ef/f4/efeff4b83e8aecf58644af080c24e4ac.jpg',
-      'https://i.pinimg.com/736x/41/31/08/4131089e2d531379ade8f1ac547246bd.jpg',
-      'https://i.pinimg.com/736x/51/d7/fe/51d7fe3f8c05b4ddfbfc1ca2e0c4e996.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/ef/ef/f4/efeff4b83e8aecf58644af080c24e4ac.jpg',
+     'https://i.pinimg.com/736x/41/31/08/4131089e2d531379ade8f1ac547246bd.jpg',
+     'https://i.pinimg.com/736x/51/d7/fe/51d7fe3f8c05b4ddfbfc1ca2e0c4e996.jpg']
   ],
-  [
-    'prancha-titanium',
-    'ferramentas',
-    'Prancha de Titânio',
-    'Alisamento Uniforme',
-    'Prancha profissional com placas de titânio que proporcionam alta condução de calor e distribuição uniforme da temperatura. Indicada para alisamento, modelagem e finalização de diferentes tipos de cabelo.',
+  ['prancha-titanium', 'ferramentas', 'Prancha de Titânio', 'Alisamento Uniforme',
+    'Prancha com placas de titânio para alta condução de calor. Ideal para alisamento profissional. Temperatura uniforme e deslizamento suave.',
     'https://i.pinimg.com/1200x/e7/b6/e1/e7b6e1de363429ccf8f85d02f6c3abbc.jpg',
-    [
-      'https://i.pinimg.com/736x/69/a2/4c/69a24ce045d17b1f16c50789eafc00fb.jpg',
-      'https://i.pinimg.com/736x/5e/12/e6/5e12e630cc54a79d81b0e6c504eed9d5.jpg',
-      'https://i.pinimg.com/1200x/21/0c/ec/210cec95d149ae3e8622ae3441d830ed.jpg'
-    ]
+    ['https://i.pinimg.com/736x/69/a2/4c/69a24ce045d17b1f16c50789eafc00fb.jpg',
+     'https://i.pinimg.com/736x/5e/12/e6/5e12e630cc54a79d81b0e6c504eed9d5.jpg',
+     'https://i.pinimg.com/1200x/21/0c/ec/210cec95d149ae3e8622ae3441d830ed.jpg']
   ],
-  [
-    'modelador-ondas',
-    'ferramentas',
-    'Modelador de Ondas',
-    'Ondas Perfeitas',
-    'Modelador térmico de um cilindros desenvolvido para criar ondas marcadas e regulares. O formato permite trabalhar mechas de maneira uniforme, criando efeito ondulado com acabamento definido.',
+  ['modelador-ondas', 'ferramentas', 'Modelador de Ondas', 'Ondas Perfeitas',
+    'Modelador térmico para ondas marcadas e regulares. Ideal para uso profissional e doméstico. Trabalha mechas com uniformidade.',
     'https://i.pinimg.com/736x/e5/5c/8d/e55c8d124b8fbd55f7a2a45f6a238dd7.jpg',
-    [
-      'https://i.pinimg.com/736x/2c/ee/a8/2ceea8d25dc03ce7b4961da20d619a77.jpg',
-      'https://i.pinimg.com/736x/cc/b2/64/ccb2645665518c74182d633f4586b005.jpg',
-      'https://i.pinimg.com/736x/14/12/e1/1412e160d106839a11b2a8cdfae2654c.jpg'
-    ]
+    ['https://i.pinimg.com/736x/2c/ee/a8/2ceea8d25dc03ce7b4961da20d619a77.jpg',
+     'https://i.pinimg.com/736x/cc/b2/64/ccb2645665518c74182d633f4586b005.jpg',
+     'https://i.pinimg.com/736x/14/12/e1/1412e160d106839a11b2a8cdfae2654c.jpg']
   ],
-  [
-    'babyliss-ceramica',
-    'ferramentas',
-    'Babyliss Cerâmica',
-    'Cachos Definidos',
-    'Modelador cilíndrico com revestimento cerâmico indicado para criar cachos e ondas com controle de temperatura. O diâmetro do cilindro influencia diretamente o tamanho e a definição do resultado.',
+  ['babyliss-ceramica', 'ferramentas', 'Babyliss Cerâmica', 'Cachos Definidos',
+    'Modelador cilíndrico cerâmico para cachos e ondas. Ideal para todos os tipos de cabelo. Controle de temperatura ajustável.',
     'https://i.pinimg.com/736x/ff/a3/ae/ffa3ae40d17685e0321de9ca3e27a41d.jpg',
-    [
-      'https://i.pinimg.com/1200x/6e/b6/79/6eb6797d78cbe5606ad9d29998eb75e5.jpg',
-      'https://i.pinimg.com/736x/5d/9f/97/5d9f9707aaf6d4c444e2d65da38fcd5b.jpg',
-      'https://i.pinimg.com/1200x/b9/58/75/b95875d1a7945aaab782f67e382ba4ff.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/6e/b6/79/6eb6797d78cbe5606ad9d29998eb75e5.jpg',
+     'https://i.pinimg.com/736x/5d/9f/97/5d9f9707aaf6d4c444e2d65da38fcd5b.jpg',
+     'https://i.pinimg.com/1200x/b9/58/75/b95875d1a7945aaab782f67e382ba4ff.jpg']
   ],
-  [
-    'escova-rotativa',
-    'ferramentas',
-    'Escova Rotativa',
-    'Modelagem e Volume',
-    'Escova rotativa de ar quente que combina secagem e modelagem. O movimento rotativo ajuda a criar volume, movimento e acabamento alinhado durante a secagem.',
+  ['escova-rotativa', 'ferramentas', 'Escova Rotativa', 'Modelagem e Volume',
+    'Escova de ar quente que combina secagem e modelagem. Ideal para uso profissional e doméstico. Cria volume e acabamento alinhado.',
     'https://i.pinimg.com/736x/26/b8/ba/26b8ba113a222d08c5a7ececcf00cecf.jpg',
-    [
-      'https://i.pinimg.com/736x/73/5a/0e/735a0e7eda137b5fd090530a3f7321d0.jpg',
-      'https://i.pinimg.com/736x/73/5a/0e/735a0e7eda137b5fd090530a3f7321d0.jpg',
-      'https://i.pinimg.com/1200x/1d/4f/38/1d4f389fec6dfa518585926148342c42.jpg'
-    ]
+    ['https://i.pinimg.com/736x/73/5a/0e/735a0e7eda137b5fd090530a3f7321d0.jpg',
+     'https://i.pinimg.com/1200x/1d/4f/38/1d4f389fec6dfa518585926148342c42.jpg',
+     'https://i.pinimg.com/736x/26/b8/ba/26b8ba113a222d08c5a7ececcf00cecf.jpg']
   ],
-  [
-    'tesoura-profissional',
-    'ferramentas',
-    'Tesoura Profissional',
-    'Corte de Precisão',
-    'Tesoura profissional desenvolvida para cortes técnicos e acabamento de precisão. O formato ergonômico favorece controle e estabilidade durante o trabalho do cabeleireiro.',
+  ['tesoura-profissional', 'ferramentas', 'Tesoura Profissional', 'Corte de Precisão',
+    'Tesoura para cortes técnicos e acabamento preciso. Ideal para uso profissional. Design ergonômico e fio de alta durabilidade.',
     'https://i.pinimg.com/736x/6b/05/1d/6b051d5086bf9f85682e686e181bcf10.jpg',
-    [
-      'https://i.pinimg.com/1200x/7c/2e/ea/7c2eea5dd695bd9df6ab6524387652c6.jpg',
-      'https://i.pinimg.com/1200x/aa/2d/20/aa2d2071d977ea08ae16bab3ee8b8466.jpg',
-      'https://i.pinimg.com/1200x/20/d4/05/20d4052d35ab73cb838683fdc18df058.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/7c/2e/ea/7c2eea5dd695bd9df6ab6524387652c6.jpg',
+     'https://i.pinimg.com/1200x/aa/2d/20/aa2d2071d977ea08ae16bab3ee8b8466.jpg',
+     'https://i.pinimg.com/1200x/20/d4/05/20d4052d35ab73cb838683fdc18df058.jpg']
   ],
-  [
-    'Kit de Escova de Cerdas Naturais',
-    'ferramentas',
-    'Escova de Cerdas Naturais',
-    'Acabamento e Brilho',
-    'Escova com cerdas naturais indicada para pentear, distribuir a oleosidade natural ao longo dos fios e proporcionar um acabamento mais polido. Pode ser especialmente útil em cabelos lisos e ondulados.',
+  ['escova-cerdas-naturais', 'ferramentas', 'Escova de Cerdas Naturais', 'Acabamento e Brilho',
+    'Cerdas naturais para pentear e distribuir oleosidade. Ideal para todos os tipos de cabelo. Proporciona acabamento polido.',
     'https://i.pinimg.com/736x/32/2f/20/322f20b363ee6487911c3817f293dd21.jpg',
-    [
-      'https://i.pinimg.com/736x/f0/a4/11/f0a411143156c8668bd4f6ae64e55f25.jpg',
-      'https://i.pinimg.com/1200x/02/42/35/024235cc5d211b0a9e05b2e9883886e7.jpg',
-      'https://i.pinimg.com/1200x/62/31/ba/6231ba96187c6edeb9cc78a99fc823de.jpg'
-    ]
+    ['https://i.pinimg.com/736x/f0/a4/11/f0a411143156c8668bd4f6ae64e55f25.jpg',
+     'https://i.pinimg.com/1200x/02/42/35/024235cc5d211b0a9e05b2e9883886e7.jpg',
+     'https://i.pinimg.com/1200x/62/31/ba/6231ba96187c6edeb9cc78a99fc823de.jpg']
   ],
-  [
-    'maquina-corte',
-    'ferramentas',
-    'Máquina de Corte',
-    'Degradê e Aparo',
-    'Máquina profissional de corte com lâmina ajustável, indicada para cortes masculinos, contornos, aparos e construção de degradês. O controle da lâmina permite trabalhar diferentes comprimentos.',
+  ['maquina-corte', 'ferramentas', 'Máquina de Corte', 'Degradê e Aparo',
+    'Máquina com lâmina ajustável para cortes, contornos e degradês. Ideal para uso profissional. Alta precisão no acabamento.',
     'https://i.pinimg.com/736x/00/2b/50/002b5062b94512b47d3916ecf55212d3.jpg',
-    [
-      'https://i.pinimg.com/736x/fd/46/b1/fd46b19a09a5a83e1eedd7a544be466b.jpg',
-      'https://i.pinimg.com/736x/dc/f8/3e/dcf83e5930d2ff7b0af588b1f7ba1791.jpg',
-      'https://i.pinimg.com/736x/be/3d/a8/be3da8c62a5a3bdd21cc5605abd23e54.jpg'
-    ]
+    ['https://i.pinimg.com/736x/fd/46/b1/fd46b19a09a5a83e1eedd7a544be466b.jpg',
+     'https://i.pinimg.com/736x/dc/f8/3e/dcf83e5930d2ff7b0af588b1f7ba1791.jpg',
+     'https://i.pinimg.com/736x/be/3d/a8/be3da8c62a5a3bdd21cc5605abd23e54.jpg']
   ],
-  [
-    'difusor-universal',
-    'ferramentas',
-    'Difusor Universal',
-    'Cachos sem Frizz',
-    'Acessório para secador que distribui o fluxo de ar de maneira mais ampla e suave. Indicado principalmente para cabelos ondulados, cacheados e crespos, ajudando a preservar a formação natural dos cachos.',
+  ['difusor-universal', 'ferramentas', 'Difusor Universal', 'Cachos sem Frizz',
+    'Acessório para secador que distribui o ar de forma ampla. Ideal para cacheados e ondulados. Preserva a forma dos cachos.',
     'https://i.pinimg.com/736x/de/d6/1f/ded61f2c199f9e13e40fd64d3aa51708.jpg',
-    [
-      'https://i.pinimg.com/1200x/3e/15/a6/3e15a66f16a649716a2b7c69b611062a.jpg',
-      'https://i.pinimg.com/1200x/fe/97/ff/fe97ff246be6747be32d4c6af87789ce.jpg',
-      'https://i.pinimg.com/736x/40/94/40/409440dabf1d219f45e92534b7da1e8d.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/3e/15/a6/3e15a66f16a649716a2b7c69b611062a.jpg',
+     'https://i.pinimg.com/1200x/fe/97/ff/fe97ff246be6747be32d4c6af87789ce.jpg',
+     'https://i.pinimg.com/736x/40/94/40/409440dabf1d219f45e92534b7da1e8d.jpg']
   ],
-  [
-    'escova-termica-alisadora',
-    'ferramentas',
-    'Escova Térmica Alisadora',
-    'Alisamento e Modelagem',
-    'Escova elétrica com superfície aquecida que permite alinhar e modelar os fios durante o penteado. Indicada principalmente para retoques, redução de volume e acabamento mais liso.',
+  ['escova-termica-alisadora', 'ferramentas', 'Escova Térmica Alisadora', 'Alisamento e Modelagem',
+    'Escova elétrica com superfície aquecida para alisar e modelar. Ideal para retoques rápidos. Desliza com facilidade nos fios.',
     'https://i.pinimg.com/736x/fe/02/a6/fe02a6570cf649da1defec4455a46b2d.jpg',
-    [
-      'https://i.pinimg.com/736x/5e/c3/db/5ec3dbbf91dba4dbff59fdd7f3c57c00.jpg',
-      'https://i.pinimg.com/736x/7e/72/8d/7e728d6281c3f99dec672f9cfe638375.jpg',
-      'https://i.pinimg.com/736x/74/e2/a6/74e2a672b7ebe13187e0d7ec5ed2a36d.jpg'
-    ]
+    ['https://i.pinimg.com/736x/5e/c3/db/5ec3dbbf91dba4dbff59fdd7f3c57c00.jpg',
+     'https://i.pinimg.com/736x/7e/72/8d/7e728d6281c3f99dec672f9cfe638375.jpg',
+     'https://i.pinimg.com/736x/74/e2/a6/74e2a672b7ebe13187e0d7ec5ed2a36d.jpg']
   ],
-  [
-    'escova-paddle',
-    'ferramentas',
-    'Escova Paddle',
-    'Desembaraçar e Alisar',
-    'Escova de base larga e formato plano indicada para desembaraçar e alinhar cabelos médios e longos. Sua área ampla permite trabalhar grandes seções de cabelo com rapidez.',
+  ['escova-paddle', 'ferramentas', 'Escova Paddle', 'Desembaraçar e Alisar',
+    'Base larga e plana para desembaraçar e alinhar. Ideal para cabelos médios e longos. Trabalha grandes seções com rapidez.',
     'https://i.pinimg.com/1200x/49/36/a0/4936a0c18a5b237312f90b674f9b45db.jpg',
-    [
-      'https://i.pinimg.com/1200x/5f/f6/73/5ff673fcb94edbaa319ec3da502cc7a6.jpg',
-      'https://i.pinimg.com/736x/91/b1/90/91b1905d8a7c17206f3a1671d1954a05.jpg',
-      'https://i.pinimg.com/736x/45/c4/4b/45c44b757a8b4a1191d7276048e597b8.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/5f/f6/73/5ff673fcb94edbaa319ec3da502cc7a6.jpg',
+     'https://i.pinimg.com/736x/91/b1/90/91b1905d8a7c17206f3a1671d1954a05.jpg',
+     'https://i.pinimg.com/736x/45/c4/4b/45c44b757a8b4a1191d7276048e597b8.jpg']
   ],
-  [
-    'escova-termica',
-    'ferramentas',
-    'Escova Térmica',
-    'Modelagem com Brilho',
-    'Escova redonda com cilindro cerâmico desenvolvida para uso durante a secagem. A superfície ajuda a distribuir o calor de maneira uniforme e facilita a criação de volume, movimento e acabamento polido.',
+  ['escova-termica', 'ferramentas', 'Escova Térmica', 'Modelagem com Brilho',
+    'Escova redonda com cilindro cerâmico para secagem. Ideal para uso profissional e doméstico. Distribui calor uniformemente.',
     'https://i.pinimg.com/736x/f3/b8/14/f3b8140efec0fd25bee16ede2f9effb2.jpg',
-    [
-      'https://i.pinimg.com/736x/80/79/77/8079773d48fc57850c5ed932e3ae69b8.jpg',
-      'https://i.pinimg.com/736x/5d/47/ff/5d47ffffde26ab74dfadee1bdf9dfcd3.jpg',
-      'https://i.pinimg.com/736x/8d/5b/e7/8d5be7313f6720b5cfe57b3da3523b7a.jpg'
-    ]
+    ['https://i.pinimg.com/736x/80/79/77/8079773d48fc57850c5ed932e3ae69b8.jpg',
+     'https://i.pinimg.com/736x/5d/47/ff/5d47ffffde26ab74dfadee1bdf9dfcd3.jpg',
+     'https://i.pinimg.com/736x/8d/5b/e7/8d5be7313f6720b5cfe57b3da3523b7a.jpg']
   ],
-  [
-    'escova-madeira',
-    'ferramentas',
-    'Escova de Madeira',
-    'Antiestática e Natural',
-    'Escova com corpo de madeira e cerdas naturais indicada para pentear e massagear suavemente o couro cabeludo. Pode ajudar a reduzir a eletricidade estática e proporcionar um acabamento mais natural.',
+  ['escova-madeira', 'ferramentas', 'Escova de Madeira', 'Antiestática e Natural',
+    'Corpo de madeira com cerdas naturais para pentear e massagear. Ideal para uso diário. Efeito antiestático natural.',
     'https://i.pinimg.com/1200x/c5/8b/07/c58b07b61ad05709df43c3b92cd24e5c.jpg',
-    [
-      'https://i.pinimg.com/1200x/34/f1/0b/34f10b055e1b0b0d107737fa5ae04fed.jpg',
-      'https://i.pinimg.com/736x/b5/0b/3b/b50b3bccf7ab2db949e26faafdbbb339.jpg',
-      'https://i.pinimg.com/736x/9c/17/50/9c1750c276319824a659ce755c652be4.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/34/f1/0b/34f10b055e1b0b0d107737fa5ae04fed.jpg',
+     'https://i.pinimg.com/736x/b5/0b/3b/b50b3bccf7ab2db949e26faafdbbb339.jpg',
+     'https://i.pinimg.com/736x/9c/17/50/9c1750c276319824a659ce755c652be4.jpg']
   ],
-  [
-    'massageador-capilar',
-    'ferramentas',
-    'Massageador Capilar',
-    'Estímulo e Relaxamento',
-    'Massageador com pontas de silicone desenvolvido para massagear o couro cabeludo. Pode ser utilizado durante a higienização ou como parte de uma rotina de relaxamento e cuidados com o couro cabeludo.',
+  ['massageador-capilar', 'ferramentas', 'Massageador Capilar', 'Estímulo e Relaxamento',
+    'Pontas de silicone para massagear o couro cabeludo. Ideal para higienização e relaxamento. Estimula a circulação.',
     'https://i.pinimg.com/1200x/3d/a9/f2/3da9f25d3ffb632da87d0f1fb4189250.jpg',
-    [
-      'https://i.pinimg.com/1200x/37/84/ad/3784ad0486d8e36d4dad6dfc1bbc646c.jpg',
-      'https://i.pinimg.com/736x/2e/4b/35/2e4b353192b23a4a4314aa72693dc6ae.jpg',
-      'https://i.pinimg.com/736x/4b/37/53/4b375331adfc3ab8dd94c27cfd6e5e37.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/37/84/ad/3784ad0486d8e36d4dad6dfc1bbc646c.jpg',
+     'https://i.pinimg.com/736x/2e/4b/35/2e4b353192b23a4a4314aa72693dc6ae.jpg',
+     'https://i.pinimg.com/736x/4b/37/53/4b375331adfc3ab8dd94c27cfd6e5e37.jpg']
   ],
-  [
-    'touca-termica',
-    'ferramentas',
-    'Touca Térmica',
-    'Potencializa Tratamentos',
-    'Touca térmica utilizada durante determinados tratamentos capilares para manter o cabelo aquecido de maneira uniforme. Deve ser utilizada de acordo com as instruções do produto ou tratamento aplicado.',
+  ['touca-termica', 'ferramentas', 'Touca Térmica', 'Potencializa Tratamentos',
+    'Mantém o cabelo aquecido uniformemente durante tratamentos. Ideal para hidratação e reconstrução. Potencializa a absorção dos ativos.',
     'https://i.pinimg.com/736x/e0/fd/95/e0fd9535ba1eea5eeaff20e49bfc7308.jpg',
-    [
-      'https://i.pinimg.com/1200x/8c/5f/e7/8c5fe75321e624f96287da2885a79201.jpg',
-      'https://i.pinimg.com/736x/4f/cd/7f/4fcd7f37e266061e2d8691fb59e2e5d3.jpg',
-      'https://i.pinimg.com/736x/04/79/1f/04791ffd29b9c9ceac9f42102bd01031.jpg'
-    ]
+    ['https://i.pinimg.com/1200x/8c/5f/e7/8c5fe75321e624f96287da2885a79201.jpg',
+     'https://i.pinimg.com/736x/4f/cd/7f/4fcd7f37e266061e2d8691fb59e2e5d3.jpg',
+     'https://i.pinimg.com/736x/04/79/1f/04791ffd29b9c9ceac9f42102bd01031.jpg']
   ]
 ];
 
+
 // ============================================================
-// CONSTRUINDO O OBJETO styleData GLOBAL
+// 10. BOOTSTRAP — constrói styleData global
 // ============================================================
 var styleData = {};
 
 function addItemsToStyleData(dataArray) {
-  dataArray.forEach(function (item) {
-    var id = item[0],
-      cat = item[1],
-      corte = item[2],
-      title = item[3],
-      desc = item[4],
-      img = item[5],
-      variants = item[6];
-    styleData[id] = createCard(id, cat, corte, title, desc, img, variants);
+  dataArray.forEach(function(raw) {
+    var norm = normalizeItem(raw);
+    styleData[norm.id] = createCard(norm.id, norm.cat, norm.corte,
+                                     norm.title, norm.desc, norm.img, norm.variants);
   });
 }
 
