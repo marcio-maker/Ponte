@@ -16,11 +16,7 @@
     rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --bg: #0a0808;
@@ -42,8 +38,7 @@
       --ok: #a8d8a8;
     }
 
-    html,
-    body {
+    html, body {
       background: var(--bg);
       font-family: 'Inter', sans-serif;
       color: var(--text);
@@ -77,14 +72,8 @@
       position: relative;
     }
 
-    * {
-      scrollbar-width: none;
-    }
-
-    *::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
+    * { scrollbar-width: none; }
+    *::-webkit-scrollbar { width: 0; height: 0; }
 
     .header {
       margin-bottom: 1.2rem;
@@ -96,15 +85,8 @@
     }
 
     @keyframes headerFade {
-      0% {
-        opacity: 0;
-        transform: translateY(-14px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(-14px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     .header::after {
@@ -136,17 +118,9 @@
     }
 
     @keyframes shimmer {
-      0% {
-        background-position: 100% 0;
-      }
-
-      30% {
-        background-position: -50% 0;
-      }
-
-      100% {
-        background-position: -50% 0;
-      }
+      0% { background-position: 100% 0; }
+      30% { background-position: -50% 0; }
+      100% { background-position: -50% 0; }
     }
 
     .header h1 span {
@@ -214,14 +188,8 @@
       cursor: pointer;
     }
 
-    .mini-logo:hover {
-      color: var(--gold-light);
-      transform: scale(1.05);
-    }
-
-    .mini-logo span {
-      color: var(--gold);
-    }
+    .mini-logo:hover { color: var(--gold-light); transform: scale(1.05); }
+    .mini-logo span { color: var(--gold); }
 
     .filtros-scroll {
       display: flex;
@@ -231,21 +199,11 @@
       scrollbar-width: none;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
-      mask-image: linear-gradient(90deg,
-          transparent 0,
-          #000 16px,
-          #000 calc(100% - 16px),
-          transparent 100%);
-      -webkit-mask-image: linear-gradient(90deg,
-          transparent 0,
-          #000 16px,
-          #000 calc(100% - 16px),
-          transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
     }
 
-    .filtros-scroll::-webkit-scrollbar {
-      display: none;
-    }
+    .filtros-scroll::-webkit-scrollbar { display: none; }
 
     .filtro-btn {
       flex-shrink: 0;
@@ -262,8 +220,6 @@
       cursor: pointer;
       transition: all .35s var(--ease-luxury);
       white-space: nowrap;
-      position: relative;
-      overflow: hidden;
     }
 
     .filtro-btn:hover,
@@ -274,9 +230,7 @@
       transform: translateY(-1px);
     }
 
-    .filtro-btn:active {
-      transform: translateY(0) scale(0.97);
-    }
+    .filtro-btn:active { transform: translateY(0) scale(0.97); }
 
     .filtro-btn.active {
       background: var(--gold);
@@ -288,23 +242,12 @@
     }
 
     @keyframes filtroActivate {
-      0% {
-        transform: scale(1);
-      }
-
-      40% {
-        transform: scale(1.08);
-      }
-
-      100% {
-        transform: scale(1);
-      }
+      0% { transform: scale(1); }
+      40% { transform: scale(1.08); }
+      100% { transform: scale(1); }
     }
 
-    .gallery {
-      column-count: 2;
-      column-gap: 10px;
-    }
+    .gallery { column-count: 2; column-gap: 10px; }
 
     .hair-card {
       break-inside: avoid;
@@ -321,19 +264,9 @@
     }
 
     @keyframes cardEnter {
-      0% {
-        opacity: 0;
-        transform: translateY(28px) scale(.94);
-      }
-
-      60% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      0% { opacity: 0; transform: translateY(28px) scale(.94); }
+      60% { opacity: 1; }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .hair-card:hover,
@@ -363,29 +296,12 @@
       transition: transform .9s cubic-bezier(.25, .46, .45, .94), opacity .6s ease;
     }
 
-    .hair-card img.h-md {
-      height: 200px;
-    }
+    .hair-card img.h-md { height: 200px; }
+    .hair-card img.h-lg { height: 260px; }
+    .hair-card img.h-xl { height: 320px; }
 
-    .hair-card img.h-lg {
-      height: 260px;
-    }
-
-    .hair-card img.h-xl {
-      height: 320px;
-    }
-
-    .hair-card:hover img {
-      transform: scale(1.08);
-    }
-
-    .hair-card img.trocando {
-      opacity: 0.25;
-    }
-
-    .hair-card-categoria {
-      display: none !important;
-    }
+    .hair-card:hover img { transform: scale(1.08); }
+    .hair-card img.trocando { opacity: 0.25; }
 
     .hair-card-title {
       position: absolute;
@@ -462,10 +378,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .modal-overlay.active {
-      visibility: visible;
-      opacity: 1;
-    }
+    .modal-overlay.active { visibility: visible; opacity: 1; }
 
     .modal-content {
       background: var(--bg);
@@ -535,10 +448,7 @@
       transform: translateX(-4px) scale(1.05);
     }
 
-    .modal-header-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .modal-header-info { flex: 1; min-width: 0; }
 
     .modal-header-cat {
       font-size: 0.55rem;
@@ -589,10 +499,7 @@
       text-align: center;
     }
 
-    .variacoes-masonry {
-      column-count: 2;
-      column-gap: 10px;
-    }
+    .variacoes-masonry { column-count: 2; column-gap: 10px; }
 
     .variacao-card {
       break-inside: avoid;
@@ -608,15 +515,8 @@
     }
 
     @keyframes variacaoEnter {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(.94);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      0% { opacity: 0; transform: translateY(20px) scale(.94); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .variacao-card:hover,
@@ -636,21 +536,11 @@
       transition: transform .7s cubic-bezier(.25, .46, .45, .94);
     }
 
-    .variacao-card img.h-md {
-      height: 180px;
-    }
+    .variacao-card img.h-md { height: 180px; }
+    .variacao-card img.h-lg { height: 230px; }
+    .variacao-card img.h-xl { height: 290px; }
 
-    .variacao-card img.h-lg {
-      height: 230px;
-    }
-
-    .variacao-card img.h-xl {
-      height: 290px;
-    }
-
-    .variacao-card:hover img {
-      transform: scale(1.06);
-    }
+    .variacao-card:hover img { transform: scale(1.06); }
 
     .variacao-numero {
       position: absolute;
@@ -677,6 +567,41 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    /* ===== Botão QR flutuante ===== */
+    .btn-qr-float {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(10, 8, 8, .8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      transition: all .3s var(--ease-luxury);
+      padding: 0;
+      line-height: 1;
+    }
+
+    .btn-qr-float:hover,
+    .btn-qr-float:focus-visible {
+      background: var(--gold);
+      color: #1b1209;
+      border-color: var(--gold);
+      transform: scale(1.08);
+      outline: none;
+    }
+
+    .btn-qr-float:active { transform: scale(.94); }
+
     .card-section {
       background: var(--bg-card);
       border: 1px solid var(--border-gold);
@@ -693,19 +618,9 @@
     }
 
     @keyframes cardDetailEnter {
-      0% {
-        opacity: 0;
-        transform: translateY(32px) scale(.96);
-      }
-
-      60% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      0% { opacity: 0; transform: translateY(32px) scale(.96); }
+      60% { opacity: 1; }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .card-hair-img {
@@ -725,11 +640,10 @@
       margin-bottom: 1.1rem;
       border-radius: var(--radius);
       overflow: hidden;
+      cursor: zoom-in;
     }
 
-    .card-img-wrap .card-hair-img {
-      margin-bottom: 0;
-    }
+    .card-img-wrap .card-hair-img { margin-bottom: 0; }
 
     .card-img-hint {
       position: absolute;
@@ -741,33 +655,20 @@
       border: 1px solid var(--border-gold);
       padding: 5px 14px;
       border-radius: 24px;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--gold);
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
       white-space: nowrap;
       pointer-events: none;
       transition: all .4s var(--ease-luxury);
       animation: hintPulse 2.5s ease-in-out infinite;
+      text-align: center;
     }
 
     @keyframes hintPulse {
-
-      0%,
-      100% {
-        transform: translateX(-50%) translateY(0);
-      }
-
-      50% {
-        transform: translateX(-50%) translateY(-3px);
-      }
-    }
-
-    .card-img-wrap:hover .card-img-hint {
-      background: rgba(212, 176, 122, .95);
-      color: #1b1209;
-      animation: none;
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-3px); }
     }
 
     .card-img-wrap.aberto .card-img-hint {
@@ -805,41 +706,6 @@
       opacity: 0.85;
     }
 
-    .variacoes-rapidas {
-      display: flex;
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.4rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .variacoes-rapidas img {
-      flex-shrink: 0;
-      width: 60px;
-      height: 60px;
-      border-radius: 10px;
-      object-fit: cover;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all .35s var(--ease-luxury);
-      background: #0e0b09;
-      opacity: 0.6;
-    }
-
-    .variacoes-rapidas img:hover {
-      opacity: 1;
-      border-color: var(--border-gold);
-      transform: scale(1.06);
-    }
-
-    .variacoes-rapidas img.active {
-      border-color: var(--gold);
-      opacity: 1;
-      box-shadow: 0 0 0 3px var(--gold-glow);
-      transform: scale(1.04);
-    }
-
-    /* ===== Galeria de miniaturas (loja + card detalhado) ===== */
     .galeria-loja {
       display: flex;
       gap: 0.5rem;
@@ -909,8 +775,6 @@
       margin-bottom: 0.6rem;
       transition: all .4s var(--ease-luxury);
       box-shadow: 0 8px 24px rgba(212, 176, 122, .2);
-      position: relative;
-      overflow: hidden;
     }
 
     .btn-action:hover {
@@ -920,24 +784,11 @@
       box-shadow: 0 16px 40px rgba(212, 176, 122, .4);
     }
 
-    .btn-action:active {
-      transform: translateY(-1px) scale(.98);
-    }
-
-    .btn-action.pulse {
-      animation: pulseGold 2.8s ease-in-out 1s infinite;
-    }
+    .btn-action:active { transform: translateY(-1px) scale(.98); }
 
     @keyframes pulseGold {
-
-      0%,
-      100% {
-        box-shadow: 0 8px 24px rgba(212, 176, 122, .2), 0 0 0 0 rgba(212, 176, 122, .45);
-      }
-
-      50% {
-        box-shadow: 0 8px 24px rgba(212, 176, 122, .3), 0 0 0 10px rgba(212, 176, 122, 0);
-      }
+      0%, 100% { box-shadow: 0 8px 24px rgba(212, 176, 122, .2), 0 0 0 0 rgba(212, 176, 122, .45); }
+      50% { box-shadow: 0 8px 24px rgba(212, 176, 122, .3), 0 0 0 10px rgba(212, 176, 122, 0); }
     }
 
     .btn-secondary {
@@ -969,25 +820,6 @@
       transform: translateY(-2px);
     }
 
-    /* ===== Dupla de botões (Salvar + Abrir) ===== */
-    .btn-dupla {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .btn-dupla .btn-secondary {
-      flex: 1;
-      margin-bottom: 0;
-      font-size: 0.78rem;
-      padding: 0.9rem 0.6rem;
-    }
-
-    .btn-dupla .btn-secondary:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
     .etapa-num {
       display: inline-flex;
       align-items: center;
@@ -1006,9 +838,7 @@
     }
 
     .btn-action.etapa-ativa,
-    .btn-secondary.etapa-ativa {
-      animation: pulseGold 2.4s ease-in-out infinite;
-    }
+    .btn-secondary.etapa-ativa { animation: pulseGold 2.4s ease-in-out infinite; }
 
     .btn-action.etapa-ativa .etapa-num,
     .btn-secondary.etapa-ativa .etapa-num {
@@ -1019,10 +849,7 @@
     }
 
     .btn-action.etapa-concluida,
-    .btn-secondary.etapa-concluida {
-      opacity: 0.75;
-      animation: none;
-    }
+    .btn-secondary.etapa-concluida { opacity: 0.75; animation: none; }
 
     .btn-action.etapa-concluida .etapa-num,
     .btn-secondary.etapa-concluida .etapa-num {
@@ -1033,9 +860,7 @@
     }
 
     .btn-action.etapa-concluida .etapa-num span,
-    .btn-secondary.etapa-concluida .etapa-num span {
-      display: none;
-    }
+    .btn-secondary.etapa-concluida .etapa-num span { display: none; }
 
     .btn-action.etapa-concluida .etapa-num::after,
     .btn-secondary.etapa-concluida .etapa-num::after {
@@ -1056,9 +881,7 @@
       letter-spacing: 0.02em;
     }
 
-    .etapa-dica.visivel {
-      opacity: 0.8;
-    }
+    .etapa-dica.visivel { opacity: 0.8; }
 
     .btn-buy {
       display: flex;
@@ -1090,9 +913,7 @@
       box-shadow: 0 16px 44px rgba(212, 176, 122, .45);
     }
 
-    .btn-buy .icon {
-      font-size: 1.1rem;
-    }
+    .btn-buy .icon { font-size: 1.1rem; }
 
     .btn-buy-hint {
       font-size: 0.7rem;
@@ -1155,9 +976,7 @@
       margin-bottom: 1.2rem;
     }
 
-    .qr-expansivel .qr-wrap {
-      margin-bottom: 0;
-    }
+    .qr-expansivel .qr-wrap { margin-bottom: 0; }
 
     .instructions {
       background: rgba(0, 0, 0, .3);
@@ -1180,14 +999,9 @@
       line-height: 1.5;
     }
 
-    .instructions li:last-child {
-      margin-bottom: 0;
-    }
+    .instructions li:last-child { margin-bottom: 0; }
 
-    .instructions li strong {
-      color: var(--gold);
-      font-weight: 600;
-    }
+    .instructions li strong { color: var(--gold); font-weight: 600; }
 
     .instructions li::before {
       content: counter(step);
@@ -1238,9 +1052,7 @@
       transition: all .4s var(--ease-luxury);
     }
 
-    .product-item:last-child {
-      border-bottom: none;
-    }
+    .product-item:last-child { border-bottom: none; }
 
     .product-item:hover {
       background: rgba(212, 176, 122, .04);
@@ -1260,9 +1072,7 @@
       transition: transform .4s var(--ease-bounce);
     }
 
-    .product-item:hover .product-thumb {
-      transform: scale(1.06) rotate(-2deg);
-    }
+    .product-item:hover .product-thumb { transform: scale(1.06) rotate(-2deg); }
 
     .product-thumb.placeholder {
       display: flex;
@@ -1273,10 +1083,7 @@
       background: rgba(212, 176, 122, .08);
     }
 
-    .product-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .product-info { flex: 1; min-width: 0; }
 
     .product-info h4 {
       font-size: 0.88rem;
@@ -1344,9 +1151,7 @@
       font-weight: 300;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     .footer-note {
       margin-top: 2rem;
@@ -1371,203 +1176,264 @@
       column-span: all;
     }
 
+    /* ===== OVERLAY "COMO SALVAR A IMAGEM" ===== */
+    .print-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .4s ease, visibility .4s;
+      cursor: pointer;
+    }
+
+    .print-overlay.active { visibility: visible; opacity: 1; }
+
+    .print-card {
+      background: linear-gradient(180deg, #1a1612 0%, #0f0c0a 100%);
+      border: 1px solid rgba(212, 176, 122, .4);
+      border-radius: 20px;
+      padding: 1.8rem 1.5rem 1.5rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .8), 0 0 60px rgba(212, 176, 122, .12);
+      animation: cardEnter .5s cubic-bezier(.23, 1, .32, 1) both;
+      cursor: default;
+    }
+
+    .print-eyebrow {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      color: var(--gold);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.6rem;
+      opacity: 0.85;
+    }
+
+    .print-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--gold-light);
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .print-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-weight: 300;
+      line-height: 1.5;
+      margin-bottom: 1.6rem;
+    }
+
+    .print-passos {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .print-passo {
+      padding-left: 1rem;
+      border-left: 2px solid rgba(212, 176, 122, .35);
+    }
+
+    .print-passo-titulo {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .print-passo-txt {
+      font-size: 0.85rem;
+      color: var(--text-sec);
+      font-weight: 300;
+      line-height: 1.55;
+    }
+
+    .print-passo-txt b { color: var(--gold-light); font-weight: 600; }
+
+    .print-destaque {
+      background: rgba(212, 176, 122, .07);
+      border-left-color: var(--gold);
+      padding: 0.75rem 0.85rem 0.75rem 1rem;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .print-footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      font-style: italic;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(212, 176, 122, .12);
+      line-height: 1.5;
+    }
+
+    .print-footer b { color: var(--gold); font-weight: 600; font-style: normal; }
+
+    /* ===== ZOOM OVERLAY ===== */
+    .zoom-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .35s ease, visibility .35s;
+      touch-action: none;
+      overscroll-behavior: contain;
+    }
+
+    .zoom-overlay.active { visibility: visible; opacity: 1; }
+
+    .zoom-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .zoom-stage img {
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      transform-origin: center center;
+      will-change: transform;
+      transition: transform .08s linear;
+    }
+
+    .zoom-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(10, 8, 8, .8);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all .3s var(--ease-luxury);
+      padding: 0;
+      line-height: 1;
+    }
+
+    .zoom-close:hover {
+      background: var(--gold);
+      color: #1b1209;
+      transform: scale(1.08) rotate(90deg);
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 8, 8, .8);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-gold);
+      padding: 8px 16px;
+      border-radius: 24px;
+      font-size: 0.72rem;
+      color: var(--gold-light);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+      animation: hintPulse 2.5s ease-in-out infinite;
+      font-family: 'Inter', sans-serif;
+    }
+
     @media (min-width: 600px) {
-      body {
-        padding: 1.4rem 1rem 2.4rem;
-      }
-
-      .filtros {
-        margin: 0 -1rem 1rem;
-        padding: 0.6rem 1rem;
-      }
-
-      .gallery {
-        column-count: 3;
-        column-gap: 14px;
-      }
-
-      .hair-card {
-        margin-bottom: 14px;
-      }
-
-      .variacoes-masonry {
-        column-count: 3;
-        column-gap: 14px;
-      }
-
-      .variacao-card {
-        margin-bottom: 14px;
-      }
-
-      .header h1 {
-        font-size: 2.1rem;
-      }
-
-      .hair-card img.h-md {
-        height: 240px;
-      }
-
-      .hair-card img.h-lg {
-        height: 300px;
-      }
-
-      .hair-card img.h-xl {
-        height: 360px;
-      }
-
-      .variacao-card img.h-md {
-        height: 220px;
-      }
-
-      .variacao-card img.h-lg {
-        height: 280px;
-      }
-
-      .variacao-card img.h-xl {
-        height: 340px;
-      }
-
-      .modal-content {
-        padding: 0 1.2rem 3rem;
-      }
-
-      .modal-header {
-        padding: 0.9rem 1.2rem;
-        margin: 0 -1.2rem 1.2rem;
-      }
+      body { padding: 1.4rem 1rem 2.4rem; }
+      .filtros { margin: 0 -1rem 1rem; padding: 0.6rem 1rem; }
+      .gallery { column-count: 3; column-gap: 14px; }
+      .hair-card { margin-bottom: 14px; }
+      .variacoes-masonry { column-count: 3; column-gap: 14px; }
+      .variacao-card { margin-bottom: 14px; }
+      .header h1 { font-size: 2.1rem; }
+      .hair-card img.h-md { height: 240px; }
+      .hair-card img.h-lg { height: 300px; }
+      .hair-card img.h-xl { height: 360px; }
+      .variacao-card img.h-md { height: 220px; }
+      .variacao-card img.h-lg { height: 280px; }
+      .variacao-card img.h-xl { height: 340px; }
+      .modal-content { padding: 0 1.2rem 3rem; }
+      .modal-header { padding: 0.9rem 1.2rem; margin: 0 -1.2rem 1.2rem; }
     }
 
     @media (min-width: 900px) {
-      body {
-        padding: 1.8rem 1.4rem 3rem;
-      }
-
-      .filtros {
-        margin: 0 -1.4rem 1rem;
-        padding: 0.6rem 1.4rem;
-      }
-
-      .gallery {
-        column-count: 4;
-        column-gap: 18px;
-      }
-
-      .hair-card {
-        margin-bottom: 18px;
-      }
-
-      .variacoes-masonry {
-        column-count: 4;
-        column-gap: 18px;
-      }
-
-      .variacao-card {
-        margin-bottom: 18px;
-      }
-
-      .header h1 {
-        font-size: 2.4rem;
-      }
-
-      .hair-card img.h-md {
-        height: 260px;
-      }
-
-      .hair-card img.h-lg {
-        height: 320px;
-      }
-
-      .hair-card img.h-xl {
-        height: 380px;
-      }
-
-      .variacao-card img.h-md {
-        height: 240px;
-      }
-
-      .variacao-card img.h-lg {
-        height: 300px;
-      }
-
-      .variacao-card img.h-xl {
-        height: 360px;
-      }
-
-      .modal-content {
-        padding: 0 1.4rem 3rem;
-      }
-
-      .modal-header {
-        padding: 0.9rem 1.4rem;
-        margin: 0 -1.4rem 1.2rem;
-      }
+      body { padding: 1.8rem 1.4rem 3rem; }
+      .filtros { margin: 0 -1.4rem 1rem; padding: 0.6rem 1.4rem; }
+      .gallery { column-count: 4; column-gap: 18px; }
+      .hair-card { margin-bottom: 18px; }
+      .variacoes-masonry { column-count: 4; column-gap: 18px; }
+      .variacao-card { margin-bottom: 18px; }
+      .header h1 { font-size: 2.4rem; }
+      .hair-card img.h-md { height: 260px; }
+      .hair-card img.h-lg { height: 320px; }
+      .hair-card img.h-xl { height: 380px; }
+      .variacao-card img.h-md { height: 240px; }
+      .variacao-card img.h-lg { height: 300px; }
+      .variacao-card img.h-xl { height: 360px; }
+      .modal-content { padding: 0 1.4rem 3rem; }
+      .modal-header { padding: 0.9rem 1.4rem; margin: 0 -1.4rem 1.2rem; }
     }
 
     @media (max-width: 400px) {
-      .header h1 {
-        font-size: 1.6rem;
-      }
-
-      .modal-header-title {
-        font-size: 1.1rem;
-      }
-
-      .card-hair-name {
-        font-size: 1.35rem;
-      }
-
-      .instructions li {
-        font-size: 0.78rem;
-      }
-
-      .gallery {
-        column-count: 2;
-        column-gap: 8px;
-      }
-
-      .hair-card {
-        margin-bottom: 8px;
-      }
-
-      .variacoes-masonry {
-        column-count: 2;
-        column-gap: 8px;
-      }
-
-      .variacao-card {
-        margin-bottom: 8px;
-      }
-
-      .hair-card img.h-md {
-        height: 180px;
-      }
-
-      .hair-card img.h-lg {
-        height: 220px;
-      }
-
-      .hair-card img.h-xl {
-        height: 270px;
-      }
-
-      .variacao-card img.h-md {
-        height: 160px;
-      }
-
-      .variacao-card img.h-lg {
-        height: 200px;
-      }
-
-      .variacao-card img.h-xl {
-        height: 240px;
-      }
+      .header h1 { font-size: 1.6rem; }
+      .modal-header-title { font-size: 1.1rem; }
+      .card-hair-name { font-size: 1.35rem; }
+      .instructions li { font-size: 0.78rem; }
+      .gallery { column-count: 2; column-gap: 8px; }
+      .hair-card { margin-bottom: 8px; }
+      .variacoes-masonry { column-count: 2; column-gap: 8px; }
+      .variacao-card { margin-bottom: 8px; }
+      .hair-card img.h-md { height: 180px; }
+      .hair-card img.h-lg { height: 220px; }
+      .hair-card img.h-xl { height: 270px; }
+      .variacao-card img.h-md { height: 160px; }
+      .variacao-card img.h-lg { height: 200px; }
+      .variacao-card img.h-xl { height: 240px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -1622,6 +1488,50 @@
 
     <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
+
+  <!-- ===== OVERLAY "COMO SALVAR A IMAGEM" ===== -->
+  <div class="print-overlay" id="printOverlay">
+    <div class="print-card" id="printCard">
+      <div class="print-eyebrow">HairOS · Referência</div>
+      <div class="print-title">Como salvar a imagem</div>
+      <div class="print-sub">Escolha o jeito mais fácil pro seu celular</div>
+
+      <div class="print-passos">
+        <div class="print-passo">
+          <div class="print-passo-titulo">Android</div>
+          <div class="print-passo-txt">
+            Toque no <b>menu ⋮</b> do navegador e escolha <b>Fazer download</b>.
+          </div>
+        </div>
+        <div class="print-passo">
+          <div class="print-passo-titulo">iPhone</div>
+          <div class="print-passo-txt">
+            Toque e <b>segure a imagem</b> e escolha <b>Salvar em Fotos</b>.
+          </div>
+        </div>
+        <div class="print-passo print-destaque">
+          <div class="print-passo-titulo">Jeito mais fácil</div>
+          <div class="print-passo-txt">
+            Dê um <b>print da tela</b> agora. A imagem já está limpa, sem botões.
+          </div>
+        </div>
+      </div>
+
+      <div class="print-footer">
+        Toque em qualquer lugar para <b>fechar este aviso</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ZOOM OVERLAY ===== -->
+  <div class="zoom-overlay" id="zoomOverlay">
+    <button class="zoom-close" id="zoomClose" aria-label="Fechar zoom">✕</button>
+    <div class="zoom-stage" id="zoomStage">
+      <img id="zoomImg" src="" alt="Zoom">
+    </div>
+    <div class="zoom-hint">Pinça para ampliar · Duplo toque para voltar</div>
+  </div>
+
   <script src="data.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
@@ -1634,6 +1544,7 @@
     const IMG_FALLBACK = 'https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg';
     const INTERVALO_MIN = 10000;
     const INTERVALO_MAX = 15000;
+    const PRINT_AUTOHIDE_MS = 6000;
 
     const SUBTITULOS = {
       todos: 'todos · referência · QR · simulação IA',
@@ -1672,36 +1583,139 @@
     }
 
     // ============================================================
-    // SALVAR IMAGEM — fetch + blob (Caminho 2)
-    // Tenta baixar direto; se falhar (CORS/iOS), abre em nova aba.
+    // PRINT OVERLAY
     // ============================================================
-    async function salvarImagem(url, nomeArquivo) {
-      try {
-        const resposta = await fetch(url, { mode: 'cors' });
-        if (!resposta.ok) throw new Error('HTTP ' + resposta.status);
+    const printOverlay = document.getElementById('printOverlay');
+    const printCard = document.getElementById('printCard');
+    let printAutoHideTimer = null;
 
-        const blob = await resposta.blob();
-        const blobUrl = URL.createObjectURL(blob);
+    function abrirPrintOverlay() {
+      printOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
 
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = nomeArquivo || 'referencia-hairos.jpg';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+      if (printAutoHideTimer) clearTimeout(printAutoHideTimer);
+      printAutoHideTimer = setTimeout(() => {
+        fecharPrintOverlay();
+      }, PRINT_AUTOHIDE_MS);
+    }
 
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
-        return true;
-      } catch (err) {
-        console.warn('Download direto falhou, abrindo em nova aba:', err);
-        window.open(url, '_blank', 'noopener');
-        return false;
+    function fecharPrintOverlay() {
+      printOverlay.classList.remove('active');
+      if (printAutoHideTimer) { clearTimeout(printAutoHideTimer); printAutoHideTimer = null; }
+      if (!zoomOverlay.classList.contains('active') &&
+          !modalOverlay.classList.contains('active')) {
+        document.body.style.overflow = '';
       }
     }
 
+    printOverlay.addEventListener('click', (e) => {
+      if (e.target === printOverlay) fecharPrintOverlay();
+    });
+    printCard.addEventListener('click', (e) => e.stopPropagation());
+
     // ============================================================
-    // 1. ITENS + índice por categoria
+    // ZOOM OVERLAY
+    // ============================================================
+    const zoomOverlay = document.getElementById('zoomOverlay');
+    const zoomStage = document.getElementById('zoomStage');
+    const zoomImg = document.getElementById('zoomImg');
+    const zoomClose = document.getElementById('zoomClose');
+
+    let zoomScale = 1, zoomX = 0, zoomY = 0;
+    let startX = 0, startY = 0, startDist = 0, startScale = 1;
+    let isPanning = false, lastTap = 0, pinchActive = false;
+
+    function aplicarTransform() {
+      zoomImg.style.transform = `translate(${zoomX}px, ${zoomY}px) scale(${zoomScale})`;
+    }
+
+    function resetZoom() { zoomScale = 1; zoomX = 0; zoomY = 0; aplicarTransform(); }
+
+    function openZoom(src, alt) {
+      zoomImg.src = src;
+      zoomImg.alt = alt || 'Zoom';
+      resetZoom();
+      zoomOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeZoom() {
+      zoomOverlay.classList.remove('active');
+      if (!printOverlay.classList.contains('active') &&
+          !modalOverlay.classList.contains('active')) {
+        document.body.style.overflow = '';
+      }
+      setTimeout(() => { zoomImg.src = ''; resetZoom(); }, 300);
+    }
+
+    if (zoomClose) zoomClose.addEventListener('click', closeZoom);
+    if (zoomOverlay) {
+      zoomOverlay.addEventListener('click', (e) => {
+        if (e.target === zoomOverlay || e.target === zoomStage) closeZoom();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (zoomOverlay.classList.contains('active')) { closeZoom(); return; }
+      if (printOverlay.classList.contains('active')) { fecharPrintOverlay(); return; }
+    });
+
+    if (zoomStage) {
+      zoomStage.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          pinchActive = true;
+          startDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          startScale = zoomScale;
+        } else if (e.touches.length === 1) {
+          pinchActive = false;
+          isPanning = true;
+          startX = e.touches[0].clientX - zoomX;
+          startY = e.touches[0].clientY - zoomY;
+
+          const now = Date.now();
+          if (now - lastTap < 300) {
+            if (zoomScale > 1.05) resetZoom();
+            else { zoomScale = 2.2; aplicarTransform(); }
+            lastTap = 0;
+            isPanning = false;
+            return;
+          }
+          lastTap = now;
+        }
+      }, { passive: true });
+
+      zoomStage.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && pinchActive) {
+          e.preventDefault();
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const factor = dist / startDist;
+          zoomScale = Math.min(Math.max(startScale * factor, 1), 5);
+          aplicarTransform();
+        } else if (e.touches.length === 1 && isPanning && zoomScale > 1) {
+          e.preventDefault();
+          zoomX = e.touches[0].clientX - startX;
+          zoomY = e.touches[0].clientY - startY;
+          aplicarTransform();
+        }
+      }, { passive: false });
+
+      zoomStage.addEventListener('touchend', (e) => {
+        if (e.touches.length === 0) {
+          pinchActive = false; isPanning = false;
+          if (zoomScale < 1.05) resetZoom();
+        }
+      }, { passive: true });
+    }
+
+    // ============================================================
+    // 1. ITENS
     // ============================================================
     function extrairItens() {
       const itens = [];
@@ -1715,10 +1729,7 @@
         const vistos = {};
         (card.variants || []).forEach(v => {
           const url = (typeof v === 'object' && v !== null) ? v.img : v;
-          if (url && !vistos[url]) {
-            vistos[url] = true;
-            variantes.push(url);
-          }
+          if (url && !vistos[url]) { vistos[url] = true; variantes.push(url); }
         });
         if (card.img && !vistos[card.img]) variantes.unshift(card.img);
 
@@ -1784,13 +1795,9 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       const qtd = quantidade || 3;
 
       let mixCategorias;
-      if (item.categoria === 'coloracao') {
-        mixCategorias = ['coloracao', 'coloracao', 'cuidados'];
-      } else if (item.categoria === 'ferramentas') {
-        mixCategorias = ['ferramentas', 'ferramentas', 'cuidados'];
-      } else {
-        mixCategorias = ['coloracao', 'cuidados', 'cuidados'];
-      }
+      if (item.categoria === 'coloracao') mixCategorias = ['coloracao', 'coloracao', 'cuidados'];
+      else if (item.categoria === 'ferramentas') mixCategorias = ['ferramentas', 'ferramentas', 'cuidados'];
+      else mixCategorias = ['coloracao', 'cuidados', 'cuidados'];
 
       const escolhidos = [];
       const usados = {};
@@ -1804,26 +1811,16 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         for (let tent = 0; tent < candidatos.length; tent++) {
           const idx = (rotacaoIndex + tent) % candidatos.length;
           const cand = candidatos[idx];
-          if (!usados[cand.id]) {
-            escolhido = cand;
-            rotacaoIndex = idx + 1;
-            break;
-          }
+          if (!usados[cand.id]) { escolhido = cand; rotacaoIndex = idx + 1; break; }
         }
 
-        if (escolhido) {
-          usados[escolhido.id] = true;
-          escolhidos.push(escolhido);
-        }
+        if (escolhido) { usados[escolhido.id] = true; escolhidos.push(escolhido); }
       }
 
       if (escolhidos.length < qtd) {
         for (const kit of AFILIADOS) {
           if (escolhidos.length >= qtd) break;
-          if (!usados[kit.id]) {
-            usados[kit.id] = true;
-            escolhidos.push(kit);
-          }
+          if (!usados[kit.id]) { usados[kit.id] = true; escolhidos.push(kit); }
         }
       }
 
@@ -1936,11 +1933,8 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     function renderGallery() {
       let itensFiltrados;
 
-      if (filtroAtual === 'todos') {
-        itensFiltrados = shuffleArray(ITENS);
-      } else {
-        itensFiltrados = ITENS.filter(i => i.categoria === filtroAtual);
-      }
+      if (filtroAtual === 'todos') itensFiltrados = shuffleArray(ITENS);
+      else itensFiltrados = ITENS.filter(i => i.categoria === filtroAtual);
 
       if (itensFiltrados.length === 0) {
         galleryEl.innerHTML = '<div class="loading-msg">Nenhum item nesta categoria</div>';
@@ -1960,8 +1954,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
                style="animation-delay: ${delay}s">
             <div class="hair-card-img-wrap">
               <img src="${item.imagem}" alt="${item.nome}" loading="lazy"
-                   class="${item.altura}"
-                   onerror="this.src='${IMG_FALLBACK}'">
+                   class="${item.altura}" onerror="this.src='${IMG_FALLBACK}'">
               ${badgeHtml}
             </div>
           </div>
@@ -1985,24 +1978,14 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       iniciarRotacao();
     }
 
-    // ============================================================
-    // 7.1 ROTAÇÃO REAL DOS CARDS (10 a 15s)
-    // ============================================================
     function iniciarRotacao() {
-      if (rotacaoTimer) {
-        clearTimeout(rotacaoTimer);
-        rotacaoTimer = null;
-      }
-
+      if (rotacaoTimer) { clearTimeout(rotacaoTimer); rotacaoTimer = null; }
       const agendarProxima = () => {
         rotacaoTimer = setTimeout(() => {
-          if (!modalOverlay.classList.contains('active')) {
-            rotacionarCards();
-          }
+          if (!modalOverlay.classList.contains('active')) rotacionarCards();
           agendarProxima();
         }, intervaloAleatorio());
       };
-
       agendarProxima();
     }
 
@@ -2071,7 +2054,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     }
 
     // ============================================================
-    // 8. FILTROS + MINI LOGO
+    // 8. FILTROS
     // ============================================================
     filtrosEl.addEventListener('click', (e) => {
       const btn = e.target.closest('.filtro-btn');
@@ -2085,10 +2068,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         const btnRect = btn.getBoundingClientRect();
         const wrapRect = filtrosScrollEl.getBoundingClientRect();
         if (btnRect.left < wrapRect.left || btnRect.right > wrapRect.right) {
-          filtrosScrollEl.scrollTo({
-            left: btn.offsetLeft - 40,
-            behavior: 'smooth'
-          });
+          filtrosScrollEl.scrollTo({ left: btn.offsetLeft - 40, behavior: 'smooth' });
         }
       }
 
@@ -2122,7 +2102,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     }
 
     // ============================================================
-    // 10. MODAL DE VARIAÇÕES (corte/coloração)
+    // 10. MODAL DE VARIAÇÕES
     // ============================================================
     function openModalVariacoes(item) {
       itemAtualModal = item;
@@ -2137,32 +2117,41 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
       modalHeaderCount.textContent = item.variantes.length + ' refs';
-      modalSectionLabel.textContent = 'Escolha uma referência para simular';
+      modalSectionLabel.textContent = 'Toque na imagem para abrir · 🔲 para o QR';
 
       modalVariacoes.innerHTML = item.variantes.map((url, idx) => {
         const altura = getAlturaAleatoria();
         const delay = Math.min(idx * 0.04, 0.5).toFixed(2);
         return `
-          <div class="variacao-card" data-ref-index="${idx}" tabindex="0" role="button"
-               aria-label="Referência ${idx + 1}" style="animation-delay: ${delay}s">
+          <div class="variacao-card" data-ref-index="${idx}" data-url="${url}"
+               tabindex="0" role="button" aria-label="Referência ${idx + 1}"
+               style="animation-delay: ${delay}s">
             <img src="${url}" alt="Referência ${idx + 1}" loading="lazy"
                  class="${altura}" onerror="this.src='${IMG_FALLBACK}'">
+            <button class="btn-qr-float" data-qr-ref="${idx}" aria-label="Ver QR" title="Ver QR">🔲</button>
             <span class="variacao-numero">#${idx + 1}</span>
           </div>
         `;
       }).join('');
 
       modalVariacoes.querySelectorAll('.variacao-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-qr-float')) return;
           const idx = parseInt(card.dataset.refIndex, 10);
           const url = item.variantes[idx];
           openCardDetalhado(item, idx, url);
         });
         card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            card.click();
-          }
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
+      });
+
+      modalVariacoes.querySelectorAll('.btn-qr-float').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.qrRef, 10);
+          const url = item.variantes[idx];
+          openCardDetalhado(item, idx, url, true);
         });
       });
 
@@ -2177,6 +2166,8 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       itemAtualModal = null;
       if (qrInstance) { qrInstance.clear(); qrInstance = null; }
       if (qrLojaInstance) { qrLojaInstance.clear(); qrLojaInstance = null; }
+      closeZoom();
+      fecharPrintOverlay();
     }
 
     modalBackBtn.addEventListener('click', () => {
@@ -2211,9 +2202,9 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     });
 
     // ============================================================
-    // 11. CARD DETALHADO (corte/coloração)
+    // 11. CARD DETALHADO
     // ============================================================
-    function openCardDetalhado(item, refIndex, imagemUrl) {
+    function openCardDetalhado(item, refIndex, imagemUrl, abrirQR) {
       modalVariacoes.classList.add('hidden');
       modalSectionLabel.classList.add('hidden');
       modalHeaderCount.classList.add('hidden');
@@ -2222,11 +2213,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
 
-      renderCardDetalhado(item, refIndex, imagemUrl);
+      renderCardDetalhado(item, refIndex, imagemUrl, abrirQR);
       modalContent.scrollTop = 0;
     }
 
-    function renderCardDetalhado(item, refIndex, imagemUrl) {
+    function renderCardDetalhado(item, refIndex, imagemUrl, abrirQR) {
       const prompt = gerarPrompt(item);
       const urlCompartilhavel = buildItemUrl(item.id, refIndex);
       const produtos = produtosParaCard(item, 3);
@@ -2244,25 +2235,22 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       const productsHtml = produtos.map(renderProdutoItem).join('');
 
-      // Detecta se veio de link compartilhado (QR escaneado)
-      const params = new URLSearchParams(window.location.search);
-      const veioDeLink = params.get('item') !== null;
-
-      // Se veio de QR, esconde o bloco de QR (título + hint + código)
-      const qrHtml = veioDeLink ? '' : `
-  <div class="fase2-titulo">QR Code desta referência</div>
-  <div class="qr-wrap">
-    <div id="qrcode"></div>
-    <div class="qr-hint">
-      Aponte a câmera do celular para abrir<br>esta referência direto no HairOS
-    </div>
-  </div>
-`;
-
       cardArea.innerHTML = `
   <div class="card-section">
-    <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
-         onerror="this.src='${IMG_FALLBACK}'">
+    <div class="card-img-wrap" id="imgWrapDetalhe">
+      <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
+           onerror="this.src='${IMG_FALLBACK}'">
+      <button class="btn-qr-float" id="btnQrDetalhe" aria-label="Ver QR" title="Ver QR">🔲</button>
+      <span class="card-img-hint">Toque = ampliar · 🔲 = QR</span>
+    </div>
+
+    <div class="qr-expansivel" id="qrExpansivelDetalhe">
+      <div class="qr-wrap">
+        <div id="qrcode"></div>
+        <div class="qr-hint">Aponte a câmera do celular<br>para abrir esta referência</div>
+      </div>
+    </div>
+
     <h2 class="card-hair-name">${item.nome}</h2>
     <p class="card-hair-desc">${item.descricao}</p>
 
@@ -2275,33 +2263,26 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       <span class="etapa-num"><span>1</span></span> 📋 Copiar prompt
     </button>
 
-    <div class="btn-dupla">
-      <button class="btn-secondary" id="baixarImagemBtn" data-etapa="2" type="button">
-        <span class="etapa-num"><span>2</span></span> ⬇️ Salvar
-      </button>
-      <a class="btn-secondary" id="abrirImagemBtn"
-         href="${imagemUrl}" target="_blank" rel="noopener noreferrer">
-        🖼️ Abrir
-      </a>
-    </div>
+    <button class="btn-secondary" id="salvarPrintBtn" data-etapa="2" type="button">
+      <span class="etapa-num"><span>2</span></span> 📸 Salvar print
+    </button>
 
     <a class="btn-secondary" id="abrirGeminiBtn" data-etapa="3"
        href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
-      <span class="etapa-num"><span>3</span></span> ✨ Abrir Gemini
+      <span class="etapa-num"><span>3</span></span> ✨ Usar IA
     </a>
     <div class="etapa-dica visivel" id="etapaDica">Comece copiando o prompt</div>
 
-    ${qrHtml}
-
     <div class="fase2-titulo">Como usar</div>
     <div class="instructions">
-      <li>Copie o prompt acima (botão <strong>Copiar prompt</strong>).</li>
-      <li>Salve a imagem (botão <strong>Salvar</strong>). Se não baixar, toque em <strong>Abrir</strong> e faça <strong>toque longo → Salvar</strong>.</li>
-      <li>Abra o <strong>Gemini</strong> (botão acima).</li>
+      <li>Toque em <strong>Copiar prompt</strong>.</li>
+      <li>Toque em <strong>Salvar print</strong> → siga as instruções na tela.</li>
+      <li>Toque em <strong>Usar IA</strong>.</li>
       <li>Envie <strong>sua foto</strong> (a cliente).</li>
       <li>Envie a <strong>imagem de referência</strong> salva.</li>
       <li>Cole o <strong>prompt</strong>.</li>
       <li>Gere sua simulação fotorrealista.</li>
+      <li>Toque no <strong>🔲</strong> da imagem para ver o QR Code — ideal pra mostrar pro seu cabeleireiro.</li>
     </div>
 
     <div class="products-title">Recomendados para você</div>
@@ -2314,21 +2295,19 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.classList.remove('hidden');
 
-      // ==========================================================
-      // FLUXO GUIADO POR ETAPAS (soft · sem bloqueio)
-      // ==========================================================
+      // ===== FLUXO POR ETAPAS =====
       (function setupEtapas() {
         const dica = document.getElementById('etapaDica');
         const btn1 = document.getElementById('copiarPromptBtn');
-        const btn2 = document.getElementById('baixarImagemBtn');
+        const btn2 = document.getElementById('salvarPrintBtn');
         const btn3 = document.getElementById('abrirGeminiBtn');
         const botoes = { 1: btn1, 2: btn2, 3: btn3 };
 
         const DICAS = {
           1: 'Comece copiando o prompt',
-          2: 'Salve a imagem (ou toque longo se abrir em nova aba)',
-          3: 'Por último, abra o Gemini e cole o prompt',
-          4: 'Tudo pronto · siga as instruções no Gemini'
+          2: 'Toque em "Salvar print" e siga as instruções',
+          3: 'Por último, use a IA e cole o prompt',
+          4: 'Tudo pronto · siga as instruções na IA'
         };
 
         function avancar(etapaAtual) {
@@ -2337,12 +2316,10 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             atual.classList.remove('etapa-ativa');
             atual.classList.add('etapa-concluida');
           }
-
           const prox = botoes[etapaAtual + 1];
           if (prox && !prox.classList.contains('etapa-concluida')) {
             prox.classList.add('etapa-ativa');
           }
-
           if (dica) {
             dica.classList.remove('visivel');
             setTimeout(() => {
@@ -2352,35 +2329,66 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           }
         }
 
-        // expõe para uso externo (botão salvar)
-        window.__avancarEtapa = avancar;
-
         if (btn1) btn1.addEventListener('click', () => {
           if (!btn1.classList.contains('etapa-concluida')) avancar(1);
+        });
+        if (btn2) btn2.addEventListener('click', () => {
+          if (btn2.classList.contains('etapa-ativa')) {
+            abrirPrintOverlay();
+            avancar(2);
+          } else {
+            abrirPrintOverlay();
+          }
         });
         if (btn3) btn3.addEventListener('click', () => {
           if (btn3.classList.contains('etapa-ativa')) avancar(3);
         });
       })();
 
-      // QR Code da referência
+      // ===== Imagem: toque = zoom, botão = QR =====
+      const imgWrap = document.getElementById('imgWrapDetalhe');
+      const btnQr = document.getElementById('btnQrDetalhe');
+      const qrExpansivel = document.getElementById('qrExpansivelDetalhe');
       const qrEl = document.getElementById('qrcode');
-      if (qrEl) {
-        if (qrInstance) { qrInstance.clear(); qrInstance = null; }
-        qrEl.innerHTML = '';
-        try {
-          qrInstance = new QRCode(qrEl, {
-            text: urlCompartilhavel,
-            width: 140,
-            height: 140,
-            colorDark: '#0a0808',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M
-          });
-        } catch (err) {
-          console.warn('Falha ao gerar QR Code:', err);
-          qrEl.innerHTML = '<div style="color:#a89e93;font-size:0.7rem;padding:1rem;">QR indisponível</div>';
-        }
+
+      if (imgWrap) {
+        imgWrap.addEventListener('click', (e) => {
+          if (e.target.closest('#btnQrDetalhe')) return;
+          const img = document.getElementById('imagemPrincipal');
+          if (img) openZoom(img.src, item.nome);
+        });
+      }
+
+      if (btnQr && qrExpansivel && qrEl) {
+        btnQr.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const abrindo = !qrExpansivel.classList.contains('aberto');
+
+          if (abrindo) {
+            qrExpansivel.classList.add('aberto');
+            imgWrap.classList.add('aberto');
+
+            if (!qrInstance) {
+              qrEl.innerHTML = '';
+              try {
+                qrInstance = new QRCode(qrEl, {
+                  text: urlCompartilhavel,
+                  width: 140, height: 140,
+                  colorDark: '#0a0808', colorLight: '#ffffff',
+                  correctLevel: QRCode.CorrectLevel.M
+                });
+              } catch (err) {
+                console.warn('Falha ao gerar QR:', err);
+                qrEl.innerHTML = '<div style="color:#a89e93;font-size:0.7rem;padding:1rem;">QR indisponível</div>';
+              }
+            }
+          } else {
+            qrExpansivel.classList.remove('aberto');
+            imgWrap.classList.remove('aberto');
+          }
+        });
+
+        if (abrirQR) setTimeout(() => btnQr.click(), 250);
       }
 
       // ===== Cópia do prompt =====
@@ -2388,77 +2396,37 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       if (copiarBtn) {
         copiarBtn.addEventListener('click', async () => {
           let ok = false;
-          try {
-            await navigator.clipboard.writeText(prompt);
-            ok = true;
-          } catch (err) {
+          try { await navigator.clipboard.writeText(prompt); ok = true; }
+          catch (err) {
             try {
               const ta = document.createElement('textarea');
               ta.value = prompt;
-              ta.style.position = 'fixed';
-              ta.style.opacity = '0';
-              document.body.appendChild(ta);
-              ta.select();
+              ta.style.position = 'fixed'; ta.style.opacity = '0';
+              document.body.appendChild(ta); ta.select();
               document.execCommand('copy');
               document.body.removeChild(ta);
               ok = true;
             } catch (e2) { console.warn('Cópia falhou:', e2); }
           }
           if (!ok) return;
-
           if (!copiarBtn.dataset.feedback) {
             copiarBtn.dataset.feedback = '1';
-            const txtOriginal = copiarBtn.innerHTML;
+            const txt = copiarBtn.innerHTML;
             copiarBtn.innerHTML = '✓ Prompt copiado!';
-            setTimeout(() => {
-              copiarBtn.innerHTML = txtOriginal;
-              delete copiarBtn.dataset.feedback;
-            }, 2000);
+            setTimeout(() => { copiarBtn.innerHTML = txt; delete copiarBtn.dataset.feedback; }, 2000);
           }
         });
       }
 
-      // ===== Botão Salvar imagem (Caminho 2) =====
-      const baixarBtn = document.getElementById('baixarImagemBtn');
-      const abrirBtn = document.getElementById('abrirImagemBtn');
-      if (baixarBtn) {
-        baixarBtn.addEventListener('click', async () => {
-          const img = document.getElementById('imagemPrincipal');
-          if (!img) return;
-
-          const urlParaSalvar = baixarBtn.dataset.urlAtual || img.src;
-          const txtOriginal = baixarBtn.innerHTML;
-
-          baixarBtn.innerHTML = '⏳ Salvando...';
-          baixarBtn.disabled = true;
-
-          const ok = await salvarImagem(urlParaSalvar, `hairos-${item.id}.jpg`);
-
-          baixarBtn.innerHTML = ok ? '✓ Imagem salva!' : '🖼️ Abrindo...';
-
-          // avança etapa (soft)
-          if (baixarBtn.classList.contains('etapa-ativa') && window.__avancarEtapa) {
-            window.__avancarEtapa(2);
-          }
-
-          setTimeout(() => {
-            baixarBtn.innerHTML = txtOriginal;
-            baixarBtn.disabled = false;
-          }, 2200);
-        });
-      }
-
-      // ===== Bloco pós-simulação =====
+      // ===== Pós-simulação =====
       const abrirGemini = document.getElementById('abrirGeminiBtn');
       const posSimArea = document.getElementById('posSimArea');
       if (abrirGemini && posSimArea) {
         abrirGemini.addEventListener('click', () => {
           if (posSimArea.dataset.injetado === '1') return;
           posSimArea.dataset.injetado = '1';
-
           const extras = produtosExtrasParaCard(item, produtosCardAtual, 3);
           if (extras.length === 0) return;
-
           posSimArea.innerHTML = `
             <div class="pos-sim-block">
               <div class="pos-sim-title">Gostou do resultado?</div>
@@ -2480,16 +2448,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           if (novaUrl) {
             const principal = document.getElementById('imagemPrincipal');
             principal.style.opacity = '0';
-            setTimeout(() => {
-              principal.src = novaUrl;
-              principal.style.opacity = '1';
-            }, 150);
-
-            // Atualiza botão "Abrir" (é <a>, muda href)
-            if (abrirBtn) abrirBtn.href = novaUrl;
-
-            // Atualiza botão "Salvar" (é <button>, guarda no dataset)
-            if (baixarBtn) baixarBtn.dataset.urlAtual = novaUrl;
+            setTimeout(() => { principal.src = novaUrl; principal.style.opacity = '1'; }, 150);
 
             variacoesRapidas.querySelectorAll('img').forEach(i => i.classList.remove('active'));
             img.classList.add('active');
@@ -2505,7 +2464,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     }
 
     // ============================================================
-    // 12. CARD DE LOJA (produto / kit / ferramenta)
+    // 12. CARD DE LOJA
     // ============================================================
     function openCardLoja(item) {
       itemAtualModal = item;
@@ -2544,7 +2503,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         </a>
       `).join('');
 
-      // Coleta variantes do produto (até 4, sem repetir)
       const variantesLoja = [];
       const vistosLoja = {};
       (item.variantes || []).forEach(v => {
@@ -2571,7 +2529,15 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           <div class="card-img-wrap" id="imgWrapLoja">
             <img class="card-hair-img" id="imgPrincipalLoja" src="${item.imagem}" alt="${item.nome}"
                  onerror="this.src='${IMG_FALLBACK}'">
-            <span class="card-img-hint">Toque para ver o QR</span>
+            <button class="btn-qr-float" id="btnQrLoja" aria-label="Ver QR" title="Ver QR">🔲</button>
+            <span class="card-img-hint">Toque = ampliar · 🔲 = QR</span>
+          </div>
+
+          <div class="qr-expansivel" id="qrExpansivelLoja">
+            <div class="qr-wrap">
+              <div id="qrLoja"></div>
+              <div class="qr-hint">Aponte a câmera do celular<br>para abrir o link de compra</div>
+            </div>
           </div>
 
           ${galeriaLojaHtml}
@@ -2584,15 +2550,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           </a>
           <div class="btn-buy-hint">Compra segura · frete calculado no site</div>
 
-          <div class="qr-expansivel" id="qrExpansivel">
-            <div class="qr-wrap">
-              <div id="qrLoja"></div>
-              <div class="qr-hint">
-                Aponte a câmera do celular<br>para abrir o link de compra
-              </div>
-            </div>
-          </div>
-
           ${relacionados.length > 0 ? `
             <div class="products-title">Você também pode gostar</div>
             <div class="products-sub">outras opções de ${LABELS[item.categoria].toLowerCase()}</div>
@@ -2603,31 +2560,22 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.classList.remove('hidden');
 
-      // ===== Galeria de miniaturas da loja =====
-      const galeriaLoja = document.getElementById('galeriaLoja');
-      if (galeriaLoja) {
-        galeriaLoja.addEventListener('click', (e) => {
-          const img = e.target.closest('img');
-          if (!img) return;
-          const principal = document.getElementById('imgPrincipalLoja');
-          if (principal && img.dataset.url) {
-            principal.style.opacity = '0';
-            setTimeout(() => {
-              principal.src = img.dataset.url;
-              principal.style.opacity = '1';
-            }, 150);
-            galeriaLoja.querySelectorAll('img').forEach(i => i.classList.remove('active'));
-            img.classList.add('active');
-          }
+      const imgWrap = document.getElementById('imgWrapLoja');
+      const btnQr = document.getElementById('btnQrLoja');
+      const qrExpansivel = document.getElementById('qrExpansivelLoja');
+      const qrLojaEl = document.getElementById('qrLoja');
+
+      if (imgWrap) {
+        imgWrap.addEventListener('click', (e) => {
+          if (e.target.closest('#btnQrLoja')) return;
+          const img = document.getElementById('imgPrincipalLoja');
+          if (img) openZoom(img.src, item.nome);
         });
       }
 
-      const imgWrap = document.getElementById('imgWrapLoja');
-      const qrExpansivel = document.getElementById('qrExpansivel');
-      const qrLojaEl = document.getElementById('qrLoja');
-
-      if (imgWrap && qrExpansivel && qrLojaEl) {
-        imgWrap.addEventListener('click', () => {
+      if (btnQr && qrExpansivel && qrLojaEl) {
+        btnQr.addEventListener('click', (e) => {
+          e.stopPropagation();
           const abrindo = !qrExpansivel.classList.contains('aberto');
 
           if (abrindo) {
@@ -2639,10 +2587,8 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
               try {
                 qrLojaInstance = new QRCode(qrLojaEl, {
                   text: linkCompra,
-                  width: 140,
-                  height: 140,
-                  colorDark: '#0a0808',
-                  colorLight: '#ffffff',
+                  width: 140, height: 140,
+                  colorDark: '#0a0808', colorLight: '#ffffff',
                   correctLevel: QRCode.CorrectLevel.M
                 });
               } catch (err) {
@@ -2653,6 +2599,21 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           } else {
             qrExpansivel.classList.remove('aberto');
             imgWrap.classList.remove('aberto');
+          }
+        });
+      }
+
+      const galeriaLoja = document.getElementById('galeriaLoja');
+      if (galeriaLoja) {
+        galeriaLoja.addEventListener('click', (e) => {
+          const img = e.target.closest('img');
+          if (!img) return;
+          const principal = document.getElementById('imgPrincipalLoja');
+          if (principal && img.dataset.url) {
+            principal.style.opacity = '0';
+            setTimeout(() => { principal.src = img.dataset.url; principal.style.opacity = '1'; }, 150);
+            galeriaLoja.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+            img.classList.add('active');
           }
         });
       }
