@@ -2,137 +2,464 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HairOS · referência & IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>HairOS · referência · QR · simulação IA</title>
+  <meta name="theme-color" content="#0a0808">
+
+  <!-- Fontes do HairOS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
+    /* ============================================================
+       TOKENS HAIR-OS (mesma paleta da vitrine)
+       ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #faf9f8;
-      color: #1e1e1e;
-      line-height: 1.5;
-      padding: 1rem;
+    :root {
+      --bg: #0a0808;
+      --bg-card: #1a1612;
+      --bg-elevated: #221d18;
+      --text: #f5f0ea;
+      --text-sec: #ddd0c0;
+      --text-muted: #a89e93;
+      --gold: #d4b07a;
+      --gold-light: #ecdcb0;
+      --gold-glow: rgba(212, 176, 122, .14);
+      --border: rgba(212, 176, 122, .10);
+      --border-gold: rgba(212, 176, 122, .28);
+      --radius: 14px;
+      --radius-lg: 24px;
+      --transition: .4s cubic-bezier(.22, .61, .36, 1);
+      --ease-luxury: cubic-bezier(.23, 1, .32, 1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, .6);
+      --focus-ring: 0 0 0 3px rgba(212, 176, 122, 0.5);
+    }
+
+    html, body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
       min-height: 100vh;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    body {
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-x: hidden;
     }
 
     .app { max-width: 460px; width: 100%; margin: 0 auto; }
 
-    .header { margin-bottom: 1.5rem; text-align: center; }
-    .header h1 { font-size: 1.7rem; font-weight: 500; letter-spacing: -0.02em; }
-    .header p { font-size: 0.9rem; color: #6b6b6b; margin-top: 0.2rem; }
+    /* Scrollbar invisível (igual HairOS) */
+    * { scrollbar-width: none; }
+    *::-webkit-scrollbar { width: 0; height: 0; }
 
-    /* ---------- GALERIA ---------- */
-    .gallery { display: flex; flex-direction: column; gap: 1.2rem; }
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .header {
+      margin-bottom: 1.8rem;
+      text-align: center;
+      padding: 0.5rem 0 1.2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .header h1 span { color: var(--gold); }
+
+    .header p {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 300;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       FILTROS
+       ============================================================ */
+    .filtros {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.2rem;
+      scrollbar-width: none;
+    }
+    .filtros::-webkit-scrollbar { display: none; }
+
+    .filtro-btn {
+      flex-shrink: 0;
+      padding: 0.5rem 1.1rem;
+      border-radius: 40px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .filtro-btn:hover, .filtro-btn:focus-visible {
+      border-color: var(--gold);
+      color: var(--text);
+      outline: var(--focus-ring);
+    }
+    .filtro-btn.active {
+      background: var(--gold);
+      color: #1b1209;
+      border-color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       GALERIA (cards)
+       ============================================================ */
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
 
     .hair-card {
-      background: white;
-      border-radius: 24px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow);
       cursor: pointer;
-      border: 1px solid #f0efed;
-      transition: transform 0.15s ease;
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+      position: relative;
     }
-    .hair-card:active { transform: scale(0.99); }
-    .hair-card img {
-      width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
-      display: block; background: #eae8e6;
+    .hair-card:hover, .hair-card:focus-within {
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, .5);
     }
-    .hair-card-info { padding: 0.9rem 1rem 1rem; }
-    .hair-card-info h2 { font-size: 1.15rem; font-weight: 500; margin-bottom: 0.15rem; }
-    .hair-card-info p { font-size: 0.85rem; color: #6b6b6b; }
+    .hair-card:active { transform: translateY(-2px) scale(0.99); }
 
-    /* ---------- MODAL QR ---------- */
+    .hair-card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #0e0b09;
+    }
+    .hair-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      transition: transform .6s cubic-bezier(.25, .46, .45, .94);
+    }
+    .hair-card:hover img { transform: scale(1.05); }
+
+    .hair-card-info {
+      padding: 1rem 1.1rem 1.1rem;
+      position: relative;
+    }
+    .hair-card-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+      line-height: 1.2;
+    }
+    .hair-card-info p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+    .hair-card-categoria {
+      position: absolute;
+      top: 0.9rem;
+      right: 1rem;
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      background: rgba(10, 8, 8, .75);
+      backdrop-filter: blur(8px);
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border-gold);
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       MODAL QR
+       ============================================================ */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(6px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 1rem; z-index: 1000;
-      visibility: hidden; opacity: 0;
-      transition: opacity 0.2s ease, visibility 0.2s;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .35s ease, visibility .35s;
     }
     .modal-overlay.active { visibility: visible; opacity: 1; }
 
     .modal-content {
-      background: white; border-radius: 32px;
-      max-width: 420px; width: 100%;
-      padding: 1.2rem 1.2rem 1.5rem;
+      background: linear-gradient(145deg, var(--bg-card), #100e0c);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      max-width: 420px;
+      width: 100%;
+      padding: 1.4rem 1.3rem 1.5rem;
       position: relative;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .8);
+      transform: translateY(14px) scale(.98);
+      transition: transform .35s var(--ease-luxury);
     }
+    .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
 
     .modal-close {
-      position: absolute; top: 12px; right: 16px;
-      background: rgba(0, 0, 0, 0.06); border: none;
-      width: 36px; height: 36px; border-radius: 30px;
-      font-size: 1.4rem; cursor: pointer; color: #333;
-      display: flex; align-items: center; justify-content: center;
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: rgba(201, 169, 110, .08);
+      border: 1px solid var(--border-gold);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      line-height: 1;
+      padding: 0;
     }
-    .modal-close:hover { background: rgba(0, 0, 0, 0.12); }
+    .modal-close:hover {
+      background: var(--gold);
+      color: #1b1209;
+      transform: rotate(90deg);
+    }
 
     .modal-hair-img {
-      width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
-      border-radius: 20px; margin-bottom: 1rem; background: #eae8e6;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: 1.1rem;
+      background: #0e0b09;
+      border: 1px solid var(--border);
     }
-    .modal-hair-name { font-size: 1.35rem; font-weight: 500; margin-bottom: 0.25rem; }
-    .modal-hair-desc { font-size: 0.9rem; color: #5a5a5a; margin-bottom: 1rem; }
+
+    .modal-hair-name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      line-height: 1.15;
+    }
+    .modal-hair-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+      line-height: 1.5;
+    }
 
     .qrcode-section {
-      display: flex; flex-direction: column; align-items: center;
-      background: #f8f7f6; padding: 1.2rem; border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(0, 0, 0, .35);
+      padding: 1.2rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
     .qrcode-section p {
-      font-size: 0.75rem; text-transform: uppercase;
-      letter-spacing: 0.03em; color: #6f6f6f; margin-bottom: 0.5rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.7rem;
+      font-weight: 500;
     }
     #qrcode-container {
-      display: flex; justify-content: center; align-items: center;
-      background: white; padding: 0.75rem; border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
     }
     #qrcode-container canvas,
-    #qrcode-container img { display: block; width: 140px; height: 140px; }
+    #qrcode-container img {
+      display: block;
+      width: 140px;
+      height: 140px;
+    }
     .qr-hint {
-      font-size: 0.7rem; color: #8b8b8b; margin-top: 0.6rem;
-      text-align: center; word-break: break-all;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 0.8rem;
+      text-align: center;
+      word-break: break-all;
+      opacity: 0.55;
+      font-weight: 300;
     }
 
-    /* ---------- CARD DETALHADO ---------- */
+    /* ============================================================
+       CARD DETALHADO
+       ============================================================ */
     .card-section {
-      background: white;
-      border-radius: 28px;
-      padding: 1.2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.2rem 1.5rem;
       margin-top: 0.5rem;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
-      border: 1px solid #f0efed;
+      box-shadow: var(--shadow);
+      animation: fadeInUp .5s var(--ease-luxury);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .card-hair-img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border-radius: 22px;
-      background: #eae8e6;
-      margin-bottom: 1rem;
+      border-radius: var(--radius);
+      background: #0e0b09;
+      margin-bottom: 1.1rem;
+      border: 1px solid var(--border);
     }
 
     .card-hair-name {
-      font-size: 1.4rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      line-height: 1.15;
     }
-
     .card-hair-desc {
-      font-size: 0.9rem;
-      color: #5a5a5a;
-      margin-bottom: 1.2rem;
+      font-size: 0.88rem;
+      color: var(--text-sec);
+      margin-bottom: 1.3rem;
+      font-weight: 300;
+      line-height: 1.6;
     }
 
-    /* BOTÃO ÚNICO */
+    /* Mini galeria de variações */
+    .fase2-titulo {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      margin: 1.3rem 0 0.7rem;
+      font-weight: 500;
+      text-align: center;
+      opacity: 0.85;
+    }
+
+    .variacoes {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
+      scrollbar-width: none;
+    }
+    .variacoes::-webkit-scrollbar { display: none; }
+    .variacoes img {
+      flex-shrink: 0;
+      width: 68px;
+      height: 68px;
+      border-radius: 12px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all var(--transition);
+      background: #0e0b09;
+      opacity: 0.7;
+    }
+    .variacoes img:hover {
+      opacity: 1;
+      border-color: var(--border-gold);
+    }
+    .variacoes img.active {
+      border-color: var(--gold);
+      opacity: 1;
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    /* ============================================================
+       PROMPT BOX
+       ============================================================ */
+    .prompt-box {
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-sec);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       BOTÃO PRINCIPAL
+       ============================================================ */
     .btn-action {
       display: flex;
       align-items: center;
@@ -141,332 +468,463 @@
       width: 100%;
       padding: 1rem 1.2rem;
       border-radius: 60px;
-      border: none;
-      background: #2b5f8a;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #1b1209;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       cursor: pointer;
       margin-bottom: 0.6rem;
-      transition: background 0.15s, transform 0.1s;
+      transition: all var(--ease-luxury);
+      box-shadow: 0 8px 24px rgba(212, 176, 122, .2);
     }
-    .btn-action:hover { background: #1f4a6e; }
-    .btn-action:active { transform: scale(0.98); }
-    .btn-action.fase2 { background: #1e1e1e; }
-    .btn-action.fase2:hover { background: #333; }
+    .btn-action:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(212, 176, 122, .35);
+    }
+    .btn-action:active { transform: translateY(0); }
 
-    /* Aviso fase 1 (após 1º clique) */
+    .btn-action.fase2 {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      box-shadow: none;
+    }
+    .btn-action.fase2:hover {
+      background: var(--gold-glow);
+      box-shadow: 0 8px 24px rgba(212, 176, 122, .15);
+    }
+
+    /* ============================================================
+       AVISOS
+       ============================================================ */
     .aviso-fase1 {
-      background: #e6f7ec;
-      border: 1px solid #a8e6bf;
-      color: #0a5c2a;
-      font-size: 0.85rem;
+      background: rgba(46, 204, 113, .08);
+      border: 1px solid rgba(46, 204, 113, .35);
+      color: #6ee7a0;
+      font-size: 0.82rem;
       padding: 0.9rem 1rem;
-      border-radius: 16px;
+      border-radius: var(--radius);
       margin-bottom: 1rem;
-      line-height: 1.5;
-      text-align: center;
+      line-height: 1.55;
+      font-weight: 300;
     }
-    .aviso-fase1 strong { display: block; margin-bottom: 0.2rem; }
-
-    /* Área fase 2 (imagem + prompt + instruções) */
-    .fase2-area {
-      margin-bottom: 1rem;
-    }
-
-    .fase2-titulo {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #8b8b8b;
-      margin: 1.2rem 0 0.5rem;
+    .aviso-fase1 strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #a8f0c5;
       font-weight: 600;
-      text-align: center;
     }
 
-    .fase2-img-wrap {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
+    .aviso-fallback {
+      background: rgba(212, 176, 122, .08);
+      border: 1px solid var(--border-gold);
+      border-radius: var(--radius);
+      padding: 1rem;
       margin-bottom: 1rem;
-      background: #eae8e6;
+    }
+    .aviso-fallback div {
+      font-size: 0.75rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .aviso-fallback textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 0.72rem;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, .35);
+      color: var(--text-sec);
+      font-family: 'SF Mono', monospace;
+      resize: none;
+      outline: none;
     }
 
+    /* ============================================================
+       IMAGEM FASE 2
+       ============================================================ */
+    .fase2-img-wrap {
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      background: #0e0b09;
+      border: 1px solid var(--border-gold);
+    }
     .fase2-img-wrap img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
     }
-
     .fase2-img-hint {
       text-align: center;
-      font-size: 0.75rem;
-      color: #6b6b6b;
-      margin-top: -0.5rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
       margin-bottom: 1rem;
       font-style: italic;
+      font-weight: 300;
     }
 
-    /* Prompt */
-    .prompt-box {
-      background: #f6f5f4;
-      border-radius: 20px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.8rem;
-      color: #2c2c2c;
-      border: 1px solid #e6e4e2;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      line-height: 1.5;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    /* Instruções */
+    /* ============================================================
+       INSTRUÇÕES
+       ============================================================ */
     .instructions {
-      background: #f8f7f6;
-      border-radius: 20px;
+      background: rgba(0, 0, 0, .3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 1rem 1rem 1rem 1.2rem;
       margin-bottom: 1rem;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--text-sec);
       counter-reset: step;
+      font-weight: 300;
     }
     .instructions li {
       list-style: none;
-      margin-bottom: 0.5rem;
-      padding-left: 1.8rem;
+      margin-bottom: 0.55rem;
+      padding-left: 1.9rem;
       position: relative;
       counter-increment: step;
+      line-height: 1.5;
     }
     .instructions li:last-child { margin-bottom: 0; }
+    .instructions li strong { color: var(--gold); font-weight: 600; }
     .instructions li::before {
       content: counter(step);
-      position: absolute; left: 0; top: 0;
-      width: 1.3rem; height: 1.3rem;
-      background: #1e1e1e; color: white;
-      border-radius: 40px; font-size: 0.7rem; font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.35rem;
+      height: 1.35rem;
+      background: var(--gold);
+      color: #1b1209;
+      border-radius: 50%;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Fallback cópia manual */
-    .aviso-fallback {
-      background: #fff4e5;
-      border: 1px solid #ffd9a0;
-      border-radius: 16px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    .aviso-fallback div {
-      font-size: 0.8rem;
-      color: #7a4a00;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    .aviso-fallback textarea {
+    /* ============================================================
+       BOTÃO GEMINI
+       ============================================================ */
+    .btn-gemini {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
       width: 100%;
-      height: 120px;
-      font-size: 0.72rem;
-      padding: 0.6rem;
-      border-radius: 10px;
-      border: 1px solid #e0c89a;
-      font-family: monospace;
-      resize: none;
+      padding: 0.9rem 1.2rem;
+      border-radius: 60px;
+      background: transparent;
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-gemini:hover {
+      background: var(--gold-glow);
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-1px);
     }
 
-    /* Produtos */
+    /* ============================================================
+       PRODUTOS
+       ============================================================ */
     .products-title {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #8b8b8b;
-      margin: 1rem 0 0.6rem;
-      font-weight: 600;
+      letter-spacing: 0.16em;
+      color: var(--gold);
+      margin: 1.4rem 0 0.7rem;
+      font-weight: 500;
       text-align: center;
+      opacity: 0.85;
     }
 
     .product-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.85rem 0.4rem;
-      border-bottom: 1px solid #f0efed;
+      padding: 0.9rem 0.5rem;
+      border-bottom: 1px solid var(--border);
       text-decoration: none;
       color: inherit;
+      transition: all var(--transition);
     }
     .product-item:last-child { border-bottom: none; }
-    .product-info h4 { font-size: 0.92rem; font-weight: 500; }
-    .product-info p { font-size: 0.75rem; color: #8b8b8b; margin-top: 0.1rem; }
+    .product-item:hover {
+      background: rgba(212, 176, 122, .04);
+      padding-left: 0.8rem;
+      padding-right: 0.3rem;
+      border-radius: 8px;
+    }
+    .product-info h4 {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.25;
+    }
+    .product-info p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+      font-weight: 300;
+      line-height: 1.4;
+    }
     .product-link-icon {
-      font-size: 1rem;
-      background: #f0efed;
-      width: 34px; height: 34px; border-radius: 40px;
-      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      background: rgba(212, 176, 122, .1);
+      border: 1px solid var(--border-gold);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
-      color: #1e1e1e;
+      color: var(--gold);
+      transition: all var(--transition);
+    }
+    .product-item:hover .product-link-icon {
+      background: var(--gold);
+      color: #1b1209;
+      transform: scale(1.08);
     }
 
-    .hidden { display: none !important; }
-    .footer-note { margin-top: 1.5rem; font-size: 0.7rem; color: #aaa; text-align: center; }
-
+    /* ============================================================
+       BOTÃO VOLTAR
+       ============================================================ */
     .btn-voltar {
       display: inline-block;
-      font-size: 0.85rem;
-      color: #6b6b6b;
+      font-size: 0.72rem;
+      color: var(--text-muted);
       text-decoration: none;
       margin-bottom: 1rem;
       cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0.3rem 0;
-      font-family: inherit;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all var(--transition);
     }
-    .btn-voltar:hover { color: #1e1e1e; }
+    .btn-voltar:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      outline: var(--focus-ring);
+    }
+
+    /* ============================================================
+       UTILITÁRIOS
+       ============================================================ */
+    .hidden { display: none !important; }
+
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      font-weight: 300;
+    }
+
+    .loading-msg {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 300;
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 400px) {
+      .header h1 { font-size: 1.6rem; }
+      .modal-hair-name { font-size: 1.25rem; }
+      .card-hair-name { font-size: 1.35rem; }
+      .instructions li { font-size: 0.78rem; }
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <h1>HairOS</h1>
+      <h1>Hair<span>OS</span></h1>
       <p>referência · QR · simulação IA</p>
     </header>
 
-    <div class="gallery" id="gallery"></div>
+    <!-- FILTROS -->
+    <div class="filtros" id="filtros">
+      <button class="filtro-btn active" data-filtro="corte">Cortes</button>
+      <button class="filtro-btn" data-filtro="coloracao">Colorações</button>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="loading-msg">Carregando do HairOS...</div>
+    </div>
     <div id="card-area" class="hidden"></div>
 
     <!-- MODAL QR -->
     <div class="modal-overlay" id="modalOverlay">
       <div class="modal-content">
-        <button class="modal-close" id="modalCloseBtn">×</button>
-        <img class="modal-hair-img" id="modalHairImg" src="" alt="Cabelo">
+        <button class="modal-close" id="modalCloseBtn" aria-label="Fechar">×</button>
+        <img class="modal-hair-img" id="modalHairImg" src="" alt="Estilo">
         <h3 class="modal-hair-name" id="modalHairName"></h3>
         <p class="modal-hair-desc" id="modalHairDesc"></p>
         <div class="qrcode-section">
-          <p>📱 aponte a câmera</p>
+          <p>📱 Aponte a câmera</p>
           <div id="qrcode-container"></div>
           <div class="qr-hint" id="qrHint"></div>
         </div>
       </div>
     </div>
 
-    <div class="footer-note">protótipo · 3 cabelos · estrutura expansível</div>
+    <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
 
+  <!-- 1) BASE DE DADOS -->
+  <script src="data.js"></script>
+
+  <!-- 2) QR CODE -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
+  <!-- 3) LÓGICA -->
   <script>
     // ============================================================
-    // CONFIGURAÇÃO OPCIONAL DE URL PÚBLICA
+    // CONFIGURAÇÃO
     // ============================================================
     const URL_PUBLICA_MANUAL = '';
 
     // ============================================================
-    // DADOS DOS CABELOS
+    // 1. ADAPTADOR
     // ============================================================
-    const HAIRS = [
-      {
-        id: '01',
-        nome: 'Iluminado Caramelo',
-        imagem: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&auto=format&fit=crop&q=80',
-        descricao: 'Mechas iluminadas tom caramelo, ondas suaves e movimento natural.',
-        prompt: `Você vai receber DUAS imagens nesta conversa:
+    function extrairItens() {
+      const itens = [];
+      if (typeof cortesData === 'undefined') return [];
+
+      const todasFontes = [];
+      if (typeof cortesData !== 'undefined') cortesData.forEach(i => todasFontes.push(i));
+      if (typeof coloracoesData !== 'undefined') coloracoesData.forEach(i => todasFontes.push(i));
+
+      todasFontes.forEach(function (item) {
+        const id = item[0];
+        const categoria = item[1];
+        const corte = item[2];
+        const title = item[3];
+        const desc = item[4];
+        const img = item[5];
+        const variants = item[6] || [];
+
+        const variantesProcessadas = [];
+        const vistos = {};
+        variants.forEach(v => {
+          const url = (typeof v === 'object' && v !== null) ? v.img : v;
+          if (url && !vistos[url]) {
+            vistos[url] = true;
+            variantesProcessadas.push(url);
+          }
+        });
+        if (img && !vistos[img]) variantesProcessadas.unshift(img);
+
+        itens.push({
+          id: id,
+          nome: corte,
+          titulo: title,
+          descricao: desc,
+          imagem: img,
+          variantes: variantesProcessadas,
+          categoria: categoria
+        });
+      });
+
+      return itens;
+    }
+
+    const ITENS = extrairItens();
+    console.log('✅ Itens carregados:', ITENS.length);
+
+    // ============================================================
+    // 2. PROMPT
+    // ============================================================
+    function gerarPrompt(item) {
+      const tipoLabel = item.categoria === 'coloracao' ? 'coloração' : 'corte';
+      const acao = item.categoria === 'coloracao' ? 'a cor e a técnica da' : 'o corte da';
+      const aplicar = item.categoria === 'coloracao' ? 'a coloração' : 'o corte';
+
+      return `Você vai receber DUAS imagens nesta conversa:
 
 IMAGEM 1: foto de uma pessoa (a cliente).
-IMAGEM 2: imagem de referência de um cabelo iluminado caramelo com ondas suaves.
+IMAGEM 2: imagem de referência de ${tipoLabel} "${item.nome}" (${item.titulo}).
 
-Sua tarefa: aplicar o cabelo da IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
+Sua tarefa: aplicar ${acao} IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
 
 Regras obrigatórias:
 - Preserve rigorosamente o rosto, a identidade, as características faciais, as proporções e a expressão da pessoa da IMAGEM 1.
 - Mantenha a iluminação, o tom de pele e o fundo originais da IMAGEM 1.
-- Aplique o cabelo da IMAGEM 2 respeitando a textura ondulada, o caimento, o tom caramelo iluminado e o volume originais.
+- Aplique ${aplicar} da IMAGEM 2 respeitando o formato, o caimento, o volume, a textura e a cor originais.
 - O resultado deve parecer uma FOTO REAL, nunca uma montagem, peruca ou colagem artificial.
 - Integre o cabelo naturalmente com o couro cabeludo e a pele, com sombras e transições suaves.
 - Não altere roupas, expressão, fundo ou qualquer outro elemento da IMAGEM 1.
 - A saída deve ser uma única imagem fotorrealista e natural.
 
-Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes de gerar o resultado.`,
-        produtos: [
-          { nome: 'Máscara de hidratação intensa', desc: 'Para cabelos com mechas', link: 'https://mercadolivre.com.br' },
-          { nome: 'Sérum anti-frizz', desc: 'Finalizador leve', link: 'https://mercadolivre.com.br' },
-          { nome: 'Protetor térmico', desc: 'Essencial antes do secador', link: 'https://mercadolivre.com.br' }
-        ]
-      },
-      {
-        id: '02',
-        nome: 'Preto Cacheado',
-        imagem: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80',
-        descricao: 'Cachos definidos, volume equilibrado e brilho natural.',
-        prompt: `Você vai receber DUAS imagens nesta conversa:
+Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes de gerar o resultado.`;
+    }
 
-IMAGEM 1: foto de uma pessoa (a cliente).
-IMAGEM 2: imagem de referência de um cabelo preto cacheado com definição.
+    // ============================================================
+    // 3. PRODUTOS
+    // ============================================================
+    function produtosRelacionados(item) {
+      const produtos = [];
 
-Sua tarefa: aplicar o cabelo da IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
-
-Regras obrigatórias:
-- Preserve rigorosamente o rosto, a identidade, as características faciais, as proporções e a expressão da pessoa da IMAGEM 1.
-- Mantenha a iluminação, o tom de pele e o fundo originais da IMAGEM 1.
-- Aplique o cabelo da IMAGEM 2 respeitando a textura dos cachos, o volume equilibrado, o brilho natural e a cor preta originais.
-- O resultado deve parecer uma FOTO REAL, nunca uma montagem, peruca ou colagem artificial.
-- Integre o cabelo naturalmente com o couro cabeludo e a pele, com sombras e transições suaves.
-- Não altere roupas, expressão, fundo ou qualquer outro elemento da IMAGEM 1.
-- A saída deve ser uma única imagem fotorrealista e natural.
-
-Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes de gerar o resultado.`,
-        produtos: [
-          { nome: 'Creme de pentear', desc: 'Definição de cachos', link: 'https://mercadolivre.com.br' },
-          { nome: 'Gelatina modeladora', desc: 'Fixação sem endurecer', link: 'https://mercadolivre.com.br' },
-          { nome: 'Óleo de argan', desc: 'Brilho e nutrição', link: 'https://mercadolivre.com.br' }
-        ]
-      },
-      {
-        id: '03',
-        nome: 'Loiro Platinado',
-        imagem: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800&auto=format&fit=crop&q=80',
-        descricao: 'Loiro platinado liso, com brilho espelhado e raiz esfumada.',
-        prompt: `Você vai receber DUAS imagens nesta conversa:
-
-IMAGEM 1: foto de uma pessoa (a cliente).
-IMAGEM 2: imagem de referência de um cabelo loiro platinado liso com raiz esfumada.
-
-Sua tarefa: aplicar o cabelo da IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
-
-Regras obrigatórias:
-- Preserve rigorosamente o rosto, a identidade, as características faciais, as proporções e a expressão da pessoa da IMAGEM 1.
-- Mantenha a iluminação, o tom de pele e o fundo originais da IMAGEM 1.
-- Aplique o cabelo da IMAGEM 2 respeitando a textura lisa, o brilho espelhado, a cor platinada e a raiz esfumada originais.
-- O resultado deve parecer uma FOTO REAL, nunca uma montagem, peruca ou colagem artificial.
-- Integre o cabelo naturalmente com o couro cabeludo e a pele, com sombras e transições suaves.
-- Não altere roupas, expressão, fundo ou qualquer outro elemento da IMAGEM 1.
-- A saída deve ser uma única imagem fotorrealista e natural.
-
-Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes de gerar o resultado.`,
-        produtos: [
-          { nome: 'Shampoo matizador', desc: 'Neutraliza amarelo', link: 'https://mercadolivre.com.br' },
-          { nome: 'Máscara de reconstrução', desc: 'Para cabelos descoloridos', link: 'https://mercadolivre.com.br' },
-          { nome: 'Leave-in térmico', desc: 'Proteção e brilho', link: 'https://mercadolivre.com.br' }
-        ]
+      if (typeof coloracaoKits !== 'undefined' && coloracaoKits.kits) {
+        coloracaoKits.kits.forEach(kit => {
+          produtos.push({ nome: kit.nome, desc: kit.produtos, link: kit.link });
+        });
       }
-    ];
+      if (typeof cuidadosKits !== 'undefined' && cuidadosKits.kits) {
+        cuidadosKits.kits.forEach(kit => {
+          produtos.push({ nome: kit.nome, desc: kit.produtos, link: kit.link });
+        });
+      }
+      if (produtos.length === 0 && typeof produtosData !== 'undefined') {
+        produtosData.slice(0, 3).forEach(it => {
+          produtos.push({ nome: it[2], desc: it[3], link: '#' });
+        });
+      }
+
+      return produtos.slice(0, 4);
+    }
 
     // ============================================================
-    // REFERÊNCIAS DOM
-    // ============================================================
-    const galleryEl = document.getElementById('gallery');
-    const cardArea = document.getElementById('card-area');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
-    const modalHairImg = document.getElementById('modalHairImg');
-    const modalHairName = document.getElementById('modalHairName');
-    const modalHairDesc = document.getElementById('modalHairDesc');
-    const qrcodeContainer = document.getElementById('qrcode-container');
-    const qrHint = document.getElementById('qrHint');
-
-    // ============================================================
-    // URL BASE
+    // 4. URL
     // ============================================================
     function getBaseUrl() {
       if (URL_PUBLICA_MANUAL && URL_PUBLICA_MANUAL.trim() !== '') {
@@ -478,45 +936,89 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return window.location.origin + window.location.pathname;
     }
 
-    function buildHairUrl(hairId) {
-      return `${getBaseUrl()}?cabelo=${hairId}`;
-    }
-
-    function getHairById(id) {
-      return HAIRS.find(h => h.id === id);
-    }
+    function buildItemUrl(id) { return `${getBaseUrl()}?item=${id}`; }
+    function getItemById(id) { return ITENS.find(c => c.id === id); }
 
     // ============================================================
-    // GALERIA
+    // 5. DOM
+    // ============================================================
+    const galleryEl = document.getElementById('gallery');
+    const cardArea = document.getElementById('card-area');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalHairImg = document.getElementById('modalHairImg');
+    const modalHairName = document.getElementById('modalHairName');
+    const modalHairDesc = document.getElementById('modalHairDesc');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const qrHint = document.getElementById('qrHint');
+    const filtrosEl = document.getElementById('filtros');
+
+    let filtroAtual = 'corte';
+
+    // ============================================================
+    // 6. GALERIA
     // ============================================================
     function renderGallery() {
-      galleryEl.innerHTML = HAIRS.map(hair => `
-        <div class="hair-card" data-hair-id="${hair.id}">
-          <img src="${hair.imagem}" alt="${hair.nome}" loading="lazy">
-          <div class="hair-card-info">
-            <h2>${hair.nome}</h2>
-            <p>${hair.descricao}</p>
+      const itensFiltrados = ITENS.filter(i => i.categoria === filtroAtual);
+
+      if (itensFiltrados.length === 0) {
+        galleryEl.innerHTML = '<div class="loading-msg">Nenhum item nesta categoria</div>';
+        return;
+      }
+
+      galleryEl.innerHTML = itensFiltrados.map(item => {
+        const catLabel = item.categoria === 'corte' ? 'Corte' : 'Coloração';
+        return `
+          <div class="hair-card" data-item-id="${item.id}" tabindex="0" role="button" aria-label="${item.nome}">
+            <div class="hair-card-img-wrap">
+              <img src="${item.imagem}" alt="${item.nome}" loading="lazy"
+                   onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
+              <span class="hair-card-categoria">${catLabel}</span>
+            </div>
+            <div class="hair-card-info">
+              <h2>${item.nome}</h2>
+              <p>${item.descricao}</p>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       document.querySelectorAll('.hair-card').forEach(card => {
         card.addEventListener('click', () => {
-          const hair = getHairById(card.dataset.hairId);
-          if (hair) openModal(hair);
+          const item = getItemById(card.dataset.itemId);
+          if (item) openModal(item);
+        });
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const item = getItemById(card.dataset.itemId);
+            if (item) openModal(item);
+          }
         });
       });
     }
 
     // ============================================================
-    // MODAL QR
+    // 7. FILTROS
     // ============================================================
-    function openModal(hair) {
-      modalHairImg.src = hair.imagem;
-      modalHairImg.alt = hair.nome;
-      modalHairName.textContent = hair.nome;
-      modalHairDesc.textContent = hair.descricao;
-      renderQRCode(hair.id);
+    filtrosEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filtro-btn');
+      if (!btn) return;
+      filtroAtual = btn.dataset.filtro;
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGallery();
+    });
+
+    // ============================================================
+    // 8. MODAL QR
+    // ============================================================
+    function openModal(item) {
+      modalHairImg.src = item.imagem;
+      modalHairImg.alt = item.nome;
+      modalHairName.textContent = item.nome;
+      modalHairDesc.textContent = item.descricao;
+      renderQRCode(item.id);
       modalOverlay.classList.add('active');
     }
 
@@ -530,19 +1032,13 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       if (e.target === modalOverlay) closeModal();
     });
 
-    // ============================================================
-    // QR CODE
-    // ============================================================
-    function renderQRCode(hairId) {
+    function renderQRCode(itemId) {
       qrcodeContainer.innerHTML = '';
-      const url = buildHairUrl(hairId);
+      const url = buildItemUrl(itemId);
       qrHint.textContent = url;
 
       if (typeof QRCode === 'undefined') {
-        qrcodeContainer.innerHTML = `
-          <a href="${url}" target="_blank" style="font-size:0.8rem; color:#1e1e1e;">
-            🔗 abrir link
-          </a>`;
+        qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="font-size:0.8rem;color:#d4b07a;">🔗 abrir link</a>`;
         return;
       }
 
@@ -551,23 +1047,37 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           text: url,
           width: 140,
           height: 140,
-          colorDark: '#1e1e1e',
+          colorDark: '#0a0808',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.H
         });
       } catch (err) {
-        console.warn('Erro QR:', err);
-        qrcodeContainer.innerHTML = `<a href="${url}" target="_blank">🔗 abrir</a>`;
+        qrcodeContainer.innerHTML = `<a href="${url}" target="_blank" style="color:#d4b07a;">🔗 abrir</a>`;
       }
     }
 
     // ============================================================
-    // CARD DETALHADO (após scan) — FLUXO DE 2 FASES
+    // 9. CARD DETALHADO
     // ============================================================
-    function renderHairCard(hair) {
+    function renderHairCard(item) {
       galleryEl.classList.add('hidden');
+      filtrosEl.classList.add('hidden');
 
-      const productsHtml = hair.produtos.map(prod => `
+      const prompt = gerarPrompt(item);
+      const produtos = produtosRelacionados(item);
+
+      const variacoesHtml = item.variantes.length > 1 ? `
+        <div class="fase2-titulo">outras referências</div>
+        <div class="variacoes" id="variacoes">
+          ${item.variantes.map((v, i) => `
+            <img src="${v}" alt="Variação ${i + 1}" data-url="${v}" loading="lazy"
+                 class="${i === 0 ? 'active' : ''}"
+                 onerror="this.style.display='none'">
+          `).join('')}
+        </div>
+      ` : '';
+
+      const productsHtml = produtos.map(prod => `
         <a class="product-item" href="${prod.link}" target="_blank" rel="noopener noreferrer">
           <div class="product-info">
             <h4>${prod.nome}</h4>
@@ -579,123 +1089,127 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.innerHTML = `
         <button class="btn-voltar" onclick="window.location.href='${getBaseUrl()}'">
-          ← voltar
+          ← Voltar
         </button>
 
         <div class="card-section">
-          <img class="card-hair-img" src="${hair.imagem}" alt="${hair.nome}">
-          <h2 class="card-hair-name">${hair.nome}</h2>
-          <p class="card-hair-desc">${hair.descricao}</p>
+          <img class="card-hair-img" id="imagemPrincipal" src="${item.imagem}" alt="${item.nome}"
+               onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
+          <h2 class="card-hair-name">${item.nome}</h2>
+          <p class="card-hair-desc">${item.descricao}</p>
 
-          <!-- BOTÃO ÚNICO (2 FASES) -->
+          ${variacoesHtml}
+
           <button class="btn-action" id="acaoBtn">
-            🚀 Preparar simulação com IA
+            🚀 Preparar simulação
           </button>
 
-          <!-- ÁREA DE CONTEÚDO (muda conforme a fase) -->
           <div id="conteudoArea"></div>
 
-          <!-- PRODUTOS -->
-          <div class="products-title">produtos recomendados</div>
+          <div class="products-title">Produtos recomendados</div>
           ${productsHtml}
         </div>
       `;
 
       cardArea.classList.remove('hidden');
 
-      // ============================================================
-      // ESTADO DAS FASES
-      // ============================================================
-      let fase = 1; // 1 = pronto pra preparar | 2 = mostrando conteúdo
+      // Trocar imagem principal
+      const variacoesEl = document.getElementById('variacoes');
+      if (variacoesEl) {
+        variacoesEl.addEventListener('click', (e) => {
+          const img = e.target.closest('img');
+          if (!img) return;
+          const novaUrl = img.dataset.url;
+          if (novaUrl) {
+            document.getElementById('imagemPrincipal').src = novaUrl;
+            variacoesEl.querySelectorAll('img').forEach(i => i.classList.remove('active'));
+            img.classList.add('active');
+          }
+        });
+      }
 
+      // ============================================================
+      // FLUXO DE 2 FASES
+      // ============================================================
+      let fase = 1;
       const acaoBtn = document.getElementById('acaoBtn');
       const conteudoArea = document.getElementById('conteudoArea');
 
       acaoBtn.addEventListener('click', async () => {
-        // ============================================================
-        // FASE 1 → copia prompt + abre Gemini + mostra aviso
-        // ============================================================
+        // FASE 1
         if (fase === 1) {
-          console.log('🚀 FASE 1: copiando prompt e abrindo Gemini');
-
-          // 1) Copiar prompt
           let promptOk = false;
           try {
-            await navigator.clipboard.writeText(hair.prompt);
+            await navigator.clipboard.writeText(prompt);
             promptOk = true;
           } catch (err) {
             console.warn('Clipboard falhou:', err);
           }
 
-          // 2) Abrir Gemini (site — funciona mesmo sem app)
           try {
             window.open('https://gemini.google.com', '_blank');
           } catch (err) {
             console.warn('window.open bloqueado:', err);
           }
 
-          // 3) Mostrar aviso fase 1
           conteudoArea.innerHTML = `
             <div class="aviso-fase1">
-              <strong>✅ Prompt copiado!</strong>
-              ${promptOk ? '' : '⚠️ Se não copiou, toque abaixo para ver o texto.<br>'}
+              <strong>✓ Prompt copiado</strong>
+              ${promptOk ? '' : '⚠️ Se não copiou, use o campo abaixo.<br>'}
               ✨ O Gemini está abrindo em outra aba...
             </div>
             ${!promptOk ? `
               <div class="aviso-fallback">
-                <div>Copie o prompt manualmente:</div>
-                <textarea readonly>${hair.prompt}</textarea>
+                <div>Copie o prompt manualmente</div>
+                <textarea readonly>${prompt}</textarea>
               </div>
             ` : ''}
           `;
 
-          // 4) Mudar botão para fase 2
-          acaoBtn.textContent = '👁️ Ver prompt + imagem';
+          acaoBtn.textContent = '👁️ Ver imagem + prompt';
           acaoBtn.classList.add('fase2');
           fase = 2;
           return;
         }
 
-        // ============================================================
-        // FASE 2 → mostra imagem + prompt + instruções
-        // ============================================================
+        // FASE 2
         if (fase === 2) {
-          console.log('👁️ FASE 2: mostrando imagem + prompt + instruções');
+          const imagemAtual = document.getElementById('imagemPrincipal').src;
 
           conteudoArea.innerHTML = `
-            <div class="fase2-area">
-
-              <div class="aviso-fase1" style="background:#e6f7ec;">
-                <strong>✅ Prompt já foi copiado</strong>
-                O Gemini está aberto em outra aba. Agora salve a imagem abaixo.
-              </div>
-
-              <div class="fase2-titulo">imagem do cabelo</div>
-              <div class="fase2-img-wrap">
-                <img src="${hair.imagem}" alt="${hair.nome}">
-              </div>
-              <div class="fase2-img-hint">
-                👆 toque e segure na imagem para salvar<br>
-                ou tire um print da tela
-              </div>
-
-              <div class="fase2-titulo">prompt</div>
-              <div class="prompt-box">${hair.prompt}</div>
-
-              <div class="fase2-titulo">instruções</div>
-              <div class="instructions">
-                <li>Copie o prompt (já foi copiado).</li>
-                <li>Abra o Gemini (já está aberto).</li>
-                <li>Envie <strong>sua foto</strong>.</li>
-                <li>Envie <strong>a imagem do cabelo</strong> acima.</li>
-                <li>Cole o prompt.</li>
-                <li>Gere sua simulação.</li>
-              </div>
-
+            <div class="aviso-fase1">
+              <strong>✓ Prompt já foi copiado</strong>
+              O Gemini está aberto em outra aba. Agora salve a imagem abaixo.
             </div>
+
+            <div class="fase2-titulo">Imagem de referência</div>
+            <div class="fase2-img-wrap">
+              <img src="${imagemAtual}" alt="${item.nome}"
+                   onerror="this.src='https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg'">
+            </div>
+            <div class="fase2-img-hint">
+              👆 Toque e segure para salvar<br>
+              ou tire um print
+            </div>
+
+            <div class="fase2-titulo">Prompt</div>
+            <div class="prompt-box">${prompt}</div>
+
+            <div class="fase2-titulo">Instruções</div>
+            <div class="instructions">
+              <li>Copie o prompt (já foi copiado).</li>
+              <li>Abra o Gemini (já está aberto).</li>
+              <li>Envie <strong>sua foto</strong>.</li>
+              <li>Envie <strong>a imagem de referência</strong> acima.</li>
+              <li>Cole o prompt.</li>
+              <li>Gere sua simulação.</li>
+            </div>
+
+            <a class="btn-gemini" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
+              ✨ Abrir Gemini novamente
+            </a>
           `;
 
-          // Mudar botão para "preparar novamente"
           acaoBtn.textContent = '🔄 Preparar novamente';
           acaoBtn.classList.remove('fase2');
           fase = 1;
@@ -705,22 +1219,22 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     }
 
     // ============================================================
-    // INICIALIZAÇÃO
+    // 10. INIT
     // ============================================================
     function init() {
       const params = new URLSearchParams(window.location.search);
-      const hairId = params.get('cabelo');
+      const itemId = params.get('item');
 
-      if (hairId) {
-        const hair = getHairById(hairId);
-        if (hair) {
-          renderHairCard(hair);
-          document.title = `${hair.nome} · HairOS`;
+      if (itemId) {
+        const item = getItemById(itemId);
+        if (item) {
+          renderHairCard(item);
+          document.title = `${item.nome} · HairOS`;
         } else {
           renderGallery();
           const aviso = document.createElement('p');
-          aviso.style.cssText = 'text-align:center; color:#b33; margin-top:1rem;';
-          aviso.textContent = 'Cabelo não encontrado. Selecione um da galeria.';
+          aviso.style.cssText = 'text-align:center;color:#d4b07a;margin-top:1rem;font-size:0.85rem;';
+          aviso.textContent = 'Item não encontrado. Selecione um da galeria.';
           cardArea.appendChild(aviso);
           cardArea.classList.remove('hidden');
         }
