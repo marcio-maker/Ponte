@@ -567,7 +567,6 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ===== Botão QR flutuante ===== */
     .btn-qr-float {
       position: absolute;
       top: 0.6rem;
@@ -1176,22 +1175,23 @@
       column-span: all;
     }
 
-    /* ===== OVERLAY "COMO SALVAR A IMAGEM" ===== */
+    /* ===== OVERLAY "SALVAR IMAGEM" (nova ordem: instruções → imagem) ===== */
     .print-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .9);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, .92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       z-index: 1500;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 1.2rem;
       visibility: hidden;
       opacity: 0;
       transition: opacity .4s ease, visibility .4s;
-      cursor: pointer;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .print-overlay.active { visibility: visible; opacity: 1; }
@@ -1200,12 +1200,44 @@
       background: linear-gradient(180deg, #1a1612 0%, #0f0c0a 100%);
       border: 1px solid rgba(212, 176, 122, .4);
       border-radius: 20px;
-      padding: 1.8rem 1.5rem 1.5rem;
-      max-width: 420px;
+      padding: 1.6rem 1.3rem 1.3rem;
+      max-width: 440px;
       width: 100%;
+      margin: auto;
       box-shadow: 0 24px 70px rgba(0, 0, 0, .8), 0 0 60px rgba(212, 176, 122, .12);
       animation: cardEnter .5s cubic-bezier(.23, 1, .32, 1) both;
-      cursor: default;
+      position: relative;
+      max-height: 94vh;
+      overflow-y: auto;
+    }
+
+    .print-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.7rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(10, 8, 8, .75);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-light);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+      transition: all .3s var(--ease-luxury);
+      z-index: 3;
+    }
+
+    .print-close:hover,
+    .print-close:focus-visible {
+      background: var(--gold);
+      color: #1b1209;
+      transform: scale(1.08) rotate(90deg);
+      outline: none;
     }
 
     .print-eyebrow {
@@ -1215,56 +1247,47 @@
       color: var(--gold);
       font-weight: 600;
       text-align: center;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       opacity: 0.85;
     }
 
     .print-title {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 1.6rem;
+      font-size: 1.45rem;
       font-weight: 700;
       text-align: center;
       color: var(--gold-light);
       line-height: 1.15;
-      margin-bottom: 0.4rem;
-    }
-
-    .print-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-align: center;
-      font-weight: 300;
-      line-height: 1.5;
-      margin-bottom: 1.6rem;
+      margin-bottom: 1.1rem;
     }
 
     .print-passos {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 1.3rem;
+      gap: 0.65rem;
+      margin-bottom: 1.1rem;
     }
 
     .print-passo {
-      padding-left: 1rem;
+      padding-left: 0.9rem;
       border-left: 2px solid rgba(212, 176, 122, .35);
     }
 
     .print-passo-titulo {
-      font-size: 0.72rem;
+      font-size: 0.64rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--gold);
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .print-passo-txt {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-sec);
       font-weight: 300;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .print-passo-txt b { color: var(--gold-light); font-weight: 600; }
@@ -1272,18 +1295,41 @@
     .print-destaque {
       background: rgba(212, 176, 122, .07);
       border-left-color: var(--gold);
-      padding: 0.75rem 0.85rem 0.75rem 1rem;
+      padding: 0.6rem 0.8rem 0.6rem 0.9rem;
       border-radius: 0 10px 10px 0;
+    }
+
+    .print-img-wrap {
+      width: 100%;
+      max-height: 54vh;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid rgba(212, 176, 122, .35);
+      background: #0e0b09;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .print-img-wrap img {
+      width: 100%;
+      height: auto;
+      max-height: 54vh;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
     }
 
     .print-footer {
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 300;
       font-style: italic;
-      padding-top: 0.9rem;
-      border-top: 1px solid rgba(212, 176, 122, .12);
+      padding-top: 0.7rem;
       line-height: 1.5;
     }
 
@@ -1489,12 +1535,14 @@
     <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
 
-  <!-- ===== OVERLAY "COMO SALVAR A IMAGEM" ===== -->
+  <!-- ===== OVERLAY "SALVAR IMAGEM" ===== -->
   <div class="print-overlay" id="printOverlay">
     <div class="print-card" id="printCard">
+
+      <button class="print-close" id="printCloseBtn" aria-label="Fechar">✕</button>
+
       <div class="print-eyebrow">HairOS · Referência</div>
-      <div class="print-title">Como salvar a imagem</div>
-      <div class="print-sub">Escolha o jeito mais fácil pro seu celular</div>
+      <div class="print-title">Salve esta imagem</div>
 
       <div class="print-passos">
         <div class="print-passo">
@@ -1506,20 +1554,26 @@
         <div class="print-passo">
           <div class="print-passo-titulo">iPhone</div>
           <div class="print-passo-txt">
-            Toque e <b>segure a imagem</b> e escolha <b>Salvar em Fotos</b>.
+            Toque e <b>segure a imagem</b> abaixo e escolha <b>Salvar em Fotos</b>.
           </div>
         </div>
         <div class="print-passo print-destaque">
-          <div class="print-passo-titulo">Jeito mais fácil</div>
+          <div class="print-passo-titulo">Mais fácil</div>
           <div class="print-passo-txt">
-            Dê um <b>print da tela</b> agora. A imagem já está limpa, sem botões.
+            Dê um <b>print da tela</b> agora. A imagem está limpa, sem botões.
           </div>
         </div>
       </div>
 
-      <div class="print-footer">
-        Toque em qualquer lugar para <b>fechar este aviso</b>
+      <div class="print-img-wrap" id="printImgWrap">
+        <img id="printImg" src="" alt="Referência para salvar">
       </div>
+
+      <a class="btn-buy" id="printDownloadBtn" download target="_blank" rel="noopener">
+        ⬇️ Baixar imagem
+      </a>
+
+      <div class="print-footer">Toque fora ou no <b>✕</b> para fechar</div>
     </div>
   </div>
 
@@ -1544,7 +1598,6 @@
     const IMG_FALLBACK = 'https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg';
     const INTERVALO_MIN = 10000;
     const INTERVALO_MAX = 15000;
-    const PRINT_AUTOHIDE_MS = 6000;
 
     const SUBTITULOS = {
       todos: 'todos · referência · QR · simulação IA',
@@ -1583,35 +1636,67 @@
     }
 
     // ============================================================
-    // PRINT OVERLAY
+    // PRINT OVERLAY (instruções → botão fechar → imagem → download)
     // ============================================================
-    const printOverlay = document.getElementById('printOverlay');
-    const printCard = document.getElementById('printCard');
-    let printAutoHideTimer = null;
+    const printOverlay     = document.getElementById('printOverlay');
+    const printCard        = document.getElementById('printCard');
+    const printImg         = document.getElementById('printImg');
+    const printDownloadBtn = document.getElementById('printDownloadBtn');
+    const printCloseBtn    = document.getElementById('printCloseBtn');
 
-    function abrirPrintOverlay() {
+    function abrirPrintOverlay(imagemUrl, nomeItem) {
+      if (imagemUrl) {
+        printImg.src = imagemUrl;
+        printImg.alt = nomeItem || 'Referência';
+        printDownloadBtn.href = imagemUrl;
+        printDownloadBtn.setAttribute(
+          'download',
+          (nomeItem || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg'
+        );
+      }
       printOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
-
-      if (printAutoHideTimer) clearTimeout(printAutoHideTimer);
-      printAutoHideTimer = setTimeout(() => {
-        fecharPrintOverlay();
-      }, PRINT_AUTOHIDE_MS);
     }
 
     function fecharPrintOverlay() {
       printOverlay.classList.remove('active');
-      if (printAutoHideTimer) { clearTimeout(printAutoHideTimer); printAutoHideTimer = null; }
       if (!zoomOverlay.classList.contains('active') &&
           !modalOverlay.classList.contains('active')) {
         document.body.style.overflow = '';
       }
     }
 
+    if (printCloseBtn) printCloseBtn.addEventListener('click', fecharPrintOverlay);
+
     printOverlay.addEventListener('click', (e) => {
       if (e.target === printOverlay) fecharPrintOverlay();
     });
     printCard.addEventListener('click', (e) => e.stopPropagation());
+
+    // Botão "Baixar imagem" — tenta fetch+blob, cai para nova aba
+    if (printDownloadBtn) {
+      printDownloadBtn.addEventListener('click', async (e) => {
+        const url = printImg.src;
+        if (!url) return;
+        e.preventDefault();
+        try {
+          const resp = await fetch(url, { mode: 'cors' });
+          if (!resp.ok) throw new Error('fetch falhou');
+          const blob = await resp.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = (printImg.alt || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+        } catch (err) {
+          // fallback: abre em nova aba
+          window.open(url, '_blank', 'noopener');
+        }
+      });
+    }
 
     // ============================================================
     // ZOOM OVERLAY
@@ -1890,12 +1975,13 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return window.location.origin + window.location.pathname;
     }
 
-    function buildItemUrl(id, refIndex) {
+    function buildItemUrl(id, refIndex, salvar) {
       const base = getBaseUrl();
-      if (typeof refIndex === 'number' && refIndex >= 0) {
-        return `${base}?item=${id}&ref=${refIndex}`;
-      }
-      return `${base}?item=${id}`;
+      const params = [];
+      if (id) params.push('item=' + encodeURIComponent(id));
+      if (typeof refIndex === 'number' && refIndex >= 0) params.push('ref=' + refIndex);
+      if (salvar) params.push('salvar=1');
+      return params.length ? `${base}?${params.join('&')}` : base;
     }
 
     function getItemById(id) { return ITENS.find(c => c.id === id); }
@@ -2333,12 +2419,9 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           if (!btn1.classList.contains('etapa-concluida')) avancar(1);
         });
         if (btn2) btn2.addEventListener('click', () => {
-          if (btn2.classList.contains('etapa-ativa')) {
-            abrirPrintOverlay();
-            avancar(2);
-          } else {
-            abrirPrintOverlay();
-          }
+          const imgAtual = document.getElementById('imagemPrincipal');
+          abrirPrintOverlay(imgAtual ? imgAtual.src : imagemUrl, item.nome);
+          if (btn2.classList.contains('etapa-ativa')) avancar(2);
         });
         if (btn3) btn3.addEventListener('click', () => {
           if (btn3.classList.contains('etapa-ativa')) avancar(3);
@@ -2368,11 +2451,16 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             qrExpansivel.classList.add('aberto');
             imgWrap.classList.add('aberto');
 
+            const imgAtual = document.getElementById('imagemPrincipal');
+            const refAtual = item.variantes.indexOf(imgAtual ? imgAtual.src : imagemUrl);
+            const idxAtual = refAtual >= 0 ? refAtual : refIndex;
+            const urlQR = buildItemUrl(item.id, idxAtual, true);
+
             if (!qrInstance) {
               qrEl.innerHTML = '';
               try {
                 qrInstance = new QRCode(qrEl, {
-                  text: urlCompartilhavel,
+                  text: urlQR,
                   width: 140, height: 140,
                   colorDark: '#0a0808', colorLight: '#ffffff',
                   correctLevel: QRCode.CorrectLevel.M
@@ -2637,6 +2725,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       const params = new URLSearchParams(window.location.search);
       const itemId = params.get('item');
       const refIndex = params.get('ref');
+      const salvarAuto = params.get('salvar') === '1';
 
       if (itemId) {
         const item = getItemById(itemId);
@@ -2649,6 +2738,12 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             openCardDetalhado(item, idx, url);
+
+            // Se veio via QR com &salvar=1, abre o overlay de salvar automaticamente
+            if (salvarAuto) {
+              setTimeout(() => abrirPrintOverlay(url, item.nome), 500);
+            }
+
             document.title = `${item.nome} · HairOS`;
           } else {
             openCardLoja(item);
