@@ -132,23 +132,6 @@
       margin-bottom: 1.2rem;
     }
 
-    /* Prompt */
-    .prompt-box {
-      background: #f6f5f4;
-      border-radius: 20px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.8rem;
-      color: #2c2c2c;
-      border: 1px solid #e6e4e2;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      line-height: 1.5;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
     /* BOTÃO ÚNICO */
     .btn-action {
       display: flex;
@@ -169,25 +152,106 @@
     }
     .btn-action:hover { background: #1f4a6e; }
     .btn-action:active { transform: scale(0.98); }
-    .btn-action.copiado { background: #1f7a3d; }
+    .btn-action.fase2 { background: #1e1e1e; }
+    .btn-action.fase2:hover { background: #333; }
 
-    .aviso-sucesso {
+    /* Aviso fase 1 (após 1º clique) */
+    .aviso-fase1 {
       background: #e6f7ec;
       border: 1px solid #a8e6bf;
       color: #0a5c2a;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       padding: 0.9rem 1rem;
       border-radius: 16px;
       margin-bottom: 1rem;
-      line-height: 1.6;
+      line-height: 1.5;
+      text-align: center;
     }
-    .aviso-sucesso strong { display: block; margin-bottom: 0.3rem; }
-    .aviso-sucesso hr {
-      border: none;
-      border-top: 1px solid #a8e6bf;
-      margin: 0.6rem 0;
+    .aviso-fase1 strong { display: block; margin-bottom: 0.2rem; }
+
+    /* Área fase 2 (imagem + prompt + instruções) */
+    .fase2-area {
+      margin-bottom: 1rem;
     }
 
+    .fase2-titulo {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #8b8b8b;
+      margin: 1.2rem 0 0.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .fase2-img-wrap {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      background: #eae8e6;
+    }
+
+    .fase2-img-wrap img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .fase2-img-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6b6b6b;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    /* Prompt */
+    .prompt-box {
+      background: #f6f5f4;
+      border-radius: 20px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.8rem;
+      color: #2c2c2c;
+      border: 1px solid #e6e4e2;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      line-height: 1.5;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    /* Instruções */
+    .instructions {
+      background: #f8f7f6;
+      border-radius: 20px;
+      padding: 1rem 1rem 1rem 1.2rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      counter-reset: step;
+    }
+    .instructions li {
+      list-style: none;
+      margin-bottom: 0.5rem;
+      padding-left: 1.8rem;
+      position: relative;
+      counter-increment: step;
+    }
+    .instructions li:last-child { margin-bottom: 0; }
+    .instructions li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 0;
+      width: 1.3rem; height: 1.3rem;
+      background: #1e1e1e; color: white;
+      border-radius: 40px; font-size: 0.7rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Fallback cópia manual */
     .aviso-fallback {
       background: #fff4e5;
       border: 1px solid #ffd9a0;
@@ -295,9 +359,6 @@
   <script>
     // ============================================================
     // CONFIGURAÇÃO OPCIONAL DE URL PÚBLICA
-    // Se estiver hospedado (Netlify/GitHub Pages), deixe '' vazio.
-    // Se estiver testando na rede local, informe o IP da máquina.
-    // Exemplo: 'http://192.168.0.10:8000/index.html'
     // ============================================================
     const URL_PUBLICA_MANUAL = '';
 
@@ -501,7 +562,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     }
 
     // ============================================================
-    // CARD DETALHADO (após scan)
+    // CARD DETALHADO (após scan) — FLUXO DE 2 FASES
     // ============================================================
     function renderHairCard(hair) {
       galleryEl.classList.add('hidden');
@@ -526,14 +587,15 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           <h2 class="card-hair-name">${hair.nome}</h2>
           <p class="card-hair-desc">${hair.descricao}</p>
 
-          <div class="prompt-box" id="promptText">${hair.prompt}</div>
-
+          <!-- BOTÃO ÚNICO (2 FASES) -->
           <button class="btn-action" id="acaoBtn">
             🚀 Preparar simulação com IA
           </button>
 
-          <div id="avisoArea"></div>
+          <!-- ÁREA DE CONTEÚDO (muda conforme a fase) -->
+          <div id="conteudoArea"></div>
 
+          <!-- PRODUTOS -->
           <div class="products-title">produtos recomendados</div>
           ${productsHtml}
         </div>
@@ -542,98 +604,103 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       cardArea.classList.remove('hidden');
 
       // ============================================================
-      // LÓGICA DO BOTÃO ÚNICO
+      // ESTADO DAS FASES
       // ============================================================
+      let fase = 1; // 1 = pronto pra preparar | 2 = mostrando conteúdo
+
       const acaoBtn = document.getElementById('acaoBtn');
-      const avisoArea = document.getElementById('avisoArea');
+      const conteudoArea = document.getElementById('conteudoArea');
 
       acaoBtn.addEventListener('click', async () => {
-        // 1) Copiar prompt
-        let promptOk = false;
-        try {
-          await navigator.clipboard.writeText(hair.prompt);
-          promptOk = true;
-        } catch (err) {
-          console.warn('Clipboard falhou:', err);
-        }
+        // ============================================================
+        // FASE 1 → copia prompt + abre Gemini + mostra aviso
+        // ============================================================
+        if (fase === 1) {
+          console.log('🚀 FASE 1: copiando prompt e abrindo Gemini');
 
-        // 2) Baixar imagem
-        let imgOk = false;
-        try {
-          const link = document.createElement('a');
-          link.href = hair.imagem;
-          link.download = `cabelo-${hair.id}.jpg`;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          imgOk = true;
-        } catch (err) {
-          console.warn('Download falhou:', err);
-        }
-
-        // 3) Feedback visual
-        acaoBtn.textContent = '✅ Tudo pronto!';
-        acaoBtn.classList.add('copiado');
-
-        avisoArea.innerHTML = `
-          <div class="aviso-sucesso">
-            <strong>✅ Tudo pronto!</strong>
-            ${promptOk ? '📋 Prompt copiado.<br>' : '⚠️ Copie o prompt manualmente abaixo.<br>'}
-            ${imgOk ? '⬇️ Imagem do cabelo baixada.<br>' : '⚠️ Salve a imagem manualmente (toque e segure na imagem acima).<br>'}
-            <hr>
-            <strong>✨ Próximos passos no Gemini:</strong>
-            1. Envie <strong>sua foto</strong><br>
-            2. Envie <strong>a imagem do cabelo</strong> baixada<br>
-            3. Cole o <strong>prompt</strong> e envie
-          </div>
-        `;
-
-        // 4) Fallback se não conseguiu copiar
-        if (!promptOk) {
-          const fallback = document.createElement('div');
-          fallback.className = 'aviso-fallback';
-          fallback.innerHTML = `
-            <div>Copie o prompt manualmente:</div>
-            <textarea readonly>${hair.prompt}</textarea>
-          `;
-          avisoArea.appendChild(fallback);
-        }
-
-        // 5) Tentar abrir o Gemini automaticamente
-        let geminiAberto = false;
-        try {
-          const win = window.open('https://gemini.google.com', '_blank');
-          if (win) {
-            geminiAberto = true;
+          // 1) Copiar prompt
+          let promptOk = false;
+          try {
+            await navigator.clipboard.writeText(hair.prompt);
+            promptOk = true;
+          } catch (err) {
+            console.warn('Clipboard falhou:', err);
           }
-        } catch (err) {
-          console.warn('window.open bloqueado:', err);
-        }
 
-        // 6) Se o Safari bloqueou, mostrar link manual
-        if (!geminiAberto) {
-          const fallbackLink = document.createElement('a');
-          fallbackLink.href = 'https://gemini.google.com';
-          fallbackLink.target = '_blank';
-          fallbackLink.rel = 'noopener noreferrer';
-          fallbackLink.style.cssText = `
-            display:flex; align-items:center; justify-content:center;
-            gap:0.4rem; width:100%; padding:0.9rem 1.2rem;
-            border-radius:60px; background:#2b5f8a; color:white;
-            font-size:0.95rem; font-weight:600; text-decoration:none;
-            margin-bottom:1rem; cursor:pointer;
+          // 2) Abrir Gemini (site — funciona mesmo sem app)
+          try {
+            window.open('https://gemini.google.com', '_blank');
+          } catch (err) {
+            console.warn('window.open bloqueado:', err);
+          }
+
+          // 3) Mostrar aviso fase 1
+          conteudoArea.innerHTML = `
+            <div class="aviso-fase1">
+              <strong>✅ Prompt copiado!</strong>
+              ${promptOk ? '' : '⚠️ Se não copiou, toque abaixo para ver o texto.<br>'}
+              ✨ O Gemini está abrindo em outra aba...
+            </div>
+            ${!promptOk ? `
+              <div class="aviso-fallback">
+                <div>Copie o prompt manualmente:</div>
+                <textarea readonly>${hair.prompt}</textarea>
+              </div>
+            ` : ''}
           `;
-          fallbackLink.textContent = '✨ Toque aqui para abrir o Gemini';
-          avisoArea.insertBefore(fallbackLink, avisoArea.firstChild);
+
+          // 4) Mudar botão para fase 2
+          acaoBtn.textContent = '👁️ Ver prompt + imagem';
+          acaoBtn.classList.add('fase2');
+          fase = 2;
+          return;
         }
 
-        // 7) Restaurar botão após 5s
-        setTimeout(() => {
-          acaoBtn.textContent = '🚀 Preparar simulação com IA';
-          acaoBtn.classList.remove('copiado');
-        }, 5000);
+        // ============================================================
+        // FASE 2 → mostra imagem + prompt + instruções
+        // ============================================================
+        if (fase === 2) {
+          console.log('👁️ FASE 2: mostrando imagem + prompt + instruções');
+
+          conteudoArea.innerHTML = `
+            <div class="fase2-area">
+
+              <div class="aviso-fase1" style="background:#e6f7ec;">
+                <strong>✅ Prompt já foi copiado</strong>
+                O Gemini está aberto em outra aba. Agora salve a imagem abaixo.
+              </div>
+
+              <div class="fase2-titulo">imagem do cabelo</div>
+              <div class="fase2-img-wrap">
+                <img src="${hair.imagem}" alt="${hair.nome}">
+              </div>
+              <div class="fase2-img-hint">
+                👆 toque e segure na imagem para salvar<br>
+                ou tire um print da tela
+              </div>
+
+              <div class="fase2-titulo">prompt</div>
+              <div class="prompt-box">${hair.prompt}</div>
+
+              <div class="fase2-titulo">instruções</div>
+              <div class="instructions">
+                <li>Copie o prompt (já foi copiado).</li>
+                <li>Abra o Gemini (já está aberto).</li>
+                <li>Envie <strong>sua foto</strong>.</li>
+                <li>Envie <strong>a imagem do cabelo</strong> acima.</li>
+                <li>Cole o prompt.</li>
+                <li>Gere sua simulação.</li>
+              </div>
+
+            </div>
+          `;
+
+          // Mudar botão para "preparar novamente"
+          acaoBtn.textContent = '🔄 Preparar novamente';
+          acaoBtn.classList.remove('fase2');
+          fase = 1;
+          return;
+        }
       });
     }
 
