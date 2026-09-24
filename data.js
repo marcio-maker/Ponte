@@ -1,7 +1,13 @@
 // ============================================================
-// data.js — HairOS Database v4 (final)
+// data.js — HairOS Database v4.1 (final corrigido)
 // Motor: v2 (normalizeItem, searchItems, alturas determinísticas)
 // Dados: v4 (cortes, colorações, produtos, kits e ferramentas)
+//
+// CORREÇÕES v4.1:
+//   - getAlturaById agora usa hash completo (variedade real)
+//   - Labels padronizados: Doce Leite, Carioca, Romano, Soft Lights
+//   - ID renomeado: mechas-contour → framing-contour
+//   - Comentários // ⚠️ DUPLICATA marcam imagens a trocar
 //
 // ESTRUTURA
 //   Cada item aceita array legado [id, cat, corte, title, desc, img, variants]
@@ -14,10 +20,10 @@
 //   4. createCard — montador principal
 //   5. Dados: Cortes (30 itens)
 //   6. Dados: Colorações (25 itens)
-//   7. Dados: Produtos (15 itens)   ← Parte 2
-//   8. Dados: Kits (15 itens)       ← Parte 2
-//   9. Dados: Ferramentas (15 itens) ← Parte 2
-//  10. Bootstrap                    ← Parte 2
+//   7. Dados: Produtos (15 itens)
+//   8. Dados: Kits (15 itens)
+//   9. Dados: Ferramentas (15 itens)
+//  10. Bootstrap
 // ============================================================
 
 
@@ -33,9 +39,16 @@ function shuffleArray(arr) {
   return arr;
 }
 
+// ✅ CORRIGIDO: hash completo do id para variedade real entre h-md/h-lg/h-xl
 function getAlturaById(id) {
   if (!id) return 'h-md';
-  return (id.charCodeAt(0) % 2 === 0) ? 'h-md' : 'h-lg';
+  var hash = 0;
+  for (var i = 0; i < id.length; i++) {
+    hash = ((hash << 5) - hash) + id.charCodeAt(i);
+    hash = hash | 0; // força 32 bits
+  }
+  var mod = Math.abs(hash) % 3;
+  return mod === 0 ? 'h-md' : mod === 1 ? 'h-lg' : 'h-xl';
 }
 
 function getAlturaHome() {
@@ -131,6 +144,7 @@ var kitsAfiliados = [
     categoria:'cuidados',
     link:     'https://meli.la/2nmeunk',
     produtos: 'Shampoo Vitamino Color + Condicionador Absolut Repair + Máscara Nutrioil + Sérum Pro Longer',
+    // ⚠️ DUPLICATA: esta imagem também aparece em 'glazed-pecan-brunette' (coloração) e 'kit-expert-absolut-repair'
     imagem:   'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg'
   },
   {
@@ -329,7 +343,7 @@ function createCard(id, categoria, corte, title, desc, img, variants) {
 
 
 // ============================================================
-// 5. DADOS: CORTES (30 itens) — nomes curtos + descrições 3 linhas
+// 5. DADOS: CORTES (30 itens)
 // ============================================================
 var cortesData = [
   ['velvet-bob', 'corte', 'Velvet', 'Bob Texturizado',
@@ -406,6 +420,7 @@ var cortesData = [
       'https://i.pinimg.com/736x/57/72/22/5772226643794074a0c51185ea867c17.jpg',
       'https://i.pinimg.com/736x/d7/f2/2b/d7f22bca30309f62004694c1f7dafa73.jpg',
       'https://i.pinimg.com/736x/df/5b/db/df5bdb685898292a9ca41b8bbb43ab31.jpg',
+      // ⚠️ DUPLICATA: e2abf8b4... também aparece em 'wolf-cut' e 'curly-shag'. Manter só aqui.
       'https://i.pinimg.com/736x/e2/ab/f8/e2abf8b4b139df7b29c8551f40d4d338.jpg',
       'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
       'https://i.pinimg.com/736x/e0/ab/81/e0ab810bc60a2b40ec842c78a01f2de0.jpg',
@@ -432,6 +447,7 @@ var cortesData = [
     'Curtíssimo no maxilar com franja reta. O mais curto dos bobs. Oval, coração e alongado. Manutenção alta, retoque a cada 6 semanas.',
     'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
     [
+      // ⚠️ DUPLICATA: as 10 imagens abaixo também estão em 'micro-bob'. Recomendo refazer 'micro-bob' inteiro.
       'https://i.pinimg.com/736x/dd/80/09/dd80099cba2352f7f65c919016a5dbe1.jpg',
       'https://i.pinimg.com/736x/e0/df/ae/e0dfaebb413bd160699c30d24725a3fe.jpg',
       'https://i.pinimg.com/736x/55/45/71/5545719a22d414ab9294aa7baa9e4fff.jpg',
@@ -464,6 +480,7 @@ var cortesData = [
     'Topo curto e rebelde com nuca longa. Mullet + shag. Oval, quadrado e coração. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
     [
+      // ⚠️ DUPLICATA: as 10 imagens abaixo também estão em 'curly-shag'. Recomendo refazer 'curly-shag' inteiro.
       'https://i.pinimg.com/736x/e2/ab/f8/e2abf8b4b139df7b29c8551f40d4d338.jpg',
       'https://i.pinimg.com/736x/57/2d/3c/572d3c6920502f1be25599787049d8bb.jpg',
       'https://i.pinimg.com/236x/b0/e3/9a/b0e39ade429a2a9d8ccf5f031a254593.jpg',
@@ -498,12 +515,14 @@ var cortesData = [
     [
       'https://i.pinimg.com/736x/96/31/54/96315450669e7b501f2c3a3df3d22c64.jpg',
       'https://i.pinimg.com/736x/3f/8a/56/3f8a567393a8ec2e33a032171cc9da1e.jpg',
+      // ⚠️ DUPLICATA CRÍTICA (cruza categoria): 53a9a9f6... também aparece em 'vanilla-blonde' e 'blond-de-provence'
       'https://i.pinimg.com/736x/53/a9/a9/53a9a9f6cae1b2cfbc439e44cba9b312.jpg',
       'https://i.pinimg.com/736x/28/08/b2/2808b20872bdf2f4d592937b832e5ebe.jpg',
       'https://i.pinimg.com/736x/e4/33/c6/e433c67d4a72a7e0db4c09264b1db14f.jpg',
       'https://i.pinimg.com/1200x/6e/4c/c7/6e4cc792bb849c411c7c45d4ade6a5ba.jpg',
       'https://i.pinimg.com/1200x/34/30/d8/3430d8b60e48812a8e1f15426af803f9.jpg',
       'https://i.pinimg.com/736x/43/c4/93/43c493fa3eff0cc7588e361d3df8af14.jpg',
+      // ⚠️ DUPLICATA CRÍTICA (cruza categoria): 9b15b9e2... também aparece em 'mocha-mousse' e 'expensive-brunette'
       'https://i.pinimg.com/736x/9b/15/b9/9b15b9e256a6114b5148bee2650c1364.jpg',
       'https://i.pinimg.com/736x/23/ed/1a/23ed1a0d684e9c188c09ae26b62ff6cb.jpg'
     ]
@@ -625,6 +644,7 @@ var cortesData = [
     'Long bob + ondas largas: textura tropical desestruturada. Oval, redondo e coração. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
     [
+      // ⚠️ DUPLICATA: as 10 imagens abaixo também estão em 'bob-desfiado' e 'wavy-bob'. Recomendo refazer um dos 3 cards.
       'https://i.pinimg.com/236x/78/1a/5c/781a5cc85cf1c9e7f85d6c6427b8d7d3.jpg',
       'https://i.pinimg.com/1200x/22/9d/37/229d374a868553d84e23ca964759d667.jpg',
       'https://i.pinimg.com/736x/b6/ba/71/b6ba71ea65fb533b1844d0049d7ac88c.jpg',
@@ -641,6 +661,7 @@ var cortesData = [
     'Laterais bem curtas + topo longo e maleável. Oval, coração e triângulo invertido. Manutenção alta, retoque a cada 5 semanas.',
     'https://i.pinimg.com/1200x/f8/a9/c5/f8a9c55929c8099041078b816afaf6de.jpg',
     [
+      // ⚠️ DUPLICATA: as 10 imagens abaixo também estão em 'layered-pixie'. Recomendo refazer 'layered-pixie' inteiro.
       'https://i.pinimg.com/736x/6b/60/c0/6b60c0d06ef711d77012ae907d0ea7a2.jpg',
       'https://i.pinimg.com/736x/a8/b6/b1/a8b6b108b2d2abe9284ae33bf370d669.jpg',
       'https://i.pinimg.com/1200x/fc/95/a9/fc95a9d29faf38bff61c3e40bf7917ca.jpg',
@@ -657,6 +678,7 @@ var cortesData = [
     'Pontas desfiadas com camadas leves. Oval, quadrado e alongado. Manutenção média, retoque a cada 8 semanas.',
     'https://i.pinimg.com/736x/8e/c2/dd/8ec2dda6ef4765196da9032189869f96.jpg',
     [
+      // ⚠️ DUPLICATA: mesmo bloco de 'brazilian-beach-wave' e 'wavy-bob'
       'https://i.pinimg.com/736x/8e/c2/dd/8ec2dda6ef4765196da9032189869f96.jpg',
       'https://i.pinimg.com/736x/b8/89/cd/b889cd20676ddc7383f41c664f5c438f.jpg',
       'https://i.pinimg.com/736x/d8/cc/c8/d8ccc81b421dd3ca7e826b2b3b5a43a8.jpg',
@@ -673,6 +695,7 @@ var cortesData = [
     'Shag adaptado para cacheados: valoriza a curvatura. Oval, redondo e coração. Manutenção média, retoque a cada 10 semanas.',
     'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
     [
+      // ⚠️ DUPLICATA: mesmo bloco de 'wolf-cut'. Recomendo refazer este card inteiro.
       'https://i.pinimg.com/736x/2a/eb/88/2aeb88213907101e1792b014a75fb4b3.jpg',
       'https://i.pinimg.com/736x/e2/ab/f8/e2abf8b4b139df7b29c8551f40d4d338.jpg',
       'https://i.pinimg.com/736x/57/2d/3c/572d3c6920502f1be25599787049d8bb.jpg',
@@ -689,6 +712,7 @@ var cortesData = [
     'Acima do maxilar: o mais curto dos bobs. Oval, coração e alongado. Manutenção alta, retoque a cada 4 semanas.',
     'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
     [
+      // ⚠️ DUPLICATA: mesmo bloco de 'french-bob'. Recomendo refazer este card inteiro.
       'https://i.pinimg.com/1200x/fa/83/3a/fa833a9f5008d52cbf0f86a0665bbe15.jpg',
       'https://i.pinimg.com/736x/dd/80/09/dd80099cba2352f7f65c919016a5dbe1.jpg',
       'https://i.pinimg.com/736x/e0/df/ae/e0dfaebb413bd160699c30d24725a3fe.jpg',
@@ -705,6 +729,7 @@ var cortesData = [
     'Long bob + ondas suaves: elegante e despretensioso. Oval, redondo e quadrado. Manutenção baixa, retoque a cada 10 semanas.',
     'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
     [
+      // ⚠️ DUPLICATA: mesmo bloco de 'brazilian-beach-wave' e 'bob-desfiado'
       'https://i.pinimg.com/1200x/18/58/1f/18581fff007bf6dae432d4d9ed75f6ad.jpg',
       'https://i.pinimg.com/236x/78/1a/5c/781a5cc85cf1c9e7f85d6c6427b8d7d3.jpg',
       'https://i.pinimg.com/1200x/22/9d/37/229d374a868553d84e23ca964759d667.jpg',
@@ -721,6 +746,7 @@ var cortesData = [
     'Camadas longas no topo: versátil e cresce bem. Oval, coração e triângulo invertido. Manutenção média, retoque a cada 6 semanas.',
     'https://i.pinimg.com/736x/f9/ff/75/f9ff7537091c6e00b3f1415474f6ec12.jpg',
     [
+      // ⚠️ DUPLICATA: mesmo bloco de 'riviera-pixie'. Recomendo refazer este card inteiro.
       'https://i.pinimg.com/1200x/f8/a9/c5/f8a9c55929c8099041078b816afaf6de.jpg',
       'https://i.pinimg.com/736x/6b/60/c0/6b60c0d06ef711d77012ae907d0ea7a2.jpg',
       'https://i.pinimg.com/736x/a8/b6/b1/a8b6b108b2d2abe9284ae33bf370d669.jpg',
@@ -817,7 +843,7 @@ var cortesData = [
 
 
 // ============================================================
-// 6. DADOS: COLORAÇÕES (25 itens) — nomes finais + descrições 3 linhas
+// 6. DADOS: COLORAÇÕES (25 itens) — labels padronizados v4.1
 // ============================================================
 var coloracoesData = [
   ['ombre-tiger-eye', 'coloracao', 'Tiger Eye', 'Transição Dourada',
@@ -826,6 +852,7 @@ var coloracoesData = [
     [
       'https://i.pinimg.com/1200x/fc/77/96/fc7796a5b8212a0fd41f43792ede5351.jpg',
       'https://i.pinimg.com/736x/45/26/d3/4526d3bd85f723c62b5d376a21575ae5.jpg',
+      // ⚠️ DUPLICATA: 80f3bbce... também aparece em 'californianas'. Manter só aqui.
       'https://i.pinimg.com/736x/80/f3/bb/80f3bbce1fb5bb37fd8c921cd8ada7d2.jpg',
       'https://i.pinimg.com/736x/45/9c/a1/459ca1eba3cc70bc50f8414b1490a0b0.jpg',
       'https://i.pinimg.com/736x/cd/3c/0e/cd3c0ef3f5b2a4ec9c4e8b1e110b46ba.jpg',
@@ -890,6 +917,7 @@ var coloracoesData = [
     [
       'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
       'https://i.pinimg.com/736x/9b/30/3c/9b303c2040de9482f8391090b7cf8cfa.jpg',
+      // ⚠️ DUPLICATA: 80f3bbce... também em 'ombre-tiger-eye'
       'https://i.pinimg.com/1200x/80/f3/bb/80f3bbce1fb5bb37fd8c921cd8ada7d2.jpg',
       'https://i.pinimg.com/736x/99/a0/1b/99a01b1ffd110e8e7fcadf5876a06dc7.jpg',
       'https://i.pinimg.com/1200x/9d/f8/60/9df860fa26577c0589865d7e85eaded1.jpg',
@@ -900,16 +928,20 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/ce/af/83/ceaf83e5c53995750f53dacccb66f162.jpg'
     ]
   ],
-  ['mechas-contour', 'coloracao', 'Framing', 'Contorno Facial',
+  // ✅ CORRIGIDO: id renomeado de 'mechas-contour' para 'framing-contour'
+  ['framing-contour', 'coloracao', 'Framing', 'Contorno Facial',
     'Mechas frontais que emolduram o rosto sem contraste forte. Ex.: 8.0/9.0 ou 8.3 + 9.0. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/05/42/66/05426622b672a5271cdfcd4813595269.jpg',
     [
       'https://i.pinimg.com/1200x/05/42/66/05426622b672a5271cdfcd4813595269.jpg',
       'https://i.pinimg.com/1200x/ba/ea/88/baea88db56d4ee70ac25ef7ebe6b4bfa.jpg',
+      // ⚠️ DUPLICATA: 48ee440c... também em 'brunette-romantique' e 'glazed-pecan-brunette'
       'https://i.pinimg.com/1200x/48/ee/44/48ee440c6712e07c385f64752e866ae9.jpg',
       'https://i.pinimg.com/1200x/2a/6d/e8/2a6de8b2b6a20546d876e41872a8120d.jpg',
       'https://i.pinimg.com/1200x/79/59/76/795976cd1ec7cfce7cd0baff0cc0e8d5.jpg',
+      // ⚠️ DUPLICATA: 6753d454... também em 'balayage-loira' e 'champagne-brunette'
       'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
+      // ⚠️ DUPLICATA: c7922574... também em 'californianas' e 'tuscan-leather'
       'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
       'https://i.pinimg.com/736x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
       'https://i.pinimg.com/736x/72/3a/68/723a6849cd6b74d8aa9b1282cfceb7c9.jpg'
@@ -926,6 +958,7 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/b7/9a/bd/b79abd9da6b665d43b474d3844e72d07.jpg',
       'https://i.pinimg.com/1200x/60/15/22/601522009cf3871b56174b99341f5a08.jpg',
       'https://i.pinimg.com/736x/3d/11/34/3d11348cc83f29fbc5fb10873f8d104e.jpg',
+      // ⚠️ DUPLICATA: 074eeae2... também em 'blond-de-provence' e 'sun-washed-soft-lights'
       'https://i.pinimg.com/1200x/07/4e/ea/074eeae2442517936b7e83335b0c31fb.jpg',
       'https://i.pinimg.com/736x/35/a4/d1/35a4d1f4457d1905d4d3b9d868bbf799.jpg',
       'https://i.pinimg.com/736x/c5/2b/92/c52b9243137efa0fce9887e9b4511028.jpg'
@@ -963,7 +996,8 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/c0/f0/cd/c0f0cd5ace640f47763a8f7712796ef1.jpg'
     ]
   ],
-  ['ruivo-doce-leite', 'coloracao', 'Dulce', 'Ruivo Caramelo',
+  // ✅ CORRIGIDO: label 'Dulce' → 'Doce Leite'
+  ['ruivo-doce-leite', 'coloracao', 'Doce Leite', 'Ruivo Caramelo',
     'Ruivo suave com nuances carameladas, sofisticado e luminoso. Ex.: 7.4/8.34 ou 7.43 + 8.3. Pele quente e neutra.',
     'https://i.pinimg.com/736x/8a/7c/d4/8a7cd4c0523d1384c8ac71d6b97b1541.jpg',
     [
@@ -1015,6 +1049,7 @@ var coloracoesData = [
     'Marrom intenso com nuances suaves que lembram café com leite. Ex.: 5.0/6.0 ou 6.7 + 5.3. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/2b/aa/ea/2baaea4f4dc0674819552e1a00063c01.jpg',
     [
+      // ⚠️ DUPLICATA CRÍTICA (cruza categoria): 9b15b9e2... também em 'soft-layers' (corte) e 'expensive-brunette'
       'https://i.pinimg.com/736x/9b/15/b9/9b15b9e256a6114b5148bee2650c1364.jpg',
       'https://i.pinimg.com/1200x/d3/2d/74/d32d74825bfa044d8bb2251ccc5357a4.jpg',
       'https://i.pinimg.com/1200x/e9/c4/f9/e9c4f9b7f739f33ef4841e5e28aaed25.jpg',
@@ -1050,6 +1085,7 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/36/2e/76/362e768aeb7ed3f16afb82c85bf8bb7e.jpg',
       'https://i.pinimg.com/736x/e8/31/c4/e831c4a68d507a47952ab3ab3349209f.jpg',
       'https://i.pinimg.com/736x/b7/15/82/b71582e483db5ee57b2dee5002605dd5.jpg',
+      // ⚠️ DUPLICATA CRÍTICA (cruza categoria): 53a9a9f6... também em 'soft-layers' (corte) e 'blond-de-provence'
       'https://i.pinimg.com/736x/53/a9/a9/53a9a9f6cae1b2cfbc439e44cba9b312.jpg',
       'https://i.pinimg.com/736x/35/db/af/35dbafa03c10942692ed5e38f9131229.jpg',
       'https://i.pinimg.com/736x/00/42/c9/0042c9ecd8f745f76c58d1b85f9ed36e.jpg',
@@ -1063,7 +1099,9 @@ var coloracoesData = [
     'Loiro dourado com nuances quentes inspirado na luz da Provença. Ex.: base 7.0/8.0 + mechas 9.3/10.3 + gloss 9.0. Pele quente e neutra.',
     'https://i.pinimg.com/736x/5a/74/d5/5a74d546fc0b084124a730c7307d57c0.jpg',
     [
+      // ⚠️ DUPLICATA: 074eeae2... também em 'highlights-loira' e 'sun-washed-soft-lights'
       'https://i.pinimg.com/1200x/07/4e/ea/074eeae2442517936b7e83335b0c31fb.jpg',
+      // ⚠️ DUPLICATA CRÍTICA: 53a9a9f6... também em 'soft-layers' (corte) e 'vanilla-blonde'
       'https://i.pinimg.com/736x/53/a9/a9/53a9a9f6cae1b2cfbc439e44cba9b312.jpg',
       'https://i.pinimg.com/736x/d6/bf/d1/d6bfd17338aebccece8b27920eb062d4.jpg',
       'https://i.pinimg.com/1200x/23/e0/58/23e0584959e272e356bd429280fe1c48.jpg',
@@ -1084,14 +1122,18 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/30/02/94/300294ca9997d7c729a54f29124b3c30.jpg',
       'https://i.pinimg.com/1200x/05/5f/7b/055f7b790631c43cf0bf940dcf7036d6.jpg',
       'https://i.pinimg.com/1200x/75/06/aa/7506aa8b638a36cf60f1eea3cc0baf01.jpg',
+      // ⚠️ DUPLICATA: 6633b3d5... também em 'babylights-morena'
       'https://i.pinimg.com/1200x/66/33/b3/6633b3d5f27363ed895a7cb870e20c78.jpg',
+      // ⚠️ DUPLICATA: e44bdac8... também em 'babylights-morena'
       'https://i.pinimg.com/1200x/e4/4b/da/e44bdac8a5105bfec972ba9a543bfeec.jpg',
       'https://i.pinimg.com/1200x/8f/ff/12/8fff129903ffcc7194c50e7aa30f9fed.jpg',
       'https://i.pinimg.com/736x/3b/9e/64/3b9e64e1cc395fc4d2c7865026532c61.jpg',
+      // ⚠️ DUPLICATA: 37b6c9c1... também em 'expensive-brunette'
       'https://i.pinimg.com/736x/37/b6/c9/37b6c9c11eba90179150f789c458d5e3.jpg'
     ]
   ],
-  ['morena-iluminada-carioca', 'coloracao', 'Tropical', 'Castanho com Mechas Tropicais',
+  // ✅ CORRIGIDO: label 'Tropical' → 'Carioca'
+  ['morena-iluminada-carioca', 'coloracao', 'Carioca', 'Castanho com Mechas Tropicais',
     'Castanho com mechas que capturam a luz do sol carioca, vibrante e natural. Ex.: base 5.0/6.0 + mechas 8.3/9.3 + babylights 7.3. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/1200x/e8/cc/fd/e8ccfd0d23c0a67cdec7b3518588c87a.jpg',
     [
@@ -1111,6 +1153,7 @@ var coloracoesData = [
     'Castanho com nuances suaves e românticas inspirado no estilo francês. Ex.: base 5.0/6.0 + reflexos 6.7/7.7 ou 6.3/7.3. Pele quente e neutra.',
     'https://i.pinimg.com/1200x/48/ee/44/48ee440c6712e07c385f64752e866ae9.jpg',
     [
+      // ⚠️ DUPLICATA: as 10 imagens abaixo também estão em 'glazed-pecan-brunette'. Recomendo refazer 'glazed-pecan-brunette' inteiro.
       'https://i.pinimg.com/1200x/5e/2b/f0/5e2bf098d9eca6e2b22a34e19fda4ae9.jpg',
       'https://i.pinimg.com/736x/0a/5e/12/0a5e12f20ca2415b8fddbd1f5583b391.jpg',
       'https://i.pinimg.com/736x/9a/6e/27/9a6e279af8b3895e161b38107d50ab8e.jpg',
@@ -1123,7 +1166,8 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/0b/15/fa/0b15fa533f2633f86402eb94a9a399d7.jpg'
     ]
   ],
-  ['rosso-romano', 'coloracao', 'Rubino', 'Ruivo Intenso',
+  // ✅ CORRIGIDO: label 'Rubino' → 'Romano'
+  ['rosso-romano', 'coloracao', 'Romano', 'Ruivo Intenso',
     'Ruivo intenso com alma romana, vibrante e cheio de personalidade. Ex.: 5.6/6.6 ou 6.45 + 5.62. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/0d/d4/74/0dd474599a2c97cc033d4b286d328fd2.jpg',
     [
@@ -1143,6 +1187,8 @@ var coloracoesData = [
     'Balayage suave com gloss que cria profundidade e brilho espelhado. Ex.: base 5.0/6.0 + nozes 6.3/7.3 + toque de cobre. Pele quente e neutra.',
     'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg',
     [
+      // ⚠️ DUPLICATA CRÍTICA (cruza categoria): 5bda0096... também em kit afiliado 'kit-loreal-expert' e 'kit-expert-absolut-repair'
+      // ⚠️ DUPLICATA: bloco inteiro compartilhado com 'brunette-romantique'. Recomendo refazer este card.
       'https://i.pinimg.com/1200x/48/ee/44/48ee440c6712e07c385f64752e866ae9.jpg',
       'https://i.pinimg.com/1200x/5e/2b/f0/5e2bf098d9eca6e2b22a34e19fda4ae9.jpg',
       'https://i.pinimg.com/736x/0a/5e/12/0a5e12f20ca2415b8fddbd1f5583b391.jpg',
@@ -1159,6 +1205,7 @@ var coloracoesData = [
     'Mechas finas nas pontas com raiz esfumada, transição suave e baixa manutenção. Ex.: base 6.0/7.0 + babylights 8.3/9.0 + gloss bege. Pele quente, neutra e oliva.',
     'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
     [
+      // ⚠️ DUPLICATA: 6753d454... também em 'balayage-loira' e 'framing-contour'
       'https://i.pinimg.com/736x/67/53/d4/6753d4546e18a5b6e121879b4e45a5f5.jpg',
       'https://i.pinimg.com/1200x/9c/38/2e/9c382e31a4eaafd69ce5d685d82f238b.jpg',
       'https://i.pinimg.com/1200x/85/03/4b/85034b9e76143badec90e47cdac4ae36.jpg',
@@ -1175,6 +1222,7 @@ var coloracoesData = [
     'Color melting com subtom dourado sutil que emerge como couro iluminado pelo sol. Ex.: base 5.0/6.0 + fusão 6.3/7.3. Pele quente e neutra.',
     'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
     [
+      // ⚠️ DUPLICATA: c7922574... também em 'californianas' e 'framing-contour'
       'https://i.pinimg.com/736x/c7/92/25/c7922574476f525938331938daf277f7.jpg',
       'https://i.pinimg.com/736x/9b/30/3c/9b303c2040de9482f8391090b7cf8cfa.jpg',
       'https://i.pinimg.com/1200x/80/f3/bb/80f3bbce1fb5bb37fd8c921cd8ada7d2.jpg',
@@ -1187,10 +1235,12 @@ var coloracoesData = [
       'https://i.pinimg.com/736x/ce/af/83/ceaf83e5c53995750f53dacccb66f162.jpg'
     ]
   ],
-  ['sun-washed-soft-lights', 'coloracao', 'Lumière', 'Luzes Suaves Efeito Sol',
+  // ✅ CORRIGIDO: label 'Lumière' → 'Soft Lights'
+  ['sun-washed-soft-lights', 'coloracao', 'Soft Lights', 'Luzes Suaves Efeito Sol',
     'Mechas delicadas que simulam o efeito do sol com crescimento natural. Ex.: base 7.0/8.0 + soft-lights 9.3/10.0. Pele quente e neutra.',
     'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
     [
+      // ⚠️ DUPLICATA: 6f04f7f2... também em 'highlights-loira'
       'https://i.pinimg.com/1200x/6f/04/f7/6f04f7f22120c572e80a8d903f0f2baf.jpg',
       'https://i.pinimg.com/736x/be/54/1b/be541bc6bb2d9f143c119d52059c66cf.jpg',
       'https://i.pinimg.com/736x/1c/47/4d/1c474dc342e307953abf1eccd45328b1.jpg',
@@ -1198,6 +1248,7 @@ var coloracoesData = [
       'https://i.pinimg.com/1200x/b7/9a/bd/b79abd9da6b665d43b474d3844e72d07.jpg',
       'https://i.pinimg.com/1200x/60/15/22/601522009cf3871b56174b99341f5a08.jpg',
       'https://i.pinimg.com/736x/3d/11/34/3d11348cc83f29fbc5fb10873f8d104e.jpg',
+      // ⚠️ DUPLICATA: 074eeae2... também em 'highlights-loira' e 'blond-de-provence'
       'https://i.pinimg.com/1200x/07/4e/ea/074eeae2442517936b7e83335b0c31fb.jpg',
       'https://i.pinimg.com/736x/35/a4/d1/35a4d1f4457d1905d4d3b9d868bbf799.jpg',
       'https://i.pinimg.com/736x/c5/2b/92/c52b9243137efa0fce9887e9b4511028.jpg'
@@ -1207,6 +1258,7 @@ var coloracoesData = [
     'Cobre profundo com tons de âmbar e canela, evolução sofisticada do cobre vibrante. Ex.: base 6.0/7.0 + mechas 7.4/8.34. Pele quente e oliva.',
     'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
     [
+      // ⚠️ DUPLICATA: 7ad4f49a... também em 'cowgirl-copper'
       'https://i.pinimg.com/1200x/7a/d4/f4/7ad4f49a2f9604293e2bc16d65a6d30f.jpg',
       'https://i.pinimg.com/736x/39/11/3b/39113b115f5d033e0bd7a1e57a5edb74.jpg',
       'https://i.pinimg.com/736x/9c/aa/f0/9caaf070bac7c0b853e549a47cc288b5.jpg',
@@ -1220,6 +1272,7 @@ var coloracoesData = [
     ]
   ]
 ];
+
 
 // ============================================================
 // 7. DADOS: PRODUTOS (15 itens)
@@ -1409,6 +1462,7 @@ var kitsData = [
   ],
   ['kit-expert-absolut-repair', 'kit', 'Expert Absolut Repair Kit', 'Reconstrução Completa',
     'Shampoo + Condicionador + Máscara Absolut Repair. Reconstrução com Lipid-Repair. Uso semanal, em 3 etapas.',
+    // ⚠️ DUPLICATA: 5bda0096... também no kit afiliado 'kit-loreal-expert' e em 'glazed-pecan-brunette'
     'https://i.pinimg.com/736x/5b/da/00/5bda009665f3eff9b6aa04f58e2c473f.jpg',
     ['https://i.pinimg.com/736x/e3/5e/2c/e35e2c9e9d5e31aac8793ea1cc1ebb19.jpg',
      'https://i.pinimg.com/736x/5c/82/2c/5c822c9dcd5ecae1bda1ee964bd8eeb1.jpg',
@@ -1423,10 +1477,14 @@ var kitsData = [
   ],
   ['kit-expert-metal-detox', 'kit', 'Expert Metal Detox Kit', 'Desintoxicação Capilar',
     'Tratamento + Shampoo Metal Detox. Remove metais e garante cor uniforme. Uso pré-coloração, em 2 etapas.',
+    // ⚠️ DUPLICATA: 854e02ce... também em 'kit-expert-vitamino-color'
     'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg',
-    ['https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
-     'https://i.pinimg.com/736x/3d/0f/ec/3d0fece6981e4f8fedac2225a2515c96.jpg',
-     'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg']
+    [
+      // ⚠️ DUPLICATA: f7c2e3d4... também em 'expert-absolut-repair-mask' (não faz sentido: máscara de reconstrução num kit de detox)
+      'https://i.pinimg.com/736x/f7/c2/e3/f7c2e3d49a4f6e4af307529e5cc5932f.jpg',
+      'https://i.pinimg.com/736x/3d/0f/ec/3d0fece6981e4f8fedac2225a2515c96.jpg',
+      'https://i.pinimg.com/1200x/85/4e/02/854e02ce74bf9af04d04cbf86830e14c.jpg'
+    ]
   ],
   ['kit-expert-absolut-repair-mask', 'kit', 'Expert Absolut Repair Mask Kit', 'Reconstrução Profunda',
     '2 unidades da Máscara Absolut Repair. Recupera a fibra severamente danificada. Uso semanal, após o shampoo.',
