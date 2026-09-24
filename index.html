@@ -1636,7 +1636,7 @@
     }
 
     // ============================================================
-    // PRINT OVERLAY (instruções → botão fechar → imagem → download)
+    // PRINT OVERLAY
     // ============================================================
     const printOverlay     = document.getElementById('printOverlay');
     const printCard        = document.getElementById('printCard');
@@ -1673,7 +1673,6 @@
     });
     printCard.addEventListener('click', (e) => e.stopPropagation());
 
-    // Botão "Baixar imagem" — tenta fetch+blob, cai para nova aba
     if (printDownloadBtn) {
       printDownloadBtn.addEventListener('click', async (e) => {
         const url = printImg.src;
@@ -1692,7 +1691,6 @@
           document.body.removeChild(a);
           setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
         } catch (err) {
-          // fallback: abre em nova aba
           window.open(url, '_blank', 'noopener');
         }
       });
@@ -1826,7 +1824,8 @@
           imagem: card.img,
           variantes: variantes.length ? variantes : [card.img],
           categoria: card.categoria,
-          altura: card.altura || getAlturaAleatoria()
+          altura: card.altura || getAlturaAleatoria(),
+          prompt: card.prompt || '' // ← NOVO: prompt individual
         });
       });
 
@@ -1843,24 +1842,30 @@
     });
 
     // ============================================================
-    // 2. PROMPT
+    // 2. PROMPT — ATUALIZADO para usar item.prompt
     // ============================================================
     function gerarPrompt(item) {
-      const tipoLabel = item.categoria === 'coloracao' ? 'coloração' : 'corte';
-      const acao = item.categoria === 'coloracao' ? 'a cor e a técnica da' : 'o corte da';
-      const aplicar = item.categoria === 'coloracao' ? 'a coloração' : 'o corte';
+      const isColor = item.categoria === 'coloracao';
+      const tipoLabel = isColor ? 'coloração' : 'corte';
+
+      // Bloco específico: usa o prompt individual do card, se existir
+      const blocoEspecifico = (item.prompt && item.prompt.trim())
+        ? item.prompt.trim()
+        : `Aplique ${isColor ? 'a coloração' : 'o corte'} da IMAGEM 2 respeitando fielmente comprimento, camadas, textura, direção do caimento, volume e tom.`;
 
       return `Você vai receber DUAS imagens nesta conversa:
 
 IMAGEM 1: foto de uma pessoa (a cliente).
 IMAGEM 2: imagem de referência de ${tipoLabel} "${item.nome}" (${item.titulo}).
 
-Sua tarefa: aplicar ${acao} IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
+Sua tarefa: aplicar ${isColor ? 'a cor e a técnica da' : 'o corte da'} IMAGEM 2 na pessoa da IMAGEM 1, gerando uma simulação fotorrealista.
 
-Regras obrigatórias:
+CARACTERÍSTICAS OBRIGATÓRIAS (extraídas da referência):
+${blocoEspecifico}
+
+REGRAS OBRIGATÓRIAS:
 - Preserve rigorosamente o rosto, a identidade, as características faciais, as proporções e a expressão da pessoa da IMAGEM 1.
 - Mantenha a iluminação, o tom de pele e o fundo originais da IMAGEM 1.
-- Aplique ${aplicar} da IMAGEM 2 respeitando o formato, o caimento, o volume, a textura e a cor originais.
 - O resultado deve parecer uma FOTO REAL, nunca uma montagem, peruca ou colagem artificial.
 - Integre o cabelo naturalmente com o couro cabeludo e a pele, com sombras e transições suaves.
 - Não altere roupas, expressão, fundo ou qualquer outro elemento da IMAGEM 1.
@@ -2739,7 +2744,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             document.body.style.overflow = 'hidden';
             openCardDetalhado(item, idx, url);
 
-            // Se veio via QR com &salvar=1, abre o overlay de salvar automaticamente
             if (salvarAuto) {
               setTimeout(() => abrirPrintOverlay(url, item.nome), 500);
             }
