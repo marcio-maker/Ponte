@@ -542,44 +542,20 @@
 
     .variacao-card:hover img { transform: scale(1.06); }
 
-    .variacao-numero {
-      position: absolute;
-      bottom: 0.6rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: rgba(10, 8, 8, .85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-gold);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.6rem;
-      color: var(--gold);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .35s ease, transform .35s var(--ease-luxury);
-    }
-
-    .variacao-card:hover .variacao-numero,
-    .variacao-card:focus-within .variacao-numero {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
+    /* ===== BOTÃO QR — DISCRETO, CANTO INFERIOR DIREITO ===== */
     .btn-qr-float {
       position: absolute;
-      top: 0.6rem;
-      right: 0.6rem;
-      width: 40px;
-      height: 40px;
+      bottom: 0.55rem;
+      right: 0.55rem;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: rgba(10, 8, 8, .8);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--border-gold);
+      background: rgba(10, 8, 8, .55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 176, 122, .25);
       color: var(--gold);
-      font-size: 1rem;
+      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -588,18 +564,19 @@
       transition: all .3s var(--ease-luxury);
       padding: 0;
       line-height: 1;
+      opacity: 0.45;
     }
 
     .btn-qr-float:hover,
-    .btn-qr-float:focus-visible {
+    .btn-qr-float:focus-visible,
+    .btn-qr-float:active {
+      opacity: 1;
       background: var(--gold);
       color: #1b1209;
       border-color: var(--gold);
-      transform: scale(1.08);
+      transform: scale(1.1);
       outline: none;
     }
-
-    .btn-qr-float:active { transform: scale(.94); }
 
     .card-section {
       background: var(--bg-card);
@@ -622,58 +599,58 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* ===== BLOCO UNIFICADO IMAGEM + PROMPT ===== */
+    .bloco-ref {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.1rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0e0b09;
+    }
+
+    .bloco-ref .card-img-wrap {
+      position: relative;
+      margin-bottom: 0;
+      border-radius: 0;
+      border: none;
+      cursor: zoom-in;
+    }
+
     .card-hair-img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border-radius: var(--radius);
       background: #0e0b09;
-      margin-bottom: 1.1rem;
-      border: 1px solid var(--border);
       display: block;
       transition: opacity .3s ease;
     }
 
-    .card-img-wrap {
-      position: relative;
-      margin-bottom: 1.1rem;
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: zoom-in;
+    .prompt-integrado {
+      padding: 0.9rem 1rem 1rem;
+      background: rgba(0, 0, 0, .35);
+      border-top: 1px solid var(--border-gold);
+      font-size: 0.76rem;
+      color: var(--text-sec);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow-y: auto;
     }
 
-    .card-img-wrap .card-hair-img { margin-bottom: 0; }
-
-    .card-img-hint {
-      position: absolute;
-      bottom: 0.7rem;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(10, 8, 8, .85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-gold);
-      padding: 5px 14px;
-      border-radius: 24px;
-      font-size: 0.62rem;
+    .prompt-integrado-titulo {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
       color: var(--gold);
       font-weight: 600;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-      pointer-events: none;
-      transition: all .4s var(--ease-luxury);
-      animation: hintPulse 2.5s ease-in-out infinite;
-      text-align: center;
-    }
-
-    @keyframes hintPulse {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-3px); }
-    }
-
-    .card-img-wrap.aberto .card-img-hint {
-      opacity: 0;
-      transform: translateX(-50%) translateY(10px);
-      animation: none;
+      margin-bottom: 0.5rem;
+      opacity: 0.85;
+      font-style: normal;
     }
 
     .card-hair-name {
@@ -736,22 +713,6 @@
       opacity: 1;
       box-shadow: 0 0 0 3px var(--gold-glow);
       transform: scale(1.06);
-    }
-
-    .prompt-box {
-      background: rgba(0, 0, 0, .35);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.78rem;
-      color: var(--text-sec);
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      line-height: 1.55;
-      max-height: 320px;
-      overflow-y: auto;
     }
 
     .btn-action {
@@ -1175,166 +1136,6 @@
       column-span: all;
     }
 
-    /* ===== OVERLAY "SALVAR IMAGEM" (nova ordem: instruções → imagem) ===== */
-    .print-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 1500;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 1.2rem;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity .4s ease, visibility .4s;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .print-overlay.active { visibility: visible; opacity: 1; }
-
-    .print-card {
-      background: linear-gradient(180deg, #1a1612 0%, #0f0c0a 100%);
-      border: 1px solid rgba(212, 176, 122, .4);
-      border-radius: 20px;
-      padding: 1.6rem 1.3rem 1.3rem;
-      max-width: 440px;
-      width: 100%;
-      margin: auto;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, .8), 0 0 60px rgba(212, 176, 122, .12);
-      animation: cardEnter .5s cubic-bezier(.23, 1, .32, 1) both;
-      position: relative;
-      max-height: 94vh;
-      overflow-y: auto;
-    }
-
-    .print-close {
-      position: absolute;
-      top: 0.7rem;
-      right: 0.7rem;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(10, 8, 8, .75);
-      border: 1px solid var(--border-gold);
-      color: var(--gold-light);
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      line-height: 1;
-      transition: all .3s var(--ease-luxury);
-      z-index: 3;
-    }
-
-    .print-close:hover,
-    .print-close:focus-visible {
-      background: var(--gold);
-      color: #1b1209;
-      transform: scale(1.08) rotate(90deg);
-      outline: none;
-    }
-
-    .print-eyebrow {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.24em;
-      color: var(--gold);
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 0.5rem;
-      opacity: 0.85;
-    }
-
-    .print-title {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.45rem;
-      font-weight: 700;
-      text-align: center;
-      color: var(--gold-light);
-      line-height: 1.15;
-      margin-bottom: 1.1rem;
-    }
-
-    .print-passos {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 1.1rem;
-    }
-
-    .print-passo {
-      padding-left: 0.9rem;
-      border-left: 2px solid rgba(212, 176, 122, .35);
-    }
-
-    .print-passo-titulo {
-      font-size: 0.64rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--gold);
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-
-    .print-passo-txt {
-      font-size: 0.82rem;
-      color: var(--text-sec);
-      font-weight: 300;
-      line-height: 1.5;
-    }
-
-    .print-passo-txt b { color: var(--gold-light); font-weight: 600; }
-
-    .print-destaque {
-      background: rgba(212, 176, 122, .07);
-      border-left-color: var(--gold);
-      padding: 0.6rem 0.8rem 0.6rem 0.9rem;
-      border-radius: 0 10px 10px 0;
-    }
-
-    .print-img-wrap {
-      width: 100%;
-      max-height: 54vh;
-      overflow: hidden;
-      border-radius: 14px;
-      border: 1px solid rgba(212, 176, 122, .35);
-      background: #0e0b09;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .print-img-wrap img {
-      width: 100%;
-      height: auto;
-      max-height: 54vh;
-      object-fit: contain;
-      display: block;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    .print-footer {
-      text-align: center;
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      font-weight: 300;
-      font-style: italic;
-      padding-top: 0.7rem;
-      line-height: 1.5;
-    }
-
-    .print-footer b { color: var(--gold); font-weight: 600; font-style: normal; }
-
     /* ===== ZOOM OVERLAY ===== */
     .zoom-overlay {
       position: fixed;
@@ -1423,6 +1224,11 @@
       z-index: 10;
       animation: hintPulse 2.5s ease-in-out infinite;
       font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes hintPulse {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-3px); }
     }
 
     @media (min-width: 600px) {
@@ -1535,48 +1341,6 @@
     <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
 
-  <!-- ===== OVERLAY "SALVAR IMAGEM" ===== -->
-  <div class="print-overlay" id="printOverlay">
-    <div class="print-card" id="printCard">
-
-      <button class="print-close" id="printCloseBtn" aria-label="Fechar">✕</button>
-
-      <div class="print-eyebrow">HairOS · Referência</div>
-      <div class="print-title">Salve esta imagem</div>
-
-      <div class="print-passos">
-        <div class="print-passo">
-          <div class="print-passo-titulo">Android</div>
-          <div class="print-passo-txt">
-            Toque no <b>menu ⋮</b> do navegador e escolha <b>Fazer download</b>.
-          </div>
-        </div>
-        <div class="print-passo">
-          <div class="print-passo-titulo">iPhone</div>
-          <div class="print-passo-txt">
-            Toque e <b>segure a imagem</b> abaixo e escolha <b>Salvar em Fotos</b>.
-          </div>
-        </div>
-        <div class="print-passo print-destaque">
-          <div class="print-passo-titulo">Mais fácil</div>
-          <div class="print-passo-txt">
-            Dê um <b>print da tela</b> agora. A imagem está limpa, sem botões.
-          </div>
-        </div>
-      </div>
-
-      <div class="print-img-wrap" id="printImgWrap">
-        <img id="printImg" src="" alt="Referência para salvar">
-      </div>
-
-      <a class="btn-buy" id="printDownloadBtn" download target="_blank" rel="noopener">
-        ⬇️ Baixar imagem
-      </a>
-
-      <div class="print-footer">Toque fora ou no <b>✕</b> para fechar</div>
-    </div>
-  </div>
-
   <!-- ===== ZOOM OVERLAY ===== -->
   <div class="zoom-overlay" id="zoomOverlay">
     <button class="zoom-close" id="zoomClose" aria-label="Fechar zoom">✕</button>
@@ -1636,67 +1400,6 @@
     }
 
     // ============================================================
-    // PRINT OVERLAY
-    // ============================================================
-    const printOverlay     = document.getElementById('printOverlay');
-    const printCard        = document.getElementById('printCard');
-    const printImg         = document.getElementById('printImg');
-    const printDownloadBtn = document.getElementById('printDownloadBtn');
-    const printCloseBtn    = document.getElementById('printCloseBtn');
-
-    function abrirPrintOverlay(imagemUrl, nomeItem) {
-      if (imagemUrl) {
-        printImg.src = imagemUrl;
-        printImg.alt = nomeItem || 'Referência';
-        printDownloadBtn.href = imagemUrl;
-        printDownloadBtn.setAttribute(
-          'download',
-          (nomeItem || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg'
-        );
-      }
-      printOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function fecharPrintOverlay() {
-      printOverlay.classList.remove('active');
-      if (!zoomOverlay.classList.contains('active') &&
-          !modalOverlay.classList.contains('active')) {
-        document.body.style.overflow = '';
-      }
-    }
-
-    if (printCloseBtn) printCloseBtn.addEventListener('click', fecharPrintOverlay);
-
-    printOverlay.addEventListener('click', (e) => {
-      if (e.target === printOverlay) fecharPrintOverlay();
-    });
-    printCard.addEventListener('click', (e) => e.stopPropagation());
-
-    if (printDownloadBtn) {
-      printDownloadBtn.addEventListener('click', async (e) => {
-        const url = printImg.src;
-        if (!url) return;
-        e.preventDefault();
-        try {
-          const resp = await fetch(url, { mode: 'cors' });
-          if (!resp.ok) throw new Error('fetch falhou');
-          const blob = await resp.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = (printImg.alt || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
-        } catch (err) {
-          window.open(url, '_blank', 'noopener');
-        }
-      });
-    }
-
-    // ============================================================
     // ZOOM OVERLAY
     // ============================================================
     const zoomOverlay = document.getElementById('zoomOverlay');
@@ -1724,8 +1427,7 @@
 
     function closeZoom() {
       zoomOverlay.classList.remove('active');
-      if (!printOverlay.classList.contains('active') &&
-          !modalOverlay.classList.contains('active')) {
+      if (!modalOverlay.classList.contains('active')) {
         document.body.style.overflow = '';
       }
       setTimeout(() => { zoomImg.src = ''; resetZoom(); }, 300);
@@ -1741,7 +1443,6 @@
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       if (zoomOverlay.classList.contains('active')) { closeZoom(); return; }
-      if (printOverlay.classList.contains('active')) { fecharPrintOverlay(); return; }
     });
 
     if (zoomStage) {
@@ -1825,7 +1526,7 @@
           variantes: variantes.length ? variantes : [card.img],
           categoria: card.categoria,
           altura: card.altura || getAlturaAleatoria(),
-          prompt: card.prompt || '' // ← NOVO: prompt individual
+          prompt: card.prompt || ''
         });
       });
 
@@ -1842,13 +1543,12 @@
     });
 
     // ============================================================
-    // 2. PROMPT — ATUALIZADO para usar item.prompt
+    // 2. PROMPT
     // ============================================================
     function gerarPrompt(item) {
       const isColor = item.categoria === 'coloracao';
       const tipoLabel = isColor ? 'coloração' : 'corte';
 
-      // Bloco específico: usa o prompt individual do card, se existir
       const blocoEspecifico = (item.prompt && item.prompt.trim())
         ? item.prompt.trim()
         : `Aplique ${isColor ? 'a coloração' : 'o corte'} da IMAGEM 2 respeitando fielmente comprimento, camadas, textura, direção do caimento, volume e tom.`;
@@ -1980,12 +1680,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return window.location.origin + window.location.pathname;
     }
 
-    function buildItemUrl(id, refIndex, salvar) {
+    function buildItemUrl(id, refIndex) {
       const base = getBaseUrl();
       const params = [];
       if (id) params.push('item=' + encodeURIComponent(id));
       if (typeof refIndex === 'number' && refIndex >= 0) params.push('ref=' + refIndex);
-      if (salvar) params.push('salvar=1');
       return params.length ? `${base}?${params.join('&')}` : base;
     }
 
@@ -2208,7 +1907,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
       modalHeaderCount.textContent = item.variantes.length + ' refs';
-      modalSectionLabel.textContent = 'Toque na imagem para abrir · 🔲 para o QR';
+      modalSectionLabel.textContent = 'Toque na imagem para abrir';
 
       modalVariacoes.innerHTML = item.variantes.map((url, idx) => {
         const altura = getAlturaAleatoria();
@@ -2219,30 +1918,18 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
                style="animation-delay: ${delay}s">
             <img src="${url}" alt="Referência ${idx + 1}" loading="lazy"
                  class="${altura}" onerror="this.src='${IMG_FALLBACK}'">
-            <button class="btn-qr-float" data-qr-ref="${idx}" aria-label="Ver QR" title="Ver QR">🔲</button>
-            <span class="variacao-numero">#${idx + 1}</span>
           </div>
         `;
       }).join('');
 
       modalVariacoes.querySelectorAll('.variacao-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.btn-qr-float')) return;
+        card.addEventListener('click', () => {
           const idx = parseInt(card.dataset.refIndex, 10);
           const url = item.variantes[idx];
           openCardDetalhado(item, idx, url);
         });
         card.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
-        });
-      });
-
-      modalVariacoes.querySelectorAll('.btn-qr-float').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const idx = parseInt(btn.dataset.qrRef, 10);
-          const url = item.variantes[idx];
-          openCardDetalhado(item, idx, url, true);
         });
       });
 
@@ -2258,7 +1945,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       if (qrInstance) { qrInstance.clear(); qrInstance = null; }
       if (qrLojaInstance) { qrLojaInstance.clear(); qrLojaInstance = null; }
       closeZoom();
-      fecharPrintOverlay();
     }
 
     modalBackBtn.addEventListener('click', () => {
@@ -2295,7 +1981,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     // ============================================================
     // 11. CARD DETALHADO
     // ============================================================
-    function openCardDetalhado(item, refIndex, imagemUrl, abrirQR) {
+    function openCardDetalhado(item, refIndex, imagemUrl) {
       modalVariacoes.classList.add('hidden');
       modalSectionLabel.classList.add('hidden');
       modalHeaderCount.classList.add('hidden');
@@ -2304,13 +1990,12 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       modalHeaderTitle.textContent = item.nome;
       modalHeaderSub.textContent = item.titulo || '';
 
-      renderCardDetalhado(item, refIndex, imagemUrl, abrirQR);
+      renderCardDetalhado(item, refIndex, imagemUrl);
       modalContent.scrollTop = 0;
     }
 
-    function renderCardDetalhado(item, refIndex, imagemUrl, abrirQR) {
+    function renderCardDetalhado(item, refIndex, imagemUrl) {
       const prompt = gerarPrompt(item);
-      const urlCompartilhavel = buildItemUrl(item.id, refIndex);
       const produtos = produtosParaCard(item, 3);
       produtosCardAtual = produtos;
 
@@ -2328,11 +2013,16 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.innerHTML = `
   <div class="card-section">
-    <div class="card-img-wrap" id="imgWrapDetalhe">
-      <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
-           onerror="this.src='${IMG_FALLBACK}'">
-      <button class="btn-qr-float" id="btnQrDetalhe" aria-label="Ver QR" title="Ver QR">🔲</button>
-      <span class="card-img-hint">Toque = ampliar · 🔲 = QR</span>
+
+    <div class="bloco-ref">
+      <div class="card-img-wrap" id="imgWrapDetalhe">
+        <img class="card-hair-img" id="imagemPrincipal" src="${imagemUrl}" alt="${item.nome}"
+             onerror="this.src='${IMG_FALLBACK}'">
+        <button class="btn-qr-float" id="btnQrDetalhe" aria-label="Ver QR" title="Ver QR">🔲</button>
+      </div>
+      <div class="prompt-integrado" id="promptIntegrado">
+        <div class="prompt-integrado-titulo">Prompt para IA</div>${prompt}
+      </div>
     </div>
 
     <div class="qr-expansivel" id="qrExpansivelDetalhe">
@@ -2347,33 +2037,22 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
     ${miniaturasHtml}
 
-    <div class="fase2-titulo">Prompt para IA</div>
-    <div class="prompt-box" id="promptBox">${prompt}</div>
-
     <button class="btn-action etapa-ativa" id="copiarPromptBtn" data-etapa="1" type="button">
       <span class="etapa-num"><span>1</span></span> 📋 Copiar prompt
     </button>
 
-    <button class="btn-secondary" id="salvarPrintBtn" data-etapa="2" type="button">
-      <span class="etapa-num"><span>2</span></span> 📸 Salvar print
+    <button class="btn-secondary" id="salvarAbrirBtn" data-etapa="2" type="button">
+      <span class="etapa-num"><span>2</span></span> 🖼️ Salvar imagem + abrir Gemini
     </button>
 
-    <a class="btn-secondary" id="abrirGeminiBtn" data-etapa="3"
-       href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
-      <span class="etapa-num"><span>3</span></span> ✨ Usar IA
-    </a>
     <div class="etapa-dica visivel" id="etapaDica">Comece copiando o prompt</div>
 
     <div class="fase2-titulo">Como usar</div>
     <div class="instructions">
       <li>Toque em <strong>Copiar prompt</strong>.</li>
-      <li>Toque em <strong>Salvar print</strong> → siga as instruções na tela.</li>
-      <li>Toque em <strong>Usar IA</strong>.</li>
-      <li>Envie <strong>sua foto</strong> (a cliente).</li>
-      <li>Envie a <strong>imagem de referência</strong> salva.</li>
-      <li>Cole o <strong>prompt</strong>.</li>
-      <li>Gere sua simulação fotorrealista.</li>
-      <li>Toque no <strong>🔲</strong> da imagem para ver o QR Code — ideal pra mostrar pro seu cabeleireiro.</li>
+      <li>Toque em <strong>Salvar imagem + abrir Gemini</strong>.</li>
+      <li>Anexe <strong>sua foto</strong> e a <strong>imagem salva</strong>.</li>
+      <li>Cole o <strong>prompt</strong> e gere.</li>
     </div>
 
     <div class="products-title">Recomendados para você</div>
@@ -2386,19 +2065,17 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.classList.remove('hidden');
 
-      // ===== FLUXO POR ETAPAS =====
+      // ===== FLUXO POR ETAPAS (2 etapas) =====
       (function setupEtapas() {
         const dica = document.getElementById('etapaDica');
         const btn1 = document.getElementById('copiarPromptBtn');
-        const btn2 = document.getElementById('salvarPrintBtn');
-        const btn3 = document.getElementById('abrirGeminiBtn');
-        const botoes = { 1: btn1, 2: btn2, 3: btn3 };
+        const btn2 = document.getElementById('salvarAbrirBtn');
+        const botoes = { 1: btn1, 2: btn2 };
 
         const DICAS = {
           1: 'Comece copiando o prompt',
-          2: 'Toque em "Salvar print" e siga as instruções',
-          3: 'Por último, use a IA e cole o prompt',
-          4: 'Tudo pronto · siga as instruções na IA'
+          2: 'Agora salve a imagem e abra o Gemini',
+          3: 'Tudo pronto · siga as instruções na IA'
         };
 
         function avancar(etapaAtual) {
@@ -2414,7 +2091,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           if (dica) {
             dica.classList.remove('visivel');
             setTimeout(() => {
-              dica.textContent = DICAS[etapaAtual + 1] || DICAS[4];
+              dica.textContent = DICAS[etapaAtual + 1] || DICAS[3];
               dica.classList.add('visivel');
             }, 180);
           }
@@ -2423,13 +2100,41 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         if (btn1) btn1.addEventListener('click', () => {
           if (!btn1.classList.contains('etapa-concluida')) avancar(1);
         });
+
         if (btn2) btn2.addEventListener('click', () => {
           const imgAtual = document.getElementById('imagemPrincipal');
-          abrirPrintOverlay(imgAtual ? imgAtual.src : imagemUrl, item.nome);
+          const urlImagem = imgAtual ? imgAtual.src : imagemUrl;
+          const nomeArquivo = (item.nome || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg';
+
+          // ── ESTRATÉGIA 1: <a download> nativo (funciona em Windows e Safari)
+          // Cria o link FORA do DOM antes de clicar (evita cancelamento)
+          const a = document.createElement('a');
+          a.href = urlImagem;
+          a.download = nomeArquivo;
+          a.rel = 'noopener';
+          // NÃO usar target="_blank" senão Safari ignora o download
+          a.style.display = 'none';
+          document.body.appendChild(a);
+
+          try {
+            a.click();
+          } catch (err) {
+            // ── FALLBACK: abre em nova aba (usuário salva manualmente)
+            window.open(urlImagem, '_blank', 'noopener');
+          }
+
+          // Remove o <a> DEPOIS do delay (não imediatamente)
+          setTimeout(() => {
+            if (a.parentNode) a.parentNode.removeChild(a);
+          }, 800);
+
+          // ── Gemini abre DEPOIS (delay evita cancelar o download)
+          setTimeout(() => {
+            window.open('https://gemini.google.com', '_blank', 'noopener');
+          }, 400);
+
+          // ── Avança etapa
           if (btn2.classList.contains('etapa-ativa')) avancar(2);
-        });
-        if (btn3) btn3.addEventListener('click', () => {
-          if (btn3.classList.contains('etapa-ativa')) avancar(3);
         });
       })();
 
@@ -2454,12 +2159,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
           if (abrindo) {
             qrExpansivel.classList.add('aberto');
-            imgWrap.classList.add('aberto');
 
             const imgAtual = document.getElementById('imagemPrincipal');
             const refAtual = item.variantes.indexOf(imgAtual ? imgAtual.src : imagemUrl);
             const idxAtual = refAtual >= 0 ? refAtual : refIndex;
-            const urlQR = buildItemUrl(item.id, idxAtual, true);
+            const urlQR = buildItemUrl(item.id, idxAtual);
 
             if (!qrInstance) {
               qrEl.innerHTML = '';
@@ -2477,11 +2181,8 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             }
           } else {
             qrExpansivel.classList.remove('aberto');
-            imgWrap.classList.remove('aberto');
           }
         });
-
-        if (abrirQR) setTimeout(() => btnQr.click(), 250);
       }
 
       // ===== Cópia do prompt =====
@@ -2511,11 +2212,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         });
       }
 
-      // ===== Pós-simulação =====
-      const abrirGemini = document.getElementById('abrirGeminiBtn');
+      // ===== Pós-simulação (extras quando usuário clica em salvar+gemini) =====
+      const salvarAbrir = document.getElementById('salvarAbrirBtn');
       const posSimArea = document.getElementById('posSimArea');
-      if (abrirGemini && posSimArea) {
-        abrirGemini.addEventListener('click', () => {
+      if (salvarAbrir && posSimArea) {
+        salvarAbrir.addEventListener('click', () => {
           if (posSimArea.dataset.injetado === '1') return;
           posSimArea.dataset.injetado = '1';
           const extras = produtosExtrasParaCard(item, produtosCardAtual, 3);
@@ -2623,7 +2324,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             <img class="card-hair-img" id="imgPrincipalLoja" src="${item.imagem}" alt="${item.nome}"
                  onerror="this.src='${IMG_FALLBACK}'">
             <button class="btn-qr-float" id="btnQrLoja" aria-label="Ver QR" title="Ver QR">🔲</button>
-            <span class="card-img-hint">Toque = ampliar · 🔲 = QR</span>
           </div>
 
           <div class="qr-expansivel" id="qrExpansivelLoja">
@@ -2673,7 +2373,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
           if (abrindo) {
             qrExpansivel.classList.add('aberto');
-            imgWrap.classList.add('aberto');
 
             if (!qrLojaInstance) {
               qrLojaEl.innerHTML = '';
@@ -2691,7 +2390,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             }
           } else {
             qrExpansivel.classList.remove('aberto');
-            imgWrap.classList.remove('aberto');
           }
         });
       }
@@ -2730,7 +2428,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       const params = new URLSearchParams(window.location.search);
       const itemId = params.get('item');
       const refIndex = params.get('ref');
-      const salvarAuto = params.get('salvar') === '1';
 
       if (itemId) {
         const item = getItemById(itemId);
@@ -2743,11 +2440,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             modalOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             openCardDetalhado(item, idx, url);
-
-            if (salvarAuto) {
-              setTimeout(() => abrirPrintOverlay(url, item.nome), 500);
-            }
-
             document.title = `${item.nome} · HairOS`;
           } else {
             openCardLoja(item);
