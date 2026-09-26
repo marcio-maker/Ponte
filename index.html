@@ -16,7 +16,11 @@
     rel="stylesheet">
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
       --bg: #0a0808;
@@ -38,7 +42,8 @@
       --ok: #a8d8a8;
     }
 
-    html, body {
+    html,
+    body {
       background: var(--bg);
       font-family: 'Inter', sans-serif;
       color: var(--text);
@@ -72,8 +77,14 @@
       position: relative;
     }
 
-    * { scrollbar-width: none; }
-    *::-webkit-scrollbar { width: 0; height: 0; }
+    * {
+      scrollbar-width: none;
+    }
+
+    *::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
 
     .header {
       margin-bottom: 1.2rem;
@@ -85,8 +96,15 @@
     }
 
     @keyframes headerFade {
-      0% { opacity: 0; transform: translateY(-14px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% {
+        opacity: 0;
+        transform: translateY(-14px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .header::after {
@@ -118,9 +136,17 @@
     }
 
     @keyframes shimmer {
-      0% { background-position: 100% 0; }
-      30% { background-position: -50% 0; }
-      100% { background-position: -50% 0; }
+      0% {
+        background-position: 100% 0;
+      }
+
+      30% {
+        background-position: -50% 0;
+      }
+
+      100% {
+        background-position: -50% 0;
+      }
     }
 
     .header h1 span {
@@ -188,8 +214,14 @@
       cursor: pointer;
     }
 
-    .mini-logo:hover { color: var(--gold-light); transform: scale(1.05); }
-    .mini-logo span { color: var(--gold); }
+    .mini-logo:hover {
+      color: var(--gold-light);
+      transform: scale(1.05);
+    }
+
+    .mini-logo span {
+      color: var(--gold);
+    }
 
     .filtros-scroll {
       display: flex;
@@ -203,7 +235,9 @@
       -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%);
     }
 
-    .filtros-scroll::-webkit-scrollbar { display: none; }
+    .filtros-scroll::-webkit-scrollbar {
+      display: none;
+    }
 
     .filtro-btn {
       flex-shrink: 0;
@@ -230,7 +264,9 @@
       transform: translateY(-1px);
     }
 
-    .filtro-btn:active { transform: translateY(0) scale(0.97); }
+    .filtro-btn:active {
+      transform: translateY(0) scale(0.97);
+    }
 
     .filtro-btn.active {
       background: var(--gold);
@@ -242,12 +278,23 @@
     }
 
     @keyframes filtroActivate {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.08); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+
+      40% {
+        transform: scale(1.08);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
 
-    .gallery { column-count: 2; column-gap: 10px; }
+    .gallery {
+      column-count: 2;
+      column-gap: 10px;
+    }
 
     .hair-card {
       break-inside: avoid;
@@ -264,9 +311,19 @@
     }
 
     @keyframes cardEnter {
-      0% { opacity: 0; transform: translateY(28px) scale(.94); }
-      60% { opacity: 1; }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% {
+        opacity: 0;
+        transform: translateY(28px) scale(.94);
+      }
+
+      60% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .hair-card:hover,
@@ -296,12 +353,25 @@
       transition: transform .9s cubic-bezier(.25, .46, .45, .94), opacity .6s ease;
     }
 
-    .hair-card img.h-md { height: 200px; }
-    .hair-card img.h-lg { height: 260px; }
-    .hair-card img.h-xl { height: 320px; }
+    .hair-card img.h-md {
+      height: 200px;
+    }
 
-    .hair-card:hover img { transform: scale(1.08); }
-    .hair-card img.trocando { opacity: 0.25; }
+    .hair-card img.h-lg {
+      height: 260px;
+    }
+
+    .hair-card img.h-xl {
+      height: 320px;
+    }
+
+    .hair-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .hair-card img.trocando {
+      opacity: 0.25;
+    }
 
     .hair-card-title {
       position: absolute;
@@ -378,7 +448,10 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .modal-overlay.active { visibility: visible; opacity: 1; }
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
 
     .modal-content {
       background: var(--bg);
@@ -448,7 +521,10 @@
       transform: translateX(-4px) scale(1.05);
     }
 
-    .modal-header-info { flex: 1; min-width: 0; }
+    .modal-header-info {
+      flex: 1;
+      min-width: 0;
+    }
 
     .modal-header-cat {
       font-size: 0.55rem;
@@ -499,7 +575,10 @@
       text-align: center;
     }
 
-    .variacoes-masonry { column-count: 2; column-gap: 10px; }
+    .variacoes-masonry {
+      column-count: 2;
+      column-gap: 10px;
+    }
 
     .variacao-card {
       break-inside: avoid;
@@ -515,8 +594,15 @@
     }
 
     @keyframes variacaoEnter {
-      0% { opacity: 0; transform: translateY(20px) scale(.94); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(.94);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .variacao-card:hover,
@@ -536,26 +622,37 @@
       transition: transform .7s cubic-bezier(.25, .46, .45, .94);
     }
 
-    .variacao-card img.h-md { height: 180px; }
-    .variacao-card img.h-lg { height: 230px; }
-    .variacao-card img.h-xl { height: 290px; }
+    .variacao-card img.h-md {
+      height: 180px;
+    }
 
-    .variacao-card:hover img { transform: scale(1.06); }
+    .variacao-card img.h-lg {
+      height: 230px;
+    }
 
-    /* ===== BOTÃO QR — DISCRETO, CANTO INFERIOR DIREITO ===== */
+    .variacao-card img.h-xl {
+      height: 290px;
+    }
+
+    .variacao-card:hover img {
+      transform: scale(1.06);
+    }
+
+    /* ===== BOTÃO QR — CENTRO INFERIOR ===== */
     .btn-qr-float {
       position: absolute;
-      bottom: 0.55rem;
-      right: 0.55rem;
-      width: 32px;
-      height: 32px;
+      bottom: 0.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      background: rgba(10, 8, 8, .55);
+      background: rgba(10, 8, 8, .65);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(212, 176, 122, .25);
+      border: 1px solid rgba(212, 176, 122, .35);
       color: var(--gold);
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -564,7 +661,7 @@
       transition: all .3s var(--ease-luxury);
       padding: 0;
       line-height: 1;
-      opacity: 0.45;
+      opacity: 0.7;
     }
 
     .btn-qr-float:hover,
@@ -574,7 +671,7 @@
       background: var(--gold);
       color: #1b1209;
       border-color: var(--gold);
-      transform: scale(1.1);
+      transform: translateX(-50%) scale(1.1);
       outline: none;
     }
 
@@ -594,12 +691,21 @@
     }
 
     @keyframes cardDetailEnter {
-      0% { opacity: 0; transform: translateY(32px) scale(.96); }
-      60% { opacity: 1; }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
+      0% {
+        opacity: 0;
+        transform: translateY(32px) scale(.96);
+      }
+
+      60% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    /* ===== BLOCO UNIFICADO IMAGEM + PROMPT ===== */
     .bloco-ref {
       display: flex;
       flex-direction: column;
@@ -686,7 +792,7 @@
       display: flex;
       gap: 0.5rem;
       justify-content: center;
-      margin: -0.4rem 0 1.1rem;
+      margin: 0.9rem 0 1.1rem;
       flex-wrap: wrap;
     }
 
@@ -744,11 +850,20 @@
       box-shadow: 0 16px 40px rgba(212, 176, 122, .4);
     }
 
-    .btn-action:active { transform: translateY(-1px) scale(.98); }
+    .btn-action:active {
+      transform: translateY(-1px) scale(.98);
+    }
 
     @keyframes pulseGold {
-      0%, 100% { box-shadow: 0 8px 24px rgba(212, 176, 122, .2), 0 0 0 0 rgba(212, 176, 122, .45); }
-      50% { box-shadow: 0 8px 24px rgba(212, 176, 122, .3), 0 0 0 10px rgba(212, 176, 122, 0); }
+
+      0%,
+      100% {
+        box-shadow: 0 8px 24px rgba(212, 176, 122, .2), 0 0 0 0 rgba(212, 176, 122, .45);
+      }
+
+      50% {
+        box-shadow: 0 8px 24px rgba(212, 176, 122, .3), 0 0 0 10px rgba(212, 176, 122, 0);
+      }
     }
 
     .btn-secondary {
@@ -798,7 +913,9 @@
     }
 
     .btn-action.etapa-ativa,
-    .btn-secondary.etapa-ativa { animation: pulseGold 2.4s ease-in-out infinite; }
+    .btn-secondary.etapa-ativa {
+      animation: pulseGold 2.4s ease-in-out infinite;
+    }
 
     .btn-action.etapa-ativa .etapa-num,
     .btn-secondary.etapa-ativa .etapa-num {
@@ -809,7 +926,10 @@
     }
 
     .btn-action.etapa-concluida,
-    .btn-secondary.etapa-concluida { opacity: 0.75; animation: none; }
+    .btn-secondary.etapa-concluida {
+      opacity: 0.75;
+      animation: none;
+    }
 
     .btn-action.etapa-concluida .etapa-num,
     .btn-secondary.etapa-concluida .etapa-num {
@@ -820,7 +940,9 @@
     }
 
     .btn-action.etapa-concluida .etapa-num span,
-    .btn-secondary.etapa-concluida .etapa-num span { display: none; }
+    .btn-secondary.etapa-concluida .etapa-num span {
+      display: none;
+    }
 
     .btn-action.etapa-concluida .etapa-num::after,
     .btn-secondary.etapa-concluida .etapa-num::after {
@@ -841,7 +963,9 @@
       letter-spacing: 0.02em;
     }
 
-    .etapa-dica.visivel { opacity: 0.8; }
+    .etapa-dica.visivel {
+      opacity: 0.8;
+    }
 
     .btn-buy {
       display: flex;
@@ -873,7 +997,9 @@
       box-shadow: 0 16px 44px rgba(212, 176, 122, .45);
     }
 
-    .btn-buy .icon { font-size: 1.1rem; }
+    .btn-buy .icon {
+      font-size: 1.1rem;
+    }
 
     .btn-buy-hint {
       font-size: 0.7rem;
@@ -936,7 +1062,9 @@
       margin-bottom: 1.2rem;
     }
 
-    .qr-expansivel .qr-wrap { margin-bottom: 0; }
+    .qr-expansivel .qr-wrap {
+      margin-bottom: 0;
+    }
 
     .instructions {
       background: rgba(0, 0, 0, .3);
@@ -959,9 +1087,14 @@
       line-height: 1.5;
     }
 
-    .instructions li:last-child { margin-bottom: 0; }
+    .instructions li:last-child {
+      margin-bottom: 0;
+    }
 
-    .instructions li strong { color: var(--gold); font-weight: 600; }
+    .instructions li strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
 
     .instructions li::before {
       content: counter(step);
@@ -1012,7 +1145,9 @@
       transition: all .4s var(--ease-luxury);
     }
 
-    .product-item:last-child { border-bottom: none; }
+    .product-item:last-child {
+      border-bottom: none;
+    }
 
     .product-item:hover {
       background: rgba(212, 176, 122, .04);
@@ -1032,7 +1167,9 @@
       transition: transform .4s var(--ease-bounce);
     }
 
-    .product-item:hover .product-thumb { transform: scale(1.06) rotate(-2deg); }
+    .product-item:hover .product-thumb {
+      transform: scale(1.06) rotate(-2deg);
+    }
 
     .product-thumb.placeholder {
       display: flex;
@@ -1043,7 +1180,10 @@
       background: rgba(212, 176, 122, .08);
     }
 
-    .product-info { flex: 1; min-width: 0; }
+    .product-info {
+      flex: 1;
+      min-width: 0;
+    }
 
     .product-info h4 {
       font-size: 0.88rem;
@@ -1111,7 +1251,9 @@
       font-weight: 300;
     }
 
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     .footer-note {
       margin-top: 2rem;
@@ -1136,7 +1278,6 @@
       column-span: all;
     }
 
-    /* ===== ZOOM OVERLAY ===== */
     .zoom-overlay {
       position: fixed;
       inset: 0;
@@ -1154,7 +1295,10 @@
       overscroll-behavior: contain;
     }
 
-    .zoom-overlay.active { visibility: visible; opacity: 1; }
+    .zoom-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
 
     .zoom-stage {
       position: absolute;
@@ -1227,65 +1371,214 @@
     }
 
     @keyframes hintPulse {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-3px); }
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(-3px);
+      }
     }
 
     @media (min-width: 600px) {
-      body { padding: 1.4rem 1rem 2.4rem; }
-      .filtros { margin: 0 -1rem 1rem; padding: 0.6rem 1rem; }
-      .gallery { column-count: 3; column-gap: 14px; }
-      .hair-card { margin-bottom: 14px; }
-      .variacoes-masonry { column-count: 3; column-gap: 14px; }
-      .variacao-card { margin-bottom: 14px; }
-      .header h1 { font-size: 2.1rem; }
-      .hair-card img.h-md { height: 240px; }
-      .hair-card img.h-lg { height: 300px; }
-      .hair-card img.h-xl { height: 360px; }
-      .variacao-card img.h-md { height: 220px; }
-      .variacao-card img.h-lg { height: 280px; }
-      .variacao-card img.h-xl { height: 340px; }
-      .modal-content { padding: 0 1.2rem 3rem; }
-      .modal-header { padding: 0.9rem 1.2rem; margin: 0 -1.2rem 1.2rem; }
+      body {
+        padding: 1.4rem 1rem 2.4rem;
+      }
+
+      .filtros {
+        margin: 0 -1rem 1rem;
+        padding: 0.6rem 1rem;
+      }
+
+      .gallery {
+        column-count: 3;
+        column-gap: 14px;
+      }
+
+      .hair-card {
+        margin-bottom: 14px;
+      }
+
+      .variacoes-masonry {
+        column-count: 3;
+        column-gap: 14px;
+      }
+
+      .variacao-card {
+        margin-bottom: 14px;
+      }
+
+      .header h1 {
+        font-size: 2.1rem;
+      }
+
+      .hair-card img.h-md {
+        height: 240px;
+      }
+
+      .hair-card img.h-lg {
+        height: 300px;
+      }
+
+      .hair-card img.h-xl {
+        height: 360px;
+      }
+
+      .variacao-card img.h-md {
+        height: 220px;
+      }
+
+      .variacao-card img.h-lg {
+        height: 280px;
+      }
+
+      .variacao-card img.h-xl {
+        height: 340px;
+      }
+
+      .modal-content {
+        padding: 0 1.2rem 3rem;
+      }
+
+      .modal-header {
+        padding: 0.9rem 1.2rem;
+        margin: 0 -1.2rem 1.2rem;
+      }
     }
 
     @media (min-width: 900px) {
-      body { padding: 1.8rem 1.4rem 3rem; }
-      .filtros { margin: 0 -1.4rem 1rem; padding: 0.6rem 1.4rem; }
-      .gallery { column-count: 4; column-gap: 18px; }
-      .hair-card { margin-bottom: 18px; }
-      .variacoes-masonry { column-count: 4; column-gap: 18px; }
-      .variacao-card { margin-bottom: 18px; }
-      .header h1 { font-size: 2.4rem; }
-      .hair-card img.h-md { height: 260px; }
-      .hair-card img.h-lg { height: 320px; }
-      .hair-card img.h-xl { height: 380px; }
-      .variacao-card img.h-md { height: 240px; }
-      .variacao-card img.h-lg { height: 300px; }
-      .variacao-card img.h-xl { height: 360px; }
-      .modal-content { padding: 0 1.4rem 3rem; }
-      .modal-header { padding: 0.9rem 1.4rem; margin: 0 -1.4rem 1.2rem; }
+      body {
+        padding: 1.8rem 1.4rem 3rem;
+      }
+
+      .filtros {
+        margin: 0 -1.4rem 1rem;
+        padding: 0.6rem 1.4rem;
+      }
+
+      .gallery {
+        column-count: 4;
+        column-gap: 18px;
+      }
+
+      .hair-card {
+        margin-bottom: 18px;
+      }
+
+      .variacoes-masonry {
+        column-count: 4;
+        column-gap: 18px;
+      }
+
+      .variacao-card {
+        margin-bottom: 18px;
+      }
+
+      .header h1 {
+        font-size: 2.4rem;
+      }
+
+      .hair-card img.h-md {
+        height: 260px;
+      }
+
+      .hair-card img.h-lg {
+        height: 320px;
+      }
+
+      .hair-card img.h-xl {
+        height: 380px;
+      }
+
+      .variacao-card img.h-md {
+        height: 240px;
+      }
+
+      .variacao-card img.h-lg {
+        height: 300px;
+      }
+
+      .variacao-card img.h-xl {
+        height: 360px;
+      }
+
+      .modal-content {
+        padding: 0 1.4rem 3rem;
+      }
+
+      .modal-header {
+        padding: 0.9rem 1.4rem;
+        margin: 0 -1.4rem 1.2rem;
+      }
     }
 
     @media (max-width: 400px) {
-      .header h1 { font-size: 1.6rem; }
-      .modal-header-title { font-size: 1.1rem; }
-      .card-hair-name { font-size: 1.35rem; }
-      .instructions li { font-size: 0.78rem; }
-      .gallery { column-count: 2; column-gap: 8px; }
-      .hair-card { margin-bottom: 8px; }
-      .variacoes-masonry { column-count: 2; column-gap: 8px; }
-      .variacao-card { margin-bottom: 8px; }
-      .hair-card img.h-md { height: 180px; }
-      .hair-card img.h-lg { height: 220px; }
-      .hair-card img.h-xl { height: 270px; }
-      .variacao-card img.h-md { height: 160px; }
-      .variacao-card img.h-lg { height: 200px; }
-      .variacao-card img.h-xl { height: 240px; }
+      .header h1 {
+        font-size: 1.6rem;
+      }
+
+      .modal-header-title {
+        font-size: 1.1rem;
+      }
+
+      .card-hair-name {
+        font-size: 1.35rem;
+      }
+
+      .instructions li {
+        font-size: 0.78rem;
+      }
+
+      .gallery {
+        column-count: 2;
+        column-gap: 8px;
+      }
+
+      .hair-card {
+        margin-bottom: 8px;
+      }
+
+      .variacoes-masonry {
+        column-count: 2;
+        column-gap: 8px;
+      }
+
+      .variacao-card {
+        margin-bottom: 8px;
+      }
+
+      .hair-card img.h-md {
+        height: 180px;
+      }
+
+      .hair-card img.h-lg {
+        height: 220px;
+      }
+
+      .hair-card img.h-xl {
+        height: 270px;
+      }
+
+      .variacao-card img.h-md {
+        height: 160px;
+      }
+
+      .variacao-card img.h-lg {
+        height: 200px;
+      }
+
+      .variacao-card img.h-xl {
+        height: 240px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -1341,7 +1634,6 @@
     <div class="footer-note">Ponte HairOS · integrada com data.js</div>
   </div>
 
-  <!-- ===== ZOOM OVERLAY ===== -->
   <div class="zoom-overlay" id="zoomOverlay">
     <button class="zoom-close" id="zoomClose" aria-label="Fechar zoom">✕</button>
     <div class="zoom-stage" id="zoomStage">
@@ -1354,9 +1646,7 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
   <script>
-    // ============================================================
-    // CONFIG
-    // ============================================================
+    // ===== CONFIG =====
     const URL_PUBLICA_MANUAL = '';
     const ALTURAS = ['h-md', 'h-lg', 'h-xl'];
     const IMG_FALLBACK = 'https://i.pinimg.com/736x/1e/59/3c/1e593c46f134db1bc0233b96d12d555f.jpg';
@@ -1399,9 +1689,7 @@
       return INTERVALO_MIN + Math.random() * (INTERVALO_MAX - INTERVALO_MIN);
     }
 
-    // ============================================================
-    // ZOOM OVERLAY
-    // ============================================================
+    // ===== ZOOM =====
     const zoomOverlay = document.getElementById('zoomOverlay');
     const zoomStage = document.getElementById('zoomStage');
     const zoomImg = document.getElementById('zoomImg');
@@ -1498,13 +1786,11 @@
       }, { passive: true });
     }
 
-    // ============================================================
-    // 1. ITENS
-    // ============================================================
+    // ===== ITENS =====
     function extrairItens() {
       const itens = [];
       if (typeof styleData === 'undefined') {
-        console.error('styleData não encontrado. data.js carregou?');
+        console.error('styleData não encontrado.');
         return [];
       }
 
@@ -1542,9 +1828,7 @@
       ITENS_POR_CATEGORIA[i.categoria].push(i);
     });
 
-    // ============================================================
-    // 2. PROMPT
-    // ============================================================
+    // ===== PROMPT =====
     function gerarPrompt(item) {
       const isColor = item.categoria === 'coloracao';
       const tipoLabel = isColor ? 'coloração' : 'corte';
@@ -1574,9 +1858,7 @@ REGRAS OBRIGATÓRIAS:
 Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes de gerar o resultado.`;
     }
 
-    // ============================================================
-    // 3. AFILIADOS
-    // ============================================================
+    // ===== AFILIADOS =====
     const AFILIADOS = (typeof kitsAfiliados !== 'undefined') ? kitsAfiliados : [];
     let rotacaoIndex = 0;
 
@@ -1645,9 +1927,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       return kitCompravel ? kitCompravel.link : '#';
     }
 
-    // ============================================================
-    // 4. RENDER DE PRODUTOS
-    // ============================================================
     function renderProdutoItem(kit) {
       const emojiMap = { coloracao: '🎨', cuidados: '💧', ferramentas: '✂️' };
       const thumbHtml = kit.imagem
@@ -1667,9 +1946,6 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       `;
     }
 
-    // ============================================================
-    // 5. URL / QR
-    // ============================================================
     function getBaseUrl() {
       if (URL_PUBLICA_MANUAL && URL_PUBLICA_MANUAL.trim() !== '') {
         return URL_PUBLICA_MANUAL.split('?')[0];
@@ -1690,9 +1966,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
     function getItemById(id) { return ITENS.find(c => c.id === id); }
 
-    // ============================================================
-    // 6. DOM
-    // ============================================================
+    // ===== DOM =====
     const galleryEl = document.getElementById('gallery');
     const cardArea = document.getElementById('cardArea');
     const filtrosEl = document.getElementById('filtros');
@@ -1717,9 +1991,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
     let produtosCardAtual = [];
     let rotacaoTimer = null;
 
-    // ============================================================
-    // 7. GALERIA
-    // ============================================================
+    // ===== GALERIA =====
     function renderGallery() {
       let itensFiltrados;
 
@@ -1843,9 +2115,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       });
     }
 
-    // ============================================================
-    // 8. FILTROS
-    // ============================================================
+    // ===== FILTROS =====
     filtrosEl.addEventListener('click', (e) => {
       const btn = e.target.closest('.filtro-btn');
       if (!btn) return;
@@ -1880,9 +2150,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       });
     }
 
-    // ============================================================
-    // 9. ABRIR ITEM
-    // ============================================================
+    // ===== ABRIR ITEM =====
     function abrirItem(item) {
       if (CATS_SIMULACAO.includes(item.categoria)) {
         openModalVariacoes(item);
@@ -1891,9 +2159,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       }
     }
 
-    // ============================================================
-    // 10. MODAL DE VARIAÇÕES
-    // ============================================================
+    // ===== MODAL VARIAÇÕES =====
     function openModalVariacoes(item) {
       itemAtualModal = item;
 
@@ -1978,9 +2244,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       }
     });
 
-    // ============================================================
-    // 11. CARD DETALHADO
-    // ============================================================
+    // ===== CARD DETALHADO =====
     function openCardDetalhado(item, refIndex, imagemUrl) {
       modalVariacoes.classList.add('hidden');
       modalSectionLabel.classList.add('hidden');
@@ -2041,16 +2305,22 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       <span class="etapa-num"><span>1</span></span> 📋 Copiar prompt
     </button>
 
-    <button class="btn-secondary" id="salvarAbrirBtn" data-etapa="2" type="button">
-      <span class="etapa-num"><span>2</span></span> 🖼️ Salvar imagem + abrir Gemini
+    <button class="btn-secondary" id="salvarImagemBtn" data-etapa="2" type="button">
+      <span class="etapa-num"><span>2</span></span> 🖼️ Salvar imagem
     </button>
+
+    <a class="btn-secondary" id="abrirGeminiBtn" data-etapa="3"
+       href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">
+      <span class="etapa-num"><span>3</span></span> ✨ Abrir Gemini
+    </a>
 
     <div class="etapa-dica visivel" id="etapaDica">Comece copiando o prompt</div>
 
     <div class="fase2-titulo">Como usar</div>
     <div class="instructions">
       <li>Toque em <strong>Copiar prompt</strong>.</li>
-      <li>Toque em <strong>Salvar imagem + abrir Gemini</strong>.</li>
+      <li>Toque em <strong>Salvar imagem</strong>.</li>
+      <li>Toque em <strong>Abrir Gemini</strong>.</li>
       <li>Anexe <strong>sua foto</strong> e a <strong>imagem salva</strong>.</li>
       <li>Cole o <strong>prompt</strong> e gere.</li>
     </div>
@@ -2065,17 +2335,19 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.classList.remove('hidden');
 
-      // ===== FLUXO POR ETAPAS (2 etapas) =====
+      // ===== ETAPAS =====
       (function setupEtapas() {
         const dica = document.getElementById('etapaDica');
         const btn1 = document.getElementById('copiarPromptBtn');
-        const btn2 = document.getElementById('salvarAbrirBtn');
-        const botoes = { 1: btn1, 2: btn2 };
+        const btn2 = document.getElementById('salvarImagemBtn');
+        const btn3 = document.getElementById('abrirGeminiBtn');
+        const botoes = { 1: btn1, 2: btn2, 3: btn3 };
 
         const DICAS = {
           1: 'Comece copiando o prompt',
-          2: 'Agora salve a imagem e abra o Gemini',
-          3: 'Tudo pronto · siga as instruções na IA'
+          2: 'Agora salve a imagem',
+          3: 'Por último, abra o Gemini e cole o prompt',
+          4: 'Tudo pronto · siga as instruções na IA'
         };
 
         function avancar(etapaAtual) {
@@ -2091,7 +2363,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           if (dica) {
             dica.classList.remove('visivel');
             setTimeout(() => {
-              dica.textContent = DICAS[etapaAtual + 1] || DICAS[3];
+              dica.textContent = DICAS[etapaAtual + 1] || DICAS[4];
               dica.classList.add('visivel');
             }, 180);
           }
@@ -2106,39 +2378,29 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
           const urlImagem = imgAtual ? imgAtual.src : imagemUrl;
           const nomeArquivo = (item.nome || 'referencia').replace(/\s+/g, '-').toLowerCase() + '.jpg';
 
-          // ── ESTRATÉGIA 1: <a download> nativo (funciona em Windows e Safari)
-          // Cria o link FORA do DOM antes de clicar (evita cancelamento)
           const a = document.createElement('a');
           a.href = urlImagem;
           a.download = nomeArquivo;
           a.rel = 'noopener';
-          // NÃO usar target="_blank" senão Safari ignora o download
           a.style.display = 'none';
           document.body.appendChild(a);
 
-          try {
-            a.click();
-          } catch (err) {
-            // ── FALLBACK: abre em nova aba (usuário salva manualmente)
-            window.open(urlImagem, '_blank', 'noopener');
-          }
+          try { a.click(); }
+          catch (err) { window.open(urlImagem, '_blank', 'noopener'); }
 
-          // Remove o <a> DEPOIS do delay (não imediatamente)
           setTimeout(() => {
             if (a.parentNode) a.parentNode.removeChild(a);
           }, 800);
 
-          // ── Gemini abre DEPOIS (delay evita cancelar o download)
-          setTimeout(() => {
-            window.open('https://gemini.google.com', '_blank', 'noopener');
-          }, 400);
-
-          // ── Avança etapa
           if (btn2.classList.contains('etapa-ativa')) avancar(2);
+        });
+
+        if (btn3) btn3.addEventListener('click', () => {
+          if (btn3.classList.contains('etapa-ativa')) avancar(3);
         });
       })();
 
-      // ===== Imagem: toque = zoom, botão = QR =====
+      // ===== IMAGEM: ZOOM + QR =====
       const imgWrap = document.getElementById('imgWrapDetalhe');
       const btnQr = document.getElementById('btnQrDetalhe');
       const qrExpansivel = document.getElementById('qrExpansivelDetalhe');
@@ -2185,7 +2447,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         });
       }
 
-      // ===== Cópia do prompt =====
+      // ===== CÓPIA PROMPT =====
       const copiarBtn = document.getElementById('copiarPromptBtn');
       if (copiarBtn) {
         copiarBtn.addEventListener('click', async () => {
@@ -2212,11 +2474,11 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         });
       }
 
-      // ===== Pós-simulação (extras quando usuário clica em salvar+gemini) =====
-      const salvarAbrir = document.getElementById('salvarAbrirBtn');
+      // ===== PÓS-SIMULAÇÃO =====
+      const abrirGemini = document.getElementById('abrirGeminiBtn');
       const posSimArea = document.getElementById('posSimArea');
-      if (salvarAbrir && posSimArea) {
-        salvarAbrir.addEventListener('click', () => {
+      if (abrirGemini && posSimArea) {
+        abrirGemini.addEventListener('click', () => {
           if (posSimArea.dataset.injetado === '1') return;
           posSimArea.dataset.injetado = '1';
           const extras = produtosExtrasParaCard(item, produtosCardAtual, 3);
@@ -2231,7 +2493,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
         });
       }
 
-      // ===== Miniaturas rápidas =====
+      // ===== MINIATURAS =====
       const variacoesRapidas = document.getElementById('variacoesRapidas');
       if (variacoesRapidas) {
         variacoesRapidas.addEventListener('click', (e) => {
@@ -2257,9 +2519,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       }
     }
 
-    // ============================================================
-    // 12. CARD DE LOJA
-    // ============================================================
+    // ===== CARD DE LOJA =====
     function openCardLoja(item) {
       itemAtualModal = item;
 
@@ -2320,10 +2580,13 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
 
       cardArea.innerHTML = `
         <div class="card-section">
-          <div class="card-img-wrap" id="imgWrapLoja">
-            <img class="card-hair-img" id="imgPrincipalLoja" src="${item.imagem}" alt="${item.nome}"
-                 onerror="this.src='${IMG_FALLBACK}'">
-            <button class="btn-qr-float" id="btnQrLoja" aria-label="Ver QR" title="Ver QR">🔲</button>
+
+          <div class="bloco-ref">
+            <div class="card-img-wrap" id="imgWrapLoja">
+              <img class="card-hair-img" id="imgPrincipalLoja" src="${item.imagem}" alt="${item.nome}"
+                   onerror="this.src='${IMG_FALLBACK}'">
+              <button class="btn-qr-float" id="btnQrLoja" aria-label="Ver QR" title="Ver QR">🔲</button>
+            </div>
           </div>
 
           <div class="qr-expansivel" id="qrExpansivelLoja">
@@ -2333,10 +2596,10 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
             </div>
           </div>
 
-          ${galeriaLojaHtml}
-
           <h2 class="card-hair-name">${item.nome}</h2>
           <p class="card-hair-desc">${item.descricao}</p>
+
+          ${galeriaLojaHtml}
 
           <a class="btn-buy" href="${linkCompra}" target="_blank" rel="noopener noreferrer">
             <span class="icon">🛒</span> Ver no Mercado Livre
@@ -2421,9 +2684,7 @@ Se as duas imagens não forem enviadas, peça ao usuário para anexá-las antes 
       });
     }
 
-    // ============================================================
-    // 13. INIT
-    // ============================================================
+    // ===== INIT =====
     function init() {
       const params = new URLSearchParams(window.location.search);
       const itemId = params.get('item');
